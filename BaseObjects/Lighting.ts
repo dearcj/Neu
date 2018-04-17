@@ -8,18 +8,13 @@ export class Lighting extends O {
     private tweenStart: any;
     lerp: number;
     private tweenDest: any;
-
-    get envColor(): ARGBColor {
-        return this._envColor;
-    }
-
-    set envColor(col: ARGBColor) {
-        this._envColor = col;
-     }
+    private tweenStartDark: ARGBColor;
+    private tweenDestDark: ARGBColor;
 
     public ambient: PIXI.heaven.Sprite;
     public ambientContainer: PIXI.Container;
-    private _envColor: ARGBColor;
+    public envColor: ARGBColor;
+    public envColorDark: ARGBColor = [255, 0, 0, 0];
     public defaultColor: ARGBColor = [255, 150, 150, 150];
 
     public static colBattle: ARGBColor;
@@ -50,9 +45,13 @@ export class Lighting extends O {
         this.gfx.addChild(l.gfx);
     }
 
-    tweenColorTo(col: ARGBColor, repeat: boolean = false, deltaTimeSec: number = 0.9) {
+    tweenColorTo(col: ARGBColor, darkCol: ARGBColor, repeat: boolean = false, deltaTimeSec: number = 0.9) {
         this.tweenStart = [this.envColor[0], this.envColor[1], this.envColor[2], this.envColor[3]];
         this.tweenDest = col;
+
+        this.tweenStartDark = [this.envColorDark[0], this.envColorDark[1], this.envColorDark[2], this.envColorDark[3]];
+        this.tweenDestDark = darkCol;
+
         this.lerp = 0;
         let obj: any = {
             ease: Sine.easeOut, lerp: 1, onComplete: () => {
@@ -66,22 +65,6 @@ export class Lighting extends O {
         }
         new TweenMax(this, deltaTimeSec, obj);
     }
-    makeLightsDown() {
-        this.tweenColorTo([0, 170, 170, 150]);
-    }
-
-    makeSocialLight() {
-        this.tweenColorTo([0, 180, 130, 180]);
-    }
-
-    makeBattleMode() {
-        this.tweenColorTo(Lighting.colBattle);
-    }
-
-    makeRegularMode() {
-        this.tweenColorTo(Lighting.colRegular);
-    }
-
 
     updateEnvironmentColor(col: ARGBColor) {
     }
@@ -128,11 +111,17 @@ export class Lighting extends O {
         if (this.tweenDest) {
             let l = this.lerp;
             let il = 1 - this.lerp;
-            this.envColor = [this.tweenStart[0] * il + l * this.tweenDest[0],
-                this.tweenStart[1] * il + l * this.tweenDest[1],
-                this.tweenStart[2] * il + l * this.tweenDest[2],
-                this.tweenStart[3] * il + l * this.tweenDest[3]];
-            //console.log(this.envColor);
+            this.envColor[0] = this.tweenStart[0] * il + l * this.tweenDest[0];
+            this.envColor[1] = this.tweenStart[1] * il + l * this.tweenDest[1];
+            this.envColor[2] = this.tweenStart[2] * il + l * this.tweenDest[2];
+            this.envColor[3] = this.tweenStart[3] * il + l * this.tweenDest[3];
+
+
+            this.envColorDark[0] = this.tweenStartDark[0] * il + l * this.tweenDestDark[0];
+            this.envColorDark[1] = this.tweenStartDark[1] * il + l * this.tweenDestDark[1];
+            this.envColorDark[2] = this.tweenStartDark[2] * il + l * this.tweenDestDark[2];
+            this.envColorDark[3] = this.tweenStartDark[3] * il + l * this.tweenDestDark[3];
+
             this.redraw();
         }
     }
@@ -150,5 +139,6 @@ export class Lighting extends O {
 
     public redraw() {
         this.ambient.color.setLight(this.envColor[1] / 255, this.envColor[2] / 255, this.envColor[3] / 255);
+        this.ambient.color.setDark(this.envColorDark[1] / 255, this.envColorDark[2] / 255, this.envColorDark[3] / 255);
     }
 }

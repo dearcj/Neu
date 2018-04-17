@@ -15,20 +15,11 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
         __extends(Lighting, _super);
         function Lighting() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.envColorDark = [255, 0, 0, 0];
             _this.defaultColor = [255, 150, 150, 150];
             _this.lights = [];
             return _this;
         }
-        Object.defineProperty(Lighting.prototype, "envColor", {
-            get: function () {
-                return this._envColor;
-            },
-            set: function (col) {
-                this._envColor = col;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Lighting.prototype.onDestroy = function () {
             this.gfx.filters[0].blendMode = PIXI.BLEND_MODES.NORMAL;
             this.gfx.filters = null;
@@ -46,12 +37,14 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             O_1.O.rp(l.gfx);
             this.gfx.addChild(l.gfx);
         };
-        Lighting.prototype.tweenColorTo = function (col, repeat, deltaTimeSec) {
+        Lighting.prototype.tweenColorTo = function (col, darkCol, repeat, deltaTimeSec) {
             var _this = this;
             if (repeat === void 0) { repeat = false; }
             if (deltaTimeSec === void 0) { deltaTimeSec = 0.9; }
             this.tweenStart = [this.envColor[0], this.envColor[1], this.envColor[2], this.envColor[3]];
             this.tweenDest = col;
+            this.tweenStartDark = [this.envColorDark[0], this.envColorDark[1], this.envColorDark[2], this.envColorDark[3]];
+            this.tweenDestDark = darkCol;
             this.lerp = 0;
             var obj = {
                 ease: Application_1.Sine.easeOut, lerp: 1, onComplete: function () {
@@ -63,18 +56,6 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
                 obj.repeat = -1;
             }
             new Application_1.TweenMax(this, deltaTimeSec, obj);
-        };
-        Lighting.prototype.makeLightsDown = function () {
-            this.tweenColorTo([0, 170, 170, 150]);
-        };
-        Lighting.prototype.makeSocialLight = function () {
-            this.tweenColorTo([0, 180, 130, 180]);
-        };
-        Lighting.prototype.makeBattleMode = function () {
-            this.tweenColorTo(Lighting.colBattle);
-        };
-        Lighting.prototype.makeRegularMode = function () {
-            this.tweenColorTo(Lighting.colRegular);
         };
         Lighting.prototype.updateEnvironmentColor = function (col) {
         };
@@ -118,11 +99,14 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             if (this.tweenDest) {
                 var l = this.lerp;
                 var il = 1 - this.lerp;
-                this.envColor = [this.tweenStart[0] * il + l * this.tweenDest[0],
-                    this.tweenStart[1] * il + l * this.tweenDest[1],
-                    this.tweenStart[2] * il + l * this.tweenDest[2],
-                    this.tweenStart[3] * il + l * this.tweenDest[3]];
-                //console.log(this.envColor);
+                this.envColor[0] = this.tweenStart[0] * il + l * this.tweenDest[0];
+                this.envColor[1] = this.tweenStart[1] * il + l * this.tweenDest[1];
+                this.envColor[2] = this.tweenStart[2] * il + l * this.tweenDest[2];
+                this.envColor[3] = this.tweenStart[3] * il + l * this.tweenDest[3];
+                this.envColorDark[0] = this.tweenStartDark[0] * il + l * this.tweenDestDark[0];
+                this.envColorDark[1] = this.tweenStartDark[1] * il + l * this.tweenDestDark[1];
+                this.envColorDark[2] = this.tweenStartDark[2] * il + l * this.tweenDestDark[2];
+                this.envColorDark[3] = this.tweenStartDark[3] * il + l * this.tweenDestDark[3];
                 this.redraw();
             }
         };
@@ -138,6 +122,7 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
         };
         Lighting.prototype.redraw = function () {
             this.ambient.color.setLight(this.envColor[1] / 255, this.envColor[2] / 255, this.envColor[3] / 255);
+            this.ambient.color.setDark(this.envColorDark[1] / 255, this.envColorDark[2] / 255, this.envColorDark[3] / 255);
         };
         return Lighting;
     }(O_1.O));
