@@ -20,10 +20,16 @@ export let CustomEase = window.CustomEase;
 export let Bounce = window.Bounce;
 export let Linear = window.Linear;
 export let Quad = window.Quad;
+export let Power1 = window.Power1;
+export let Power4 = window.Power4;
 export let Power3 = window.Power3;
 export let Power2 = window.Power2;
 export let Sine = window.Sine;
 export let Elastic = window.Elastic;
+export let SteppedEase = window.SteppedEase;
+export let SlowMo = window.SlowMo;
+export let Circ = window.Circ;
+
 export let TimelineMax = window.TimelineMax;
 
 export class Application {

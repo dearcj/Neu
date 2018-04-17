@@ -8,10 +8,15 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
     exports.Bounce = window.Bounce;
     exports.Linear = window.Linear;
     exports.Quad = window.Quad;
+    exports.Power1 = window.Power1;
+    exports.Power4 = window.Power4;
     exports.Power3 = window.Power3;
     exports.Power2 = window.Power2;
     exports.Sine = window.Sine;
     exports.Elastic = window.Elastic;
+    exports.SteppedEase = window.SteppedEase;
+    exports.SlowMo = window.SlowMo;
+    exports.Circ = window.Circ;
     exports.TimelineMax = window.TimelineMax;
     var Application = /** @class */ (function () {
         function Application(MIN_SCR_WIDTH, MIN_SCR_HEIGHT) {
