@@ -22,8 +22,6 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                     O_1.O.rp(this._currentTip);
                 if (value) {
                     Application_1.Application.One.sm.fonts.addChild(value);
-                    value.alpha = 0.;
-                    new Application_1.TweenMax(value, 0.2, { alpha: 1 });
                 }
                 else {
                     this.currentObject = null;
@@ -81,14 +79,19 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                 var words = lines[l].split(/[\s]+/);
                 for (var i = 0; i < words.length; ++i) {
                     var w = words[i];
-                    if (w.length > 0 && w[1] == '[') {
-                        tags.push(words[i][0]);
+                    if (w.length > 0 && w[2] == '{') {
+                        tags.push(w.slice(0, 2));
+                        w = w.slice(3);
                     }
-                    if (w[0] == ']') {
+                    if (w[0] == '}') {
                         tags.pop();
+                        w = w.slice(1);
                     }
-                    var o = wordToColorFunc(obj, words[i], tags);
-                    if (w[w.length - 1] == ']') {
+                    if (w[w.length - 1] == '}') {
+                        w = w.slice(0, w.length - 1);
+                    }
+                    var o = wordToColorFunc(obj, w, tags);
+                    if (words[i][words[i].length - 1] == '}') {
                         tags.pop();
                     }
                     var pt = this.createTF(o.word, fontName);

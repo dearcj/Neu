@@ -11,7 +11,6 @@ export class Aligner extends O {
     init(props: any) {
         super.init(props);
 
-
         if (this.x - this.width / 2 < Application.One.screenCenterOffset[0]) {
             this.crossed[0] = -1;
         }
@@ -37,6 +36,7 @@ export class Aligner extends O {
         for (let x of objectsUnderAligner) {
             x.x += deltaX;
             x.y += deltaY;
+            x.process()
         }
 
         this.killNow()

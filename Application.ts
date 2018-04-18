@@ -123,7 +123,6 @@ export class Application {
         this.camera = new PIXI.Container();
         this.camera.x = 0;
         this.camera.y = 0;
-
         this.app.stage = new PIXI.Container();
 
         this.statsPIXIHook = new GStats.PIXIHooks(this.app);
@@ -133,7 +132,6 @@ export class Application {
         this.stats.stats.domElement.style.top = "0px";
         this.sm = new SM();
         this.sm.init();
-
         this.lm = new Loader();
         this.sm.createCamera();
         this.lastLoop = (new Date()).getTime();
@@ -250,6 +248,14 @@ export class Application {
         }
 
         return gfx;
+    }
+
+    public cont(parentLayer: PIXI.Container): PIXI.Container {
+        let x = new PIXI.Container();
+        if (parentLayer) {
+            parentLayer.addChild(x);
+        }
+        return x;
     }
 
     public csproj(s: string, layer: PIXI.Container = null): any {

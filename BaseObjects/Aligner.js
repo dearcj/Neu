@@ -43,6 +43,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                 var x = objectsUnderAligner_1[_i];
                 x.x += deltaX;
                 x.y += deltaY;
+                x.process();
             }
             this.killNow();
         };

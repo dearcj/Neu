@@ -25,15 +25,13 @@ export class Tooltip {
 
         if (value) {
             Application.One.sm.fonts.addChild(value);
-            value.alpha = 0.;
-            new TweenMax(value, 0.2, {alpha: 1});
         } else {
             this.currentObject = null;
         }
         this._currentTip = value;
     }
 
-    private _currentTip: PIXI.Container;
+    protected _currentTip: PIXI.Container;
 
     constructor(p: Vec2) {
         if (!p) {
@@ -95,18 +93,24 @@ export class Tooltip {
             let words = lines[l].split(/[\s]+/);
             for (let i = 0; i < words.length; ++i) {
                 let w = words[i];
-                if (w.length > 0 && w[1] == '[') {
-                    tags.push(words[i][0])
+                if (w.length > 0 && w[2] == '{') {
+                    tags.push(w.slice(0, 2));
+                    w = w.slice(3);
                 }
 
-                if (w[0] == ']') {
+
+                if (w[0] == '}') {
                     tags.pop();
+                    w = w.slice(1);
                 }
 
+                if (w[w.length - 1] == '}') {
+                    w = w.slice(0, w.length - 1);
+                }
 
-                let o = wordToColorFunc(obj, words[i], tags);
+                let o = wordToColorFunc(obj, w, tags);
 
-                if (w[w.length - 1] == ']') {
+                if (words[i][words[i].length - 1] == '}') {
                     tags.pop();
                 }
 

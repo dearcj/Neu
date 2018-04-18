@@ -184,6 +184,13 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             }
             return gfx;
         };
+        Application.prototype.cont = function (parentLayer) {
+            var x = new exports.PIXI.Container();
+            if (parentLayer) {
+                parentLayer.addChild(x);
+            }
+            return x;
+        };
         Application.prototype.csproj = function (s, layer) {
             if (layer === void 0) { layer = null; }
             var texture = exports.PIXI.Texture.fromFrame(s);

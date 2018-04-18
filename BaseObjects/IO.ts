@@ -7,7 +7,6 @@ import {O} from "./O";
 import {Camera} from "./Camera";
 import BitmapText = PIXI.extras.BitmapText;
 import {HeavenBitmapText} from "../PIXIPlugins/HeavenBitmapText";
-declare var Elastic: any;
 
 export class IO extends O {
     private _fontScale: number = 1;
