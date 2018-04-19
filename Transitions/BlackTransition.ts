@@ -1,7 +1,7 @@
 import {Application} from "../Application";
-import {Stage} from "../../Stages/Stage";
 import {ITransition} from "./ITransition";
 import {TweenMax} from "../Application";
+import {Stage} from "../Stage";
 
 export class BlackTransition implements ITransition {
 

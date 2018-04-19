@@ -1,12 +1,11 @@
-import {Stage} from "../Stages/Stage"
 import {O} from "./BaseObjects/O";
 import {Camera} from "./BaseObjects/Camera";
 import {binarySearch, Vec2} from "./Math";
-import {GameNetworkObject, network} from "../Network";
 import {Application} from "./Application";
 import {ITransition} from "./Transitions/ITransition";
 import {BlackTransition} from "./Transitions/BlackTransition";
 import {PIXIUI} from "../main";
+import {Stage} from "./Stage";
 
 export class SM {
     public superstage: PIXI.Container;
@@ -32,12 +31,6 @@ export class SM {
     public effects: PIXI.Container;
     public globalIds: { [key: string]: O; } = {};
     private transition: ITransition;
-
-    public findByPlace(p: number): GameNetworkObject {
-        for (let o of network.networkObjects) {
-            if (o.networkObject.Place == p) return o;
-        }
-    }
 
 
     public ZOrderContainer(c: PIXI.Container): void {
@@ -243,8 +236,6 @@ export class SM {
 
         if (this.stage && this.stage.doProcess)
             this.stage.process();
-
-        network.process();
     }
 
     removeList(objects: O[]): null {

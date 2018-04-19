@@ -1,7 +1,6 @@
 /**
  * Created by MSI on 06.05.2017.
  */
-import {config} from "../config";
 
 /**
  * Created by MSI on 12.03.2017.

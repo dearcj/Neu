@@ -98,9 +98,9 @@ export class Application {
                 } else {
                     let lag = new Date().getTime() - _.lostFocusAt;
                     _.setTimeScale(SpeedUpCoef);
-                    _.game.enableInput(false);
+                    //_.game.enableInput(false);
                     setTimeout(() => {
-                        _.game.enableInput(true);
+                      //  _.game.enableInput(true);
                         _.setTimeScale(1);
                     }, (lag / SpeedUpCoef) * TRICKYTIMECOEF);
                 }

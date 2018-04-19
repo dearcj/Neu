@@ -1,10 +1,9 @@
 import {O} from "./BaseObjects/O";
 import {m, Vec2} from "./Math";
-import {config} from "../config";
-import {Stage} from "../Stages/Stage";
 import {ColorGradingShader} from "../shaders/ColorGradingShader";
 import {ObjectNames} from "../ObjectsList"
 import {Application} from "./Application";
+import {Stage} from "./Stage";
 const FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 const FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 const FLIPPED_DIAGONALLY_FLAG   = 0x20000000;

@@ -3,7 +3,7 @@ import DisplayObject = PIXI.DisplayObject;
 import {Application} from "../Application";
 
 
-interface BaseParticle  {
+export interface BaseParticle  {
     lifeTime: number,
     x: number,
     y: number

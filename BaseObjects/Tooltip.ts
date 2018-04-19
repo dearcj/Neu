@@ -2,7 +2,6 @@ import {O} from "./O";
 /**
  * Created by MSI on 04.07.2017.
  */
-import {SkillsPanel} from "../../Objects/SkillsPanel";
 import {Vec2} from "../Math";
 import {Application, TweenMax} from "../Application";
 

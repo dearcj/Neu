@@ -1,7 +1,6 @@
 import {m, Vec2} from "../Math";
 //import {Shape} from "../ClientPhys";
 import {Body, Composite} from "../../lib/matter";
-import {Shape} from "../../ClientPhys";
 import {Application, TweenMax, TimelineMax} from "../Application";
 
 
@@ -88,7 +87,6 @@ export class O implements Contextable {
     layer: PIXI.Container;
     properties: any;
     private physType: number;
-    private shape: Shape;
     stringID: string;
     colMask: number;
     doRemove: boolean = false;
@@ -274,24 +272,6 @@ export class O implements Contextable {
             }
             inx++;
         }
-    }
-
-    getShape(): Shape {
-        return this.shape
-    }
-
-    setStaticShape(s: Shape): void {
-        this.shape = s;
-        this.shape.isStatic = true;
-        this.physType = PhysStatic;
-        Application.One.sm.walls.push(this)
-    }
-
-    setDynamicShape(s: Shape): void {
-        this.shape = s;
-        this.shape.isStatic = false;
-        this.physType = PhysDynamic;
-        Application.One.sm.dynamic.push(this)
     }
 
     private _body: Body;
