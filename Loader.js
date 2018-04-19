@@ -57,14 +57,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     object.addChild(x);
                 }
                 list.push(x);
-                /*if (x.constructor == O && x.gfx) {
-                               O.rp(x.gfx);
-                                object.gfx.addChild(x.gfx);
-                               x.gfx = null;
-                               x.killNow();
-                           } else {
-                               list.push(x)
-                           }*/
             }
             return list;
         };
@@ -416,7 +408,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (polyline) {
                 properties["polyline"] = polyline.attributes.points.value;
             }
-            if (textureName) {
+            if (textureName) { //has gfx
                 obj.gfx = this.createGfx(o, textureName, 0, 0, frameName, properties);
             }
             var visibility = properties['visible'] == 'false' ? false : true;

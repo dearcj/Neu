@@ -111,7 +111,7 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             }
         };
         Lighting.prototype.updateLights = function () {
-            for (var x = 1; x < this.gfx.children.length; ++x) {
+            for (var x = 1; x < this.gfx.children.length; ++x) { //SKIP AMBIENT CONTAINER
                 O_1.O.rp(x);
             }
             this.lights = Application_1.Application.One.sm.findByType(Light_1.Light);

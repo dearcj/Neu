@@ -54,9 +54,9 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                     else {
                         var lag = new Date().getTime() - main_1._.lostFocusAt;
                         main_1._.setTimeScale(SpeedUpCoef);
-                        main_1._.game.enableInput(false);
+                        //_.game.enableInput(false);
                         setTimeout(function () {
-                            main_1._.game.enableInput(true);
+                            //  _.game.enableInput(true);
                             main_1._.setTimeScale(1);
                         }, (lag / SpeedUpCoef) * TRICKYTIMECOEF);
                     }

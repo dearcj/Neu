@@ -27,12 +27,12 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
     exports.binarySearch = binarySearch;
     function binaryInsert(array, target, duplicate, comparator) {
         var i = binarySearch(array, target, comparator);
-        if (i >= 0) {
+        if (i >= 0) { /* if the binarySearch return value was zero or positive, a matching object was found */
             if (!duplicate) {
                 return i;
             }
         }
-        else {
+        else { /* if the return value was negative, the bitwise complement of the return value is the correct index for this object */
             i = ~i;
         }
         array.splice(i, 0, target);
