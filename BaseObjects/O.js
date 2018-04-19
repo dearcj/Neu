@@ -276,21 +276,6 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
                 inx++;
             }
         };
-        O.prototype.getShape = function () {
-            return this.shape;
-        };
-        O.prototype.setStaticShape = function (s) {
-            this.shape = s;
-            this.shape.isStatic = true;
-            this.physType = PhysStatic;
-            Application_1.Application.One.sm.walls.push(this);
-        };
-        O.prototype.setDynamicShape = function (s) {
-            this.shape = s;
-            this.shape.isStatic = false;
-            this.physType = PhysDynamic;
-            Application_1.Application.One.sm.dynamic.push(this);
-        };
         O.prototype.hasFlag = function (value, flag) {
             return ((value & flag) == value);
         };

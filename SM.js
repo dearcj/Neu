@@ -1,4 +1,4 @@
-define(["require", "exports", "./BaseObjects/Camera", "./Math", "../Network", "./Application", "./Transitions/BlackTransition", "../main"], function (require, exports, Camera_1, Math_1, Network_1, Application_1, BlackTransition_1, main_1) {
+define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application", "./Transitions/BlackTransition", "../main"], function (require, exports, Camera_1, Math_1, Application_1, BlackTransition_1, main_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SM = /** @class */ (function () {
@@ -13,13 +13,6 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "../Network", ".
             this.dynamic = [];
             this.globalIds = {};
         }
-        SM.prototype.findByPlace = function (p) {
-            for (var _i = 0, _a = Network_1.network.networkObjects; _i < _a.length; _i++) {
-                var o = _a[_i];
-                if (o.networkObject.Place == p)
-                    return o;
-            }
-        };
         SM.prototype.ZOrderContainer = function (c) {
             c.children.sort(function (a, b) {
                 return a.position.y - b.position.y;
@@ -207,7 +200,6 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "../Network", ".
             }
             if (this.stage && this.stage.doProcess)
                 this.stage.process();
-            Network_1.network.process();
         };
         SM.prototype.removeList = function (objects) {
             if (objects) {
