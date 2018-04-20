@@ -13,10 +13,53 @@ export class Light extends O{
         super.onDestroy();
         let li = <Lighting>Application.One.sm.findByType(Lighting)[0];
     }
+    public createPolygon(polygon: any, properties: any) {
+        let g = new PIXI.Graphics();
+        let points = polygon;
+        let pointsArr = points.split(' ');
+        g.clear();
+        g.beginFill(properties.color ? parseInt(properties.color.replace('#', '0x')) : 0xffffff, properties.alpha ? properties.alpha : 1);
+        let arr: number[] = [];
+        let minx: number = Infinity;
+        let miny: number = Infinity;
+        for (let x of pointsArr) {
+            let p = x.split(',');
+            let xx = parseFloat(p[0]);
+            let yy = parseFloat(p[1]);
+            minx = minx > xx ? xx : minx;
+            miny = miny > yy ? yy : miny;
+            arr.push(xx, yy);
+        }
+        g.drawPolygon(arr);
+        let b = g.getBounds();
+
+        let dx = g.width*0.4;
+        let dy = g.height*0.4;
+        g.x = -minx + dx / 2;
+        g.y = -miny + dy / 2;
+        g.endFill();
+
+        let bf = new PIXI.filters.BlurFilter(1, 3);
+        bf.blurX = properties.blurx ? parseFloat(properties.blurx) : 1;
+        bf.blurY = properties.blury ? parseFloat(properties.blury) : 1;
+        g.filters = [bf];
+        let renderTexture = PIXI.RenderTexture.create(b.width + dx, b.height + dy);
+        Application.One.app.renderer.render(g, renderTexture);
+
+        let container = new PIXI.Container();
+        let spr = new PIXI.heaven.Sprite(renderTexture);
+        // spr.anchor.x = 0.5;
+        // spr.anchor.y = 0.5;
+        spr.x = minx - dx / 2;
+        spr.y = miny - dy / 2 ;
+        container.addChild(spr);
+        return container;
+    }
+
 
     init(props: any) {
         if (props.polygon) {
-            this.gfx = <PIXI.Graphics>Application.One.lm.createPolygon(props.polygon, props);
+            this.gfx = this.createPolygon(props.polygon, props);
         }
 
         this.initSize = [this.gfx.width, this.gfx.height];

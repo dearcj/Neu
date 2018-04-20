@@ -9,6 +9,7 @@ import {Controls} from "./Controls";
 import {_, FMath} from "../main";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
+import {Bodies, Engine, World} from "../lib/matter";
 
 
 declare let window: any;
@@ -84,6 +85,15 @@ export class Application {
     protected isInitialLoading: boolean = true;
 
     start() {
+        this.engine = Engine.create();
+
+
+        /*World.add(this.matterWorld, [
+            Bodies.rectangle(200, 150, 700, 20, { isStatic: true, angle: Math.PI * 0.06 }),
+            Bodies.rectangle(500, 350, 700, 20, { isStatic: true, angle: -Math.PI * 0.06 }),
+            Bodies.rectangle(340, 580, 700, 20, { isStatic: true, angle: Math.PI * 0.04 })
+        ]);*/
+
         document.addEventListener('contextmenu', (event) => {
             if (this.onContext) this.onContext();
             event.preventDefault()

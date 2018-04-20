@@ -472,11 +472,6 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             return this;
         };
         O.prototype.process = function () {
-            if (this.body) {
-                this.x = this.body.position.x;
-                this.y = this.body.position.y;
-                this.a = this.body.angle;
-            }
             if (!this.physType) {
                 this.pos[0] += this.v[0];
                 this.pos[1] += this.v[1];

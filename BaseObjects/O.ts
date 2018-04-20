@@ -71,6 +71,8 @@ interface Extension {
 }
 
 export class O implements Contextable {
+    public polygon: string;
+    public polyline: string;
     get parent(): O {
         return this._parent;
     }
@@ -388,6 +390,7 @@ export class O implements Contextable {
 
     init(props: any = null) {
         if (props) {
+
             if (props.color && this.gfx && this.gfx.color) {
                 (<PIXI.heaven.Sprite>this.gfx).color.tintBGR = parseInt(props.color.replace('#', '0x'));
             }
@@ -512,11 +515,6 @@ export class O implements Contextable {
     }
 
     process() {
-        if (this.body) {
-            this.x = this.body.position.x;
-            this.y = this.body.position.y;
-            this.a = this.body.angle;
-        }
 
         if (!this.physType) {
             this.pos[0] += this.v[0];

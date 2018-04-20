@@ -1,4 +1,4 @@
-define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../ClientSettings", "./Controls", "../main", "./PauseTimer"], function (require, exports, AnimClip_1, SM_1, Loader_1, ClientSettings_1, Controls_1, main_1, PauseTimer_1) {
+define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../ClientSettings", "./Controls", "../main", "./PauseTimer", "../lib/matter"], function (require, exports, AnimClip_1, SM_1, Loader_1, ClientSettings_1, Controls_1, main_1, PauseTimer_1, matter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TweenMax = window.TweenMax;
@@ -39,6 +39,12 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         }
         Application.prototype.start = function () {
             var _this = this;
+            this.engine = matter_1.Engine.create();
+            /*World.add(this.matterWorld, [
+                Bodies.rectangle(200, 150, 700, 20, { isStatic: true, angle: Math.PI * 0.06 }),
+                Bodies.rectangle(500, 350, 700, 20, { isStatic: true, angle: -Math.PI * 0.06 }),
+                Bodies.rectangle(340, 580, 700, 20, { isStatic: true, angle: Math.PI * 0.04 })
+            ]);*/
             document.addEventListener('contextmenu', function (event) {
                 if (_this.onContext)
                     _this.onContext();

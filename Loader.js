@@ -416,6 +416,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (polyline) {
                 properties["polyline"] = polyline.attributes.points.value;
             }
+            obj.polygon = properties['polygon'];
+            obj.polyline = properties['polyline'];
             if (textureName) { //has gfx
                 obj.gfx = this.createGfx(o, textureName, 0, 0, frameName, properties);
             }
@@ -579,46 +581,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
         };
         Loader.prototype.addTileset = function (result, data) {
             this.tilesets[result] = data;
-        };
-        Loader.prototype.createPolygon = function (polygon, properties) {
-            var g = new PIXI.Graphics();
-            var points = polygon;
-            var pointsArr = points.split(' ');
-            g.clear();
-            g.beginFill(properties.color ? parseInt(properties.color.replace('#', '0x')) : 0xffffff, properties.alpha ? properties.alpha : 1);
-            var arr = [];
-            var minx = Infinity;
-            var miny = Infinity;
-            for (var _i = 0, pointsArr_1 = pointsArr; _i < pointsArr_1.length; _i++) {
-                var x = pointsArr_1[_i];
-                var p = x.split(',');
-                var xx = parseFloat(p[0]);
-                var yy = parseFloat(p[1]);
-                minx = minx > xx ? xx : minx;
-                miny = miny > yy ? yy : miny;
-                arr.push(xx, yy);
-            }
-            g.drawPolygon(arr);
-            var b = g.getBounds();
-            var dx = g.width * 0.4;
-            var dy = g.height * 0.4;
-            g.x = -minx + dx / 2;
-            g.y = -miny + dy / 2;
-            g.endFill();
-            var bf = new PIXI.filters.BlurFilter(1, 3);
-            bf.blurX = properties.blurx ? parseFloat(properties.blurx) : 1;
-            bf.blurY = properties.blury ? parseFloat(properties.blury) : 1;
-            g.filters = [bf];
-            var renderTexture = PIXI.RenderTexture.create(b.width + dx, b.height + dy);
-            Application_1.Application.One.app.renderer.render(g, renderTexture);
-            var container = new PIXI.Container();
-            var spr = new PIXI.heaven.Sprite(renderTexture);
-            // spr.anchor.x = 0.5;
-            // spr.anchor.y = 0.5;
-            spr.x = minx - dx / 2;
-            spr.y = miny - dy / 2;
-            container.addChild(spr);
-            return container;
         };
         Loader.prototype.updateGlobalMapParams = function (globalProperties) {
             if (this.customGlobalParamsCallback) {
