@@ -12,7 +12,11 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             this.loading = false;
             this.levels = {};
             this.tilesets = {};
+            this.SkipSpriteExt = false;
         }
+        Loader.prototype.removeExt = function (t) {
+            return t.replace(/\.[^/.]+$/, "");
+        };
         Loader.prototype.add = function (name, data) {
             this.levels[name] = data;
         };
@@ -92,6 +96,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
         };
         Loader.prototype.load = function (stage, name, cb, noCameraOffset, offs, restrictGroup, addObjects, doInit) {
             var _this = this;
+            if (cb === void 0) { cb = null; }
             if (noCameraOffset === void 0) { noCameraOffset = false; }
             if (offs === void 0) { offs = null; }
             if (restrictGroup === void 0) { restrictGroup = null; }
@@ -259,6 +264,9 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     }
                     else {
                         textureName = image.source;
+                        if (this.SkipSpriteExt) {
+                            textureName = this.removeExt(textureName);
+                        }
                     }
                 }
                 var oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source : null, name, globalProperties, flipped_horizontally, flipped_vertically);
@@ -460,6 +468,9 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                         if (!bt)
                             continue;
                         textureName = bt.texname;
+                    }
+                    if (this.SkipSpriteExt) {
+                        textureName = this.removeExt(textureName);
                     }
                     var col = Math.floor(i % layerWidth);
                     var row = Math.floor(i / layerWidth);

@@ -35,12 +35,16 @@ type BigTileset = {
 }
 
 export class Loader {
+    removeExt(t: string): string {
+        return t.replace(/\.[^/.]+$/, "")
+    }
+
     customGlobalParamsCallback: Function;
     public loading: boolean = false;
     public levels: any = {};
     public objectsList: O[];
     private tilesets: any = {};
-
+    public  SkipSpriteExt: boolean = false;
     add(name: string, data: any) {
         this.levels[name] = data;
     }
@@ -123,7 +127,7 @@ export class Loader {
     }
 
 
-    load(stage: Stage, name: string, cb: Function, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
+    load(stage: Stage, name: string, cb: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
         this.loading = true;
 
         let data = this.levels[name];
@@ -298,6 +302,9 @@ export class Loader {
                     console.log("Can't load texture with Tile Id: ", gid);
                 } else {
                     textureName = image.source;
+                    if (this.SkipSpriteExt) {
+                        textureName = this.removeExt(textureName)
+                    }
                 }
             }
 
@@ -501,7 +508,7 @@ export class Loader {
                 let textureName;
                 let tileID = arr[i];
                 if (images[tileID]) {
-                    textureName = images[tileID].source
+                    textureName = images[tileID].source;
                 } else {
                     for (var bt of bigtilesets) {
                         if (bt.firstgid >= tileID && tileID < bt.firstgid + bt.tilecount) {
@@ -510,6 +517,10 @@ export class Loader {
                     }
                     if (!bt) continue;
                     textureName = bt.texname;
+                }
+
+                if (this.SkipSpriteExt) {
+                    textureName = this.removeExt(textureName);
                 }
 
                 let col = Math.floor(i % layerWidth);

@@ -14,7 +14,7 @@ define(["require", "exports", "./IO", "../PIXIPlugins/HeavenBitmapText", "../App
     /**
      * Created by KURWINDALLAS on 11.07.2014.
      */ ///
-    var DEFAULT_FONT = 'smallfontp';
+    var DEFAULT_FONT = 'Berkshire-export';
     var TextBox = /** @class */ (function (_super) {
         __extends(TextBox, _super);
         function TextBox() {

@@ -8,7 +8,7 @@ import {Application} from "../Application";
  * Created by KURWINDALLAS on 11.07.2014.
  *////
 
-const DEFAULT_FONT = 'smallfontp';
+const DEFAULT_FONT = 'Berkshire-export';
 
 export class TextBox extends IO {
 
