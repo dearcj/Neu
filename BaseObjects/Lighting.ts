@@ -13,13 +13,9 @@ export class Lighting extends O {
 
     public ambient: PIXI.heaven.Sprite;
     public ambientContainer: PIXI.Container;
-    public envColor: ARGBColor;
+    public envColor: ARGBColor = [255, 255, 255, 255];
     public envColorDark: ARGBColor = [255, 0, 0, 0];
-    public defaultColor: ARGBColor = [255, 150, 150, 150];
-
-    public static colBattle: ARGBColor;
-    public static colRegular: ARGBColor;
-
+    public defaultColor: ARGBColor = [255, 255, 150, 150];
     public lights: Light[] = [];
     private filterArea: PIXI.Rectangle;
 
@@ -83,12 +79,13 @@ export class Lighting extends O {
         super.init(props);
         this.alwaysVisible = true;
         let delta = 0;
-        this.y = 1200;
         this.filterArea = new PIXI.Rectangle(-delta, -delta, Application.One.SCR_WIDTH + 2 * delta, Application.One.SCR_HEIGHT + 2 * delta);
         this.gfx = new PIXI.Sprite();
-        this.ambient = <PIXI.heaven.Sprite>Application.One.cs('Camera-Shadow.png');
-        this.ambient.anchor.x = 0;
-        this.ambient.anchor.y = 0;
+        this.ambient = <PIXI.heaven.Sprite>Application.One.cs('darkness');
+        this.ambient.anchor.x = 0.5;
+        this.ambient.anchor.y = 0.5;
+        this.ambient.x =Application.One.SCR_WIDTH / 2;
+        this.ambient.y =Application.One.SCR_HEIGHT/ 2;
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;
         this.ambientContainer = new PIXI.Container();

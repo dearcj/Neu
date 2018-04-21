@@ -13,7 +13,6 @@ import {Bodies, Engine, World} from "../lib/matter";
 
 
 declare let window: any;
-
 export let TweenMax = window.TweenMax;
 export let TweenLite = window.TweenLite;
 export let PIXI = window.PIXI;
@@ -124,9 +123,9 @@ export class Application {
 
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
-            clearBeforeRender: false,
+            clearBeforeRender: true,
             resolution: this.appScale*window.devicePixelRatio, antialias: false,
-            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xfffffff,
+            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x494944,
         });
         document.body.appendChild(this.app.view);
 

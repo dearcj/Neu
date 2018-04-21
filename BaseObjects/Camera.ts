@@ -190,7 +190,7 @@ export class Camera extends O {
             this.anchorDelta[0] = 0;
             this.anchorDelta[1] = 0;
         }
-        return ((Math.abs(g.position.x - Application.One.SCR_WIDTH_HALF - this.anchorDelta[0]) <= this.rect.width + Application.One.SCR_WIDTH_HALF) && (Math.abs(g.position.y - Application.One.SCR_HEIGHT_HALF - this.anchorDelta[1]) <= this.rect.height + Application.One.SCR_HEIGHT_HALF))
+        return ((Math.abs(g.position.x - Application.One.SCR_WIDTH_HALF - this.anchorDelta[0]) <= this.rect.width + Application.One.SCR_WIDTH_HALF/this._zoom) && (Math.abs(g.position.y - Application.One.SCR_HEIGHT_HALF - this.anchorDelta[1]) <= this.rect.height + Application.One.SCR_HEIGHT_HALF/this._zoom))
     }
 
     hitAnimation(charPos: Vec2) {

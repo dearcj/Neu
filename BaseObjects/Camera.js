@@ -169,7 +169,7 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 this.anchorDelta[0] = 0;
                 this.anchorDelta[1] = 0;
             }
-            return ((Math.abs(g.position.x - Application_1.Application.One.SCR_WIDTH_HALF - this.anchorDelta[0]) <= this.rect.width + Application_1.Application.One.SCR_WIDTH_HALF) && (Math.abs(g.position.y - Application_1.Application.One.SCR_HEIGHT_HALF - this.anchorDelta[1]) <= this.rect.height + Application_1.Application.One.SCR_HEIGHT_HALF));
+            return ((Math.abs(g.position.x - Application_1.Application.One.SCR_WIDTH_HALF - this.anchorDelta[0]) <= this.rect.width + Application_1.Application.One.SCR_WIDTH_HALF / this._zoom) && (Math.abs(g.position.y - Application_1.Application.One.SCR_HEIGHT_HALF - this.anchorDelta[1]) <= this.rect.height + Application_1.Application.One.SCR_HEIGHT_HALF / this._zoom));
         };
         Camera.prototype.hitAnimation = function (charPos) {
             var pos = [(charPos[0] - this.pos[0]) / 15, (charPos[1] - this.pos[1]) / 15];

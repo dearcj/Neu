@@ -41,6 +41,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 return Application_1.Application.One.sm.gui2;
             if (layerName == 'olgui')
                 return Application_1.Application.One.sm.olgui;
+            if (layerName == 'light')
+                return Application_1.Application.One.sm.light;
             return stage.layers[layerName.toLowerCase()];
         };
         Loader.val = function (obj, tag) {
@@ -94,9 +96,9 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             return true;
         };
-        Loader.prototype.load = function (stage, name, cb, noCameraOffset, offs, restrictGroup, addObjects, doInit) {
+        Loader.prototype.load = function (stage, name, preInitCB, noCameraOffset, offs, restrictGroup, addObjects, doInit) {
             var _this = this;
-            if (cb === void 0) { cb = null; }
+            if (preInitCB === void 0) { preInitCB = null; }
             if (noCameraOffset === void 0) { noCameraOffset = false; }
             if (offs === void 0) { offs = null; }
             if (restrictGroup === void 0) { restrictGroup = null; }
@@ -207,14 +209,14 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             this.objectsList = objectsList;
             //let startLoad = (new Date()).getTime();
+            if (preInitCB)
+                preInitCB(objectsList, globalProperties);
             if (doInit)
                 this.init(objectsList, noCameraOffset);
             //let total = ((new Date()).getTime() - startLoad) / 1000.;
             //console.log(objectsList.length, " objects. Load level ", total);
             this.objectsList = null;
             this.loading = false;
-            if (cb)
-                cb(objectsList);
             return objectsList;
         };
         Loader.prototype.getProps = function (node) {

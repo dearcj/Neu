@@ -4,7 +4,7 @@ import {binarySearch, Vec2} from "./Math";
 import {Application} from "./Application";
 import {ITransition} from "./Transitions/ITransition";
 import {BlackTransition} from "./Transitions/BlackTransition";
-import {PIXIUI} from "../main";
+import {_, PIXIUI} from "../main";
 import {Stage} from "./Stage";
 
 export class SM {
@@ -31,6 +31,7 @@ export class SM {
     public effects: PIXI.Container;
     public globalIds: { [key: string]: O; } = {};
     private transition: ITransition;
+    public light: PIXI.Container;
 
 
     public ZOrderContainer(c: PIXI.Container): void {
@@ -115,6 +116,7 @@ export class SM {
         this.fonts = new PIXI.Container();
         this.effects = new PIXI.Container();
         this.cursorlayer = new PIXI.Container();
+        this.light = new PIXI.Container();
 
         this.main.interactive = false;
         this.gui.interactive = true;
@@ -126,8 +128,9 @@ export class SM {
         this.pixiUiStage = new PIXIUI.Stage(Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
         this.superstage.addChild(this.pixiUiStage);
         this.superstage.addChild(this.effects);
+        this.superstage.addChild(this.light);
         this.superstage.addChild(this.olgui);
-
+        
         this.superstage.addChild(this.gui);
         this.superstage.addChild(this.gui2);
         this.superstage.addChild(this.fonts);
@@ -246,5 +249,17 @@ export class SM {
             }
         }
         return null;
+    }
+
+    collectObjectsOnLayer(layer: PIXI.Container, list: O[] = null): O[] {
+        if (!list) list = this.objects;
+        let res: O[] = [];
+        for (let x of list) {
+            if (x.gfx && x.gfx.parent == layer) {
+                res.push(x)
+            }
+        }
+
+        return res;
     }
 }

@@ -15,8 +15,9 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
         __extends(Lighting, _super);
         function Lighting() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.envColor = [255, 255, 255, 255];
             _this.envColorDark = [255, 0, 0, 0];
-            _this.defaultColor = [255, 150, 150, 150];
+            _this.defaultColor = [255, 255, 150, 150];
             _this.lights = [];
             return _this;
         }
@@ -73,12 +74,13 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             _super.prototype.init.call(this, props);
             this.alwaysVisible = true;
             var delta = 0;
-            this.y = 1200;
             this.filterArea = new PIXI.Rectangle(-delta, -delta, Application_1.Application.One.SCR_WIDTH + 2 * delta, Application_1.Application.One.SCR_HEIGHT + 2 * delta);
             this.gfx = new PIXI.Sprite();
-            this.ambient = Application_1.Application.One.cs('Camera-Shadow.png');
-            this.ambient.anchor.x = 0;
-            this.ambient.anchor.y = 0;
+            this.ambient = Application_1.Application.One.cs('darkness');
+            this.ambient.anchor.x = 0.5;
+            this.ambient.anchor.y = 0.5;
+            this.ambient.x = Application_1.Application.One.SCR_WIDTH / 2;
+            this.ambient.y = Application_1.Application.One.SCR_HEIGHT / 2;
             this.ambient.width = Application_1.Application.One.SCR_WIDTH;
             this.ambient.height = Application_1.Application.One.SCR_HEIGHT;
             this.ambientContainer = new PIXI.Container();

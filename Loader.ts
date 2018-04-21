@@ -67,6 +67,7 @@ export class Loader {
         if (layerName == 'gui') return Application.One.sm.gui;
         if (layerName == 'gui2') return Application.One.sm.gui2;
         if (layerName == 'olgui') return Application.One.sm.olgui;
+        if (layerName == 'light') return Application.One.sm.light;
         return stage.layers[layerName.toLowerCase()];
     }
 
@@ -127,7 +128,7 @@ export class Loader {
     }
 
 
-    load(stage: Stage, name: string, cb: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
+    load(stage: Stage, name: string, preInitCB: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
         this.loading = true;
 
         let data = this.levels[name];
@@ -242,6 +243,8 @@ export class Loader {
         }
         this.objectsList = objectsList;
         //let startLoad = (new Date()).getTime();
+        if (preInitCB) preInitCB(objectsList, globalProperties);
+
         if (doInit)
         this.init(objectsList, noCameraOffset);
         //let total = ((new Date()).getTime() - startLoad) / 1000.;
@@ -249,7 +252,6 @@ export class Loader {
 
         this.objectsList = null;
         this.loading = false;
-        if (cb) cb(objectsList);
 
         return objectsList
     }

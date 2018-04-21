@@ -73,9 +73,9 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.PIXI = exports.PIXI;
             this.app = new exports.PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
                 autoStart: false,
-                clearBeforeRender: false,
+                clearBeforeRender: true,
                 resolution: this.appScale * window.devicePixelRatio, antialias: false,
-                preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xfffffff,
+                preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x494944,
             });
             document.body.appendChild(this.app.view);
             this.camera = new exports.PIXI.Container();

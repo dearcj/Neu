@@ -101,6 +101,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.fonts = new PIXI.Container();
             this.effects = new PIXI.Container();
             this.cursorlayer = new PIXI.Container();
+            this.light = new PIXI.Container();
             this.main.interactive = false;
             this.gui.interactive = true;
             this.gui2.interactive = true;
@@ -110,6 +111,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.pixiUiStage = new main_1.PIXIUI.Stage(Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             this.superstage.addChild(this.pixiUiStage);
             this.superstage.addChild(this.effects);
+            this.superstage.addChild(this.light);
             this.superstage.addChild(this.olgui);
             this.superstage.addChild(this.gui);
             this.superstage.addChild(this.gui2);
@@ -210,6 +212,19 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 }
             }
             return null;
+        };
+        SM.prototype.collectObjectsOnLayer = function (layer, list) {
+            if (list === void 0) { list = null; }
+            if (!list)
+                list = this.objects;
+            var res = [];
+            for (var _i = 0, list_6 = list; _i < list_6.length; _i++) {
+                var x = list_6[_i];
+                if (x.gfx && x.gfx.parent == layer) {
+                    res.push(x);
+                }
+            }
+            return res;
         };
         return SM;
     }());
