@@ -24,7 +24,7 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
             }
             var loader = new PIXI.loaders.Loader();
             loader
-                .add(spineName, 'animations/' + spineName + '.json')
+                .add(spineName, 'res/Json/' + spineName + '.json')
                 .load(function (loader, resources) {
                 _this.spineData[spineName] = resources[spineName].spineData;
                 for (var x in _this.spineLoaderListneners[spineName]) {

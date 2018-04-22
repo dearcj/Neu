@@ -22,7 +22,7 @@ export class ResourceManager  {
 
             let loader = new PIXI.loaders.Loader();
             loader
-                .add(spineName,  'animations/' + spineName +'.json',)
+                .add(spineName,  'res/Json/' + spineName +'.json',)
                 .load((loader, resources) => {
                     this.spineData[spineName] = resources[spineName].spineData;
                         for (let x in this.spineLoaderListneners[spineName]) {
