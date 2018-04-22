@@ -537,7 +537,7 @@ export class Loader {
                 let type: string = globalProperties['type'];
                 let layername: string = globalProperties['name'];
 
-                let o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername);
+                let o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername, col, row);
                 o.properties = globalProperties;
                 objectsList.push(o);
             }
@@ -552,7 +552,7 @@ export class Loader {
         return objectsList;
     }
 
-    spawnTile(stage, textureName: string, posX: number, posY: number, layerName: string, type: string, layerStringID : string): O {
+    spawnTile(stage, textureName: string, posX: number, posY: number, layerName: string, type: string, layerStringID : string,col: number, row: number): O {
         let sprite = Application.One.cs(textureName);
 
         sprite.anchor.x = 0.;
@@ -564,6 +564,7 @@ export class Loader {
         } else {
             o = new O([posX, posY]);
         }
+        o.tileColRow = [col, row];
         o.stringID = layerStringID;
         o.gfx  = sprite;
         let layer = Loader.addGfxToWorld(stage, layerName);

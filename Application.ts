@@ -123,9 +123,9 @@ export class Application {
 
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
-            clearBeforeRender: true,
+            clearBeforeRender: false,
             resolution: this.appScale*window.devicePixelRatio, antialias: false,
-            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x494944,
+            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
         });
         document.body.appendChild(this.app.view);
 
@@ -136,7 +136,7 @@ export class Application {
 
         this.statsPIXIHook = new GStats.PIXIHooks(this.app);
         this.stats = new GStats.StatsJSAdapter(this.statsPIXIHook);
-        document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
+        //document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
         this.stats.stats.domElement.style.position = "absolute";
         this.stats.stats.domElement.style.top = "0px";
         this.sm = new SM();
@@ -192,8 +192,8 @@ export class Application {
         this.time = (new Date()).getTime();
         this.cursorPos = this.app.renderer.plugins.interaction.mouse.global;
 
-        if (this.stats)
-            this.stats.update();
+        //if (this.stats)
+        //    this.stats.update();
     }
 
     process() {

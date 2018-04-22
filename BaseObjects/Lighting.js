@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./O", "./Light", "../Application"], function (require, exports, O_1, Light_1, Application_1) {
+define(["require", "exports", "./O", "./Light", "../Application", "../../main", "../../ClientSettings"], function (require, exports, O_1, Light_1, Application_1, main_1, ClientSettings_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Lighting = /** @class */ (function (_super) {
@@ -36,7 +36,8 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
         Lighting.prototype.addLight = function (l) {
             l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
             O_1.O.rp(l.gfx);
-            this.gfx.addChild(l.gfx);
+            this.addChild(l);
+            //this.gfx.addChild(l.gfx);
         };
         Lighting.prototype.tweenColorTo = function (col, darkCol, repeat, deltaTimeSec) {
             var _this = this;
@@ -80,7 +81,7 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             this.ambient.anchor.x = 0.5;
             this.ambient.anchor.y = 0.5;
             this.ambient.x = Application_1.Application.One.SCR_WIDTH / 2;
-            this.ambient.y = Application_1.Application.One.SCR_HEIGHT / 2;
+            this.ambient.y = Application_1.Application.One.SCR_HEIGHT / 2 + 300;
             this.ambient.width = Application_1.Application.One.SCR_WIDTH;
             this.ambient.height = Application_1.Application.One.SCR_HEIGHT;
             this.ambientContainer = new PIXI.Container();
@@ -96,8 +97,8 @@ define(["require", "exports", "./O", "./Light", "../Application"], function (req
             this.updateLights();
         };
         Lighting.prototype.process = function () {
-            this.gfx.x = 0; //c.offset[0];
-            this.gfx.y = 0; //c.offset[1];
+            this.gfx.x = -main_1._.sm.camera.x + ClientSettings_1.MAX_SCR_WIDTH / 2; //c.offset[0];
+            this.gfx.y = -main_1._.sm.camera.y + ClientSettings_1.MAX_SCR_HEIGHT / 2; //c.offset[1];
             if (this.tweenDest) {
                 var l = this.lerp;
                 var il = 1 - this.lerp;

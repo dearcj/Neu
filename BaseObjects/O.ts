@@ -73,6 +73,7 @@ interface Extension {
 export class O implements Contextable {
     public polygon: string;
     public polyline: string;
+    tileColRow: Vec2;
     get parent(): O {
         return this._parent;
     }

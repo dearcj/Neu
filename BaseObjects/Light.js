@@ -83,13 +83,14 @@ define(["require", "exports", "./O", "./Lighting", "../Application"], function (
                     var coef = (this.gfx.height / 1640);
                     var as = Application_1.Application.One.fMath.sin(Application_1.Application.One.time / 120 + this.rndSeed / 10) * coef;
                     this.rndSeed += Math.random();
-                    this.gfx.width = this.initSize[0] + 8 * Application_1.Application.One.fMath.cos(Application_1.Application.One.time / 70 + this.rndSeed / 10);
-                    this.gfx.height = this.initSize[1] + 8 * as;
+                    this.gfx.width = Light.POWER * this.initSize[0] + 8 * Application_1.Application.One.fMath.cos(Application_1.Application.One.time / 70 + this.rndSeed / 10);
+                    this.gfx.height = Light.POWER * this.initSize[1] + 8 * as;
                     this.y += as;
                 }
             }
             _super.prototype.process.call(this);
         };
+        Light.POWER = 1;
         return Light;
     }(O_1.O));
     exports.Light = Light;

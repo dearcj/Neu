@@ -20,7 +20,7 @@ export class BlackTransition implements ITransition {
 
         let c2 = Application.One.cp(c);
         for (let x = 0; x < 12; x ++) {
-            let sand1 = Application.One.cs("dirtsand.png", c2);
+            let sand1 = Application.One.cs("dirtsand", c2);
             sand1.x = Application.One.SCR_WIDTH_HALF + Math.random()*5000;
             sand1.y = Application.One.SCR_HEIGHT_HALF + (Math.random() - 0.5)*0.8*Application.One.SCR_HEIGHT;
             sand1.alpha  = 0.07;//.setLight(0.2, 0.2, 0.2);

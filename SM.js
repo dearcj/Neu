@@ -111,7 +111,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.pixiUiStage = new main_1.PIXIUI.Stage(Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             this.superstage.addChild(this.pixiUiStage);
             this.superstage.addChild(this.effects);
-            this.superstage.addChild(this.light);
+            this.main.addChild(this.light);
             this.superstage.addChild(this.olgui);
             this.superstage.addChild(this.gui);
             this.superstage.addChild(this.gui2);

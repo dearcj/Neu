@@ -3,6 +3,8 @@ import {Camera} from "./Camera";
 import {m, Vec2, ARGBColor} from "../Math";
 import {Light} from "./Light";
 import {Application, Sine, TweenMax} from "../Application";
+import {_} from "../../main";
+import {MAX_SCR_HEIGHT, MAX_SCR_WIDTH} from "../../ClientSettings";
 
 export class Lighting extends O {
     private tweenStart: any;
@@ -38,7 +40,8 @@ export class Lighting extends O {
     addLight(l: Light): void {
         l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
         O.rp(l.gfx);
-        this.gfx.addChild(l.gfx);
+        this.addChild(l);
+        //this.gfx.addChild(l.gfx);
     }
 
     tweenColorTo(col: ARGBColor, darkCol: ARGBColor, repeat: boolean = false, deltaTimeSec: number = 0.9) {
@@ -84,8 +87,8 @@ export class Lighting extends O {
         this.ambient = <PIXI.heaven.Sprite>Application.One.cs('darkness');
         this.ambient.anchor.x = 0.5;
         this.ambient.anchor.y = 0.5;
-        this.ambient.x =Application.One.SCR_WIDTH / 2;
-        this.ambient.y =Application.One.SCR_HEIGHT/ 2;
+        this.ambient.x = Application.One.SCR_WIDTH / 2;
+        this.ambient.y = Application.One.SCR_HEIGHT/ 2+ 300;
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;
         this.ambientContainer = new PIXI.Container();
@@ -94,6 +97,7 @@ export class Lighting extends O {
         this.envColor = this.defaultColor;
         this.gfx.addChild(this.ambientContainer);
         this.layer.addChild(this.gfx);
+        
 
         this.gfx.filters = [new PIXI.filters.AlphaFilter()];
         this.gfx.filterArea = this.filterArea;
@@ -103,8 +107,8 @@ export class Lighting extends O {
     }
 
     process() {
-        this.gfx.x = 0;//c.offset[0];
-        this.gfx.y = 0;//c.offset[1];
+        this.gfx.x = -_.sm.camera.x + MAX_SCR_WIDTH / 2;//c.offset[0];
+        this.gfx.y = -_.sm.camera.y + MAX_SCR_HEIGHT / 2;//c.offset[1];
         if (this.tweenDest) {
             let l = this.lerp;
             let il = 1 - this.lerp;

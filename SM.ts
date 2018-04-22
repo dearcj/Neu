@@ -128,7 +128,7 @@ export class SM {
         this.pixiUiStage = new PIXIUI.Stage(Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
         this.superstage.addChild(this.pixiUiStage);
         this.superstage.addChild(this.effects);
-        this.superstage.addChild(this.light);
+        this.main.addChild(this.light);
         this.superstage.addChild(this.olgui);
         
         this.superstage.addChild(this.gui);

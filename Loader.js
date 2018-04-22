@@ -482,7 +482,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     var posY = row * images[tileID].tilesetHeight - (parseFloat(images[tileID].height) - images[tileID].tilesetHeight);
                     var type = globalProperties['type'];
                     var layername = globalProperties['name'];
-                    var o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername);
+                    var o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername, col, row);
                     o.properties = globalProperties;
                     objectsList.push(o);
                 }
@@ -493,7 +493,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
             return objectsList;
         };
-        Loader.prototype.spawnTile = function (stage, textureName, posX, posY, layerName, type, layerStringID) {
+        Loader.prototype.spawnTile = function (stage, textureName, posX, posY, layerName, type, layerStringID, col, row) {
             var sprite = Application_1.Application.One.cs(textureName);
             sprite.anchor.x = 0.;
             sprite.anchor.y = 0.;
@@ -504,6 +504,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             else {
                 o = new O_1.O([posX, posY]);
             }
+            o.tileColRow = [col, row];
             o.stringID = layerStringID;
             o.gfx = sprite;
             var layer = Loader.addGfxToWorld(stage, layerName);

@@ -17,7 +17,7 @@ define(["require", "exports", "../Application", "../Application"], function (req
             c.alpha = 0;
             var c2 = Application_1.Application.One.cp(c);
             for (var x_1 = 0; x_1 < 12; x_1++) {
-                var sand1 = Application_1.Application.One.cs("dirtsand.png", c2);
+                var sand1 = Application_1.Application.One.cs("dirtsand", c2);
                 sand1.x = Application_1.Application.One.SCR_WIDTH_HALF + Math.random() * 5000;
                 sand1.y = Application_1.Application.One.SCR_HEIGHT_HALF + (Math.random() - 0.5) * 0.8 * Application_1.Application.One.SCR_HEIGHT;
                 sand1.alpha = 0.07; //.setLight(0.2, 0.2, 0.2);

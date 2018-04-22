@@ -8,6 +8,7 @@ export class Light extends O{
     public initSize: Vec2;
     public rndSeed: number = 0;
     public isCandle: boolean = false;
+    static POWER: number = 1;
 
     onDestroy() {
         super.onDestroy();
@@ -83,8 +84,8 @@ export class Light extends O{
 
 
                 this.rndSeed += Math.random();
-                this.gfx.width = this.initSize[0] + 8*Application.One.fMath.cos(Application.One.time / 70 + this.rndSeed / 10);
-                this.gfx.height = this.initSize[1] + 8*as;
+                this.gfx.width = Light.POWER * this.initSize[0] + 8*Application.One.fMath.cos(Application.One.time / 70 + this.rndSeed / 10);
+                this.gfx.height = Light.POWER * this.initSize[1] + 8*as;
                 this.y += as;
             }
 
