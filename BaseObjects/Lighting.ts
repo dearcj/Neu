@@ -88,7 +88,7 @@ export class Lighting extends O {
         this.ambient.anchor.x = 0.5;
         this.ambient.anchor.y = 0.5;
         this.ambient.x = Application.One.SCR_WIDTH / 2;
-        this.ambient.y = Application.One.SCR_HEIGHT/ 2+ 300;
+        this.ambient.y = Application.One.SCR_HEIGHT/ 2;
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;
         this.ambientContainer = new PIXI.Container();

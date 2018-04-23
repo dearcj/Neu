@@ -81,7 +81,7 @@ define(["require", "exports", "./O", "./Light", "../Application", "../../main", 
             this.ambient.anchor.x = 0.5;
             this.ambient.anchor.y = 0.5;
             this.ambient.x = Application_1.Application.One.SCR_WIDTH / 2;
-            this.ambient.y = Application_1.Application.One.SCR_HEIGHT / 2 + 300;
+            this.ambient.y = Application_1.Application.One.SCR_HEIGHT / 2;
             this.ambient.width = Application_1.Application.One.SCR_WIDTH;
             this.ambient.height = Application_1.Application.One.SCR_HEIGHT;
             this.ambientContainer = new PIXI.Container();

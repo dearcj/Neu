@@ -555,8 +555,10 @@ export class Loader {
     spawnTile(stage, textureName: string, posX: number, posY: number, layerName: string, type: string, layerStringID : string,col: number, row: number): O {
         let sprite = Application.One.cs(textureName);
 
-        sprite.anchor.x = 0.;
-        sprite.anchor.y = 0.;
+        sprite.anchor.x = 0.5;
+        sprite.anchor.y = 0.5;
+
+
 
         let o: O;
         if (type && type != '' ) {
@@ -564,6 +566,9 @@ export class Loader {
         } else {
             o = new O([posX, posY]);
         }
+        o.x += sprite.width / 2;
+        o.y += sprite.height / 2;
+
         o.tileColRow = [col, row];
         o.stringID = layerStringID;
         o.gfx  = sprite;

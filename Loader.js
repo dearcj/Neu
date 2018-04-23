@@ -495,8 +495,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
         };
         Loader.prototype.spawnTile = function (stage, textureName, posX, posY, layerName, type, layerStringID, col, row) {
             var sprite = Application_1.Application.One.cs(textureName);
-            sprite.anchor.x = 0.;
-            sprite.anchor.y = 0.;
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
             var o;
             if (type && type != '') {
                 o = new ObjectsList_1.ObjectNames[type.toLowerCase()]([posX, posY]);
@@ -504,6 +504,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             else {
                 o = new O_1.O([posX, posY]);
             }
+            o.x += sprite.width / 2;
+            o.y += sprite.height / 2;
             o.tileColRow = [col, row];
             o.stringID = layerStringID;
             o.gfx = sprite;
