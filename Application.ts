@@ -154,6 +154,16 @@ export class Application {
         this.app.ticker.start();
     }
 
+    killTweensOf(obj: any): null {
+        let tweens = TweenMax.getTweensOf(obj);
+        for (let t of tweens) {
+            if (t.totalProgress() != 1)
+            t.totalProgress(1).kill();
+        }
+
+        return null
+    }
+
     killTween(tween: any): null {
         if (tween && tween.totalProgress() != 1)
             tween.totalProgress(1).kill();

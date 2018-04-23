@@ -99,6 +99,15 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.app.ticker.add(bindedAnimate);
             this.app.ticker.start();
         };
+        Application.prototype.killTweensOf = function (obj) {
+            var tweens = exports.TweenMax.getTweensOf(obj);
+            for (var _i = 0, tweens_1 = tweens; _i < tweens_1.length; _i++) {
+                var t = tweens_1[_i];
+                if (t.totalProgress() != 1)
+                    t.totalProgress(1).kill();
+            }
+            return null;
+        };
         Application.prototype.killTween = function (tween) {
             if (tween && tween.totalProgress() != 1)
                 tween.totalProgress(1).kill();
