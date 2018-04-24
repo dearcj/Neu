@@ -134,8 +134,8 @@ export class Application {
         this.camera.y = 0;
         this.app.stage = new PIXI.Container();
 
-        this.statsPIXIHook = new GStats.PIXIHooks(this.app);
-        this.stats = new GStats.StatsJSAdapter(this.statsPIXIHook);
+        this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
+        this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
         //document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
         this.stats.stats.domElement.style.position = "absolute";
         this.stats.stats.domElement.style.top = "0px";
