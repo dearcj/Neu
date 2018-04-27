@@ -8,6 +8,8 @@ export type Vec2 = [number, number]
 
 export type ARGBColor = [number, number, number, number]
 
+export type RGBColor = [number, number, number]
+
 export  function binarySearch(array, target, comparator) {
     var l = 0,
         h = array.length - 1,
@@ -95,6 +97,13 @@ class M {
         let g = numhex >> 8 & 0xFF;
         let b = numhex & 0xFF;
         return [255, r,g,b];
+    }
+
+    numhexToRgbNormal(numhex: number): RGBColor{
+        let r = numhex >> 16;
+        let g = numhex >> 8 & 0xFF;
+        let b = numhex & 0xFF;
+        return [r / 255.,g / 255.,b / 255.];
     }
 
     decimalAdjust(type: string, value: any, exp:number) {
@@ -274,6 +283,13 @@ class M {
         return dataObject;
     }
 
+    strhexToRgbNormal(hexstr: string): RGBColor {
+        let r = parseInt(hexstr.slice(4, 6), 16),
+            g = parseInt(hexstr.slice(6, 8), 16),
+            b = parseInt(hexstr.slice(8, 10), 16);
+
+        return [r / 255., g / 255., b / 255.]
+    }
 }
 
 export var m = new M();

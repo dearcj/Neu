@@ -12,7 +12,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             this.loading = false;
             this.levels = {};
             this.tilesets = {};
-            this.SkipSpriteExt = false;
         }
         Loader.prototype.removeExt = function (t) {
             return t.replace(/\.[^/.]+$/, "");
@@ -63,6 +62,14 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     object.addChild(x);
                 }
                 list.push(x);
+                /*if (x.constructor == O && x.gfx) {
+                               O.rp(x.gfx);
+                                object.gfx.addChild(x.gfx);
+                               x.gfx = null;
+                               x.killNow();
+                           } else {
+                               list.push(x)
+                           }*/
             }
             return list;
         };
@@ -266,7 +273,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     }
                     else {
                         textureName = image.source;
-                        if (this.SkipSpriteExt) {
+                        if (Loader.SkipSpriteExt) {
                             textureName = this.removeExt(textureName);
                         }
                     }
@@ -276,9 +283,9 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     objectsList.push(oo);
             }
             if (globalProperties["color"])
-                this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+                this.setLayerColor(objectsList, globalProperties["color"]);
             if (globalProperties["light"])
-                this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+                this.setLayerLightColor(objectsList, globalProperties["light"]);
             return objectsList;
         };
         Loader.prototype.createGfx = function (o, textureName, x, y, frameName, properties) {
@@ -420,7 +427,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             obj.polygon = properties['polygon'];
             obj.polyline = properties['polyline'];
-            if (textureName) { //has gfx
+            if (textureName) {
                 obj.gfx = this.createGfx(o, textureName, 0, 0, frameName, properties);
             }
             var visibility = properties['visible'] == 'false' ? false : true;
@@ -473,7 +480,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                             continue;
                         textureName = bt.texname;
                     }
-                    if (this.SkipSpriteExt) {
+                    if (Loader.SkipSpriteExt) {
                         textureName = this.removeExt(textureName);
                     }
                     var col = Math.floor(i % layerWidth);
@@ -488,9 +495,9 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 }
             }
             if (globalProperties["color"])
-                this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+                this.setLayerColor(objectsList, globalProperties["color"]);
             if (globalProperties["light"])
-                this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+                this.setLayerLightColor(objectsList, globalProperties["light"]);
             return objectsList;
         };
         Loader.prototype.spawnTile = function (stage, textureName, posX, posY, layerName, type, layerStringID, col, row) {
@@ -550,8 +557,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, objectsList_2 = objectsList; _i < objectsList_2.length; _i++) {
                 var x = objectsList_2[_i];
                 if (x.gfx && x.gfx.color) {
-                    var col = Math_1.m.numhexToRgb(color);
-                    x.gfx.color.setDark(col[1] / 255, col[2] / 255, col[3] / 255);
+                    var col = Math_1.m.strhexToRgbNormal(color);
+                    x.gfx.color.setDark(col[0], col[1], col[2]);
                 }
             }
         };
@@ -559,8 +566,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, objectsList_3 = objectsList; _i < objectsList_3.length; _i++) {
                 var x = objectsList_3[_i];
                 if (x.gfx && x.gfx.color) {
-                    var col = Math_1.m.numhexToRgb(color);
-                    x.gfx.color.setLight(col[1] / 255, col[2] / 255, col[3] / 255);
+                    var col = Math_1.m.strhexToRgbNormal(color);
+                    x.gfx.color.setLight(col[0], col[1], col[2]);
                 }
             }
         };
@@ -592,6 +599,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 this.customGlobalParamsCallback(globalProperties);
             }
         };
+        Loader.SkipSpriteExt = false;
         return Loader;
     }());
     exports.Loader = Loader;

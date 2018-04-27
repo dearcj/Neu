@@ -1,8 +1,9 @@
 import {O} from "./O";
 import {Camera} from "./Camera";
 import {m, Vec2} from "../Math";
-import {Lighting} from "./Lighting";
 import {Application} from "../Application";
+import {Lighting} from "./Lighting";
+import {_} from "../../main";
 
 export class Light extends O{
     public initSize: Vec2;
@@ -11,9 +12,11 @@ export class Light extends O{
     static POWER: number = 1;
 
     onDestroy() {
+        this.gfx.parentLayer = null;
         super.onDestroy();
         let li = <Lighting>Application.One.sm.findByType(Lighting)[0];
     }
+
     public createPolygon(polygon: any, properties: any) {
         let g = new PIXI.Graphics();
         let points = polygon;
@@ -90,6 +93,8 @@ export class Light extends O{
             }
 
         }
-        super.process();
+
+
+            super.process();
     }
 }

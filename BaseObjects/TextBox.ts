@@ -8,9 +8,9 @@ import {Application} from "../Application";
  * Created by KURWINDALLAS on 11.07.2014.
  *////
 
-const DEFAULT_FONT = 'Berkshire-export';
 
 export class TextBox extends IO {
+    static DEFAULT_FONT: string;
 
     static hashCode(str) { // java String#hashCode
         let hash = 0;
@@ -30,7 +30,7 @@ export class TextBox extends IO {
         if (props.fontName) {
             fontName = props.fontName;
         } else {
-            fontName = DEFAULT_FONT;
+            fontName = TextBox.DEFAULT_FONT;
         }
 
         obj.text = props.text;

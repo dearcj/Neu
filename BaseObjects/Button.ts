@@ -114,8 +114,9 @@ export class Button extends IO {
         this.baseScale[1] = f.scale.y;
 
         this.gfx.mousedown = (evt) => {
+            if (this.customMouseDown) this.customMouseDown();
+
             if (this.hoverMode) {
-                if (this.customMouseDown) this.customMouseDown();
 
                 if (this.fadeOnMouseDown) {
                     if (this.gfx && this.gfx.color)
@@ -131,8 +132,8 @@ export class Button extends IO {
         };
 
         this.gfx.mouseup = (evt) => {
+            if (this.customMouseUp) this.customMouseUp();
             if (this.hoverMode) {
-                if (this.customMouseUp) this.customMouseUp();
 
                 this.resetFade();
             }

@@ -22,7 +22,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             var l = Math_1.binarySearch(container.children, c, function (a, b) {
                 return a.position.y - b.position.y;
             });
-            if (l < 0) { // if the binarySearch return value was zero or positive, a matching object was found
+            if (l < 0) {
                 l = ~l;
             }
             container.setChildIndex(c, Math.min(l + 1, container.children.length - 1));
@@ -94,6 +94,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
         };
         SM.prototype.init = function () {
             this.superstage = new PIXI.Container();
+            this.bg = new PIXI.Container();
             this.main = new PIXI.Container();
             this.gui = new PIXI.Container();
             this.gui2 = new PIXI.Container();

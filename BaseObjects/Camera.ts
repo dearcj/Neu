@@ -12,6 +12,8 @@ export class Camera extends O {
     private delta: Vec2 = [0, 0];
     public moveToX: number;
     private anchorDelta: Vec2 = [0,0];
+    public layerOfsX: number;
+    public layerOfsY: number;
 
     get zoom(): number {
         return this._zoom;
@@ -19,23 +21,23 @@ export class Camera extends O {
 
     set zoom(value: number) {
         this._zoom = value;
-        let ofsx = Application.One.SCR_WIDTH * (1 - this._zoom) / 2;
-        let ofsy = Application.One.SCR_HEIGHT * (1 - this._zoom) / 2;
+        this.layerOfsX = Application.One.SCR_WIDTH * (1 - this._zoom) / 2;
+        this.layerOfsY = Application.One.SCR_HEIGHT * (1 - this._zoom) / 2;
         let app = Application.One;
-        app.sm.main.x = ofsx;
-        app.sm.main.y = ofsy;
+        app.sm.main.x = this.layerOfsX;
+        app.sm.main.y = this.layerOfsY;
         app.sm.main.scale.x = value;
         app.sm.main.scale.y = value;
 
         app.sm.olgui.scale.x = value;
         app.sm.olgui.scale.y = value;
-        app.sm.olgui.x = ofsx;
-        app.sm.olgui.y = ofsy;
+        app.sm.olgui.x = this.layerOfsX;
+        app.sm.olgui.y = this.layerOfsY;
 
         app.sm.effects.scale.x = value;
         app.sm.effects.scale.y = value;
-        app.sm.effects.x = ofsx;
-        app.sm.effects.y = ofsy;
+        app.sm.effects.x = this.layerOfsX;
+        app.sm.effects.y = this.layerOfsY;
 
     }
     private baseY: number;
@@ -72,6 +74,13 @@ export class Camera extends O {
         this.zoom = 1;
         this.removeable = false;
         this.rect = new PIXI.Rectangle(0, 0, Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
+      //  TweenMax.to(this, 100, {x: 1000});
+        //this.x += 1;
+    //    let o = new O();
+     //   o.updateLink = (dx: number, dy: number) => {
+     //       console.log("dx:", Math.round(dx * 10) / 10, "dy:", Math.round(dy * 10) / 10);
+     //   };
+       // this.linkObj(o);
     }
 
     stop() {
@@ -177,6 +186,8 @@ export class Camera extends O {
 
 
     process() {
+    //    this.x += 1;
+        //console.log(this.x);
     }
 
     public isVisible(g: PIXI.DisplayObject) {

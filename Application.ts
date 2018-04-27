@@ -82,6 +82,7 @@ export class Application {
     public cursorPos: PIXI.Point;
     public globalMouseDown: Function;
     protected isInitialLoading: boolean = true;
+    public resolution: number = 1;
 
     start() {
         this.engine = Engine.create();
@@ -120,23 +121,24 @@ export class Application {
 
         this.controls = new Controls();
         this.PIXI = PIXI;
-
+        this.resolution = this.appScale*window.devicePixelRatio;
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
             clearBeforeRender: false,
-            resolution: this.appScale*window.devicePixelRatio, antialias: false,
+            resolution: this.resolution, antialias: false,
             preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
         });
+
         document.body.appendChild(this.app.view);
 
         this.camera = new PIXI.Container();
         this.camera.x = 0;
         this.camera.y = 0;
-        this.app.stage = new PIXI.Container();
+        this.app.stage = new PIXI.display.Stage();
 
         this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
         this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
-        //document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
+        document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
         this.stats.stats.domElement.style.position = "absolute";
         this.stats.stats.domElement.style.top = "0px";
         this.sm = new SM();
@@ -149,8 +151,7 @@ export class Application {
         let bindedProcess = this.process.bind(this);
         TweenMax.ticker.addEventListener("tick", bindedProcess);
 
-        let bindedAnimate = this.animate.bind(this);
-        this.app.ticker.add(bindedAnimate);
+        this.app.ticker.add(this.animate, this, PIXI.UPDATE_PRIORITY.HIGH);
         this.app.ticker.start();
     }
 
@@ -197,17 +198,17 @@ export class Application {
     }
 
     animate(): void {
+        this.controls.update();
+
+        this.process();
+        this.stats.update();
         this.timer.process();
         this.random = Math.random();
         this.time = (new Date()).getTime();
         this.cursorPos = this.app.renderer.plugins.interaction.mouse.global;
-
-        //if (this.stats)
-        //    this.stats.update();
     }
 
     process() {
-        this.controls.update();
         if (!this.isInitialLoading) {
             let timeD = (this.time - this.lastLoop);
             this.lastLoop = this.time;
@@ -217,6 +218,7 @@ export class Application {
             this.totalFrames++;
             this.sm.process();
         }
+
     }
 
     constructor(MIN_SCR_WIDTH, MIN_SCR_HEIGHT: number) {
@@ -228,8 +230,8 @@ export class Application {
     public setScreenRes(baseW: number, baseH: number) {
         this.appScale = baseH / MIN_SCR_HEIGHT;
         if (this.appScale > 1.28) this.appScale = 1.28;
-        this.SCR_WIDTH = baseW / this.appScale;
-        this.SCR_HEIGHT = baseH / this.appScale;
+        this.SCR_WIDTH = Math.floor(baseW / this.appScale);
+        this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
         this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
         this.SCR_HEIGHT_HALF = this.SCR_HEIGHT * .5;
         this.screenCenterOffset = [(this.SCR_WIDTH - MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - MIN_SCR_HEIGHT) * .5];
@@ -296,13 +298,18 @@ export class Application {
     }
 
     public cs(s: string, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
-        if (!PIXI.utils.TextureCache[s]) {
+        let texture;
+        if (PIXI.utils.TextureCache[s]) {
+            texture = PIXI.Texture.fromFrame(s);
+        } else {
+            texture = PIXI.Texture.fromFrame(s + '.png');
+        }
+
+        if (!texture) {
             console.log("@@@@Can't find ", s);
             return null;
         }
 
-        let texture = PIXI.Texture.fromFrame(s);
-        texture = texture ? texture : PIXI.Texture.fromFrame(s + '.png');
         if (texture) {
             let gfx = new PIXI.heaven.Sprite(texture);
             gfx.anchor.x = .5;

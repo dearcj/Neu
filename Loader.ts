@@ -1,6 +1,6 @@
 import {O} from "./BaseObjects/O";
 import {m, Vec2} from "./Math";
-import {ColorGradingShader} from "../shaders/ColorGradingShader";
+import {ColorGradingShader} from "./shaders/ColorGradingShader";
 import {ObjectNames} from "../ObjectsList"
 import {Application} from "./Application";
 import {Stage} from "./Stage";
@@ -44,7 +44,7 @@ export class Loader {
     public levels: any = {};
     public objectsList: O[];
     private tilesets: any = {};
-    public  SkipSpriteExt: boolean = false;
+    static SkipSpriteExt: boolean = false;
     add(name: string, data: any) {
         this.levels[name] = data;
     }
@@ -304,7 +304,7 @@ export class Loader {
                     console.log("Can't load texture with Tile Id: ", gid);
                 } else {
                     textureName = image.source;
-                    if (this.SkipSpriteExt) {
+                    if (Loader.SkipSpriteExt) {
                         textureName = this.removeExt(textureName)
                     }
                 }
@@ -316,10 +316,10 @@ export class Loader {
         }
 
         if (globalProperties["color"])
-            this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+            this.setLayerColor(objectsList, globalProperties["color"]);
 
         if (globalProperties["light"])
-            this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+            this.setLayerLightColor(objectsList, globalProperties["light"]);
 
         return objectsList;
     }
@@ -525,7 +525,7 @@ export class Loader {
                     textureName = bt.texname;
                 }
 
-                if (this.SkipSpriteExt) {
+                if (Loader.SkipSpriteExt) {
                     textureName = this.removeExt(textureName);
                 }
 
@@ -544,10 +544,10 @@ export class Loader {
         }
 
         if (globalProperties["color"])
-            this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+            this.setLayerColor(objectsList, globalProperties["color"]);
 
         if (globalProperties["light"])
-            this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+            this.setLayerLightColor(objectsList, globalProperties["light"]);
 
         return objectsList;
     }
@@ -609,21 +609,21 @@ export class Loader {
 
         return arr;
     }
-    private setLayerLightColor(objectsList: O[], color: number) {
+    private setLayerLightColor(objectsList: O[], color: string) {
         for (let x of objectsList) {
             if (x.gfx && x.gfx.color) {
-                let col = m.numhexToRgb(color);
+                let col = m.strhexToRgbNormal(color);
 
-                x.gfx.color.setDark(col[1] / 255, col[2] / 255, col[3] / 255)
+                x.gfx.color.setDark(col[0], col[1], col[2])
             }
         }
     }
 
-    private setLayerColor(objectsList: O[], color: number) {
+    private setLayerColor(objectsList: O[], color: string) {
         for (let x of objectsList) {
             if (x.gfx && x.gfx.color) {
-                let col = m.numhexToRgb(color);
-                x.gfx.color.setLight(col[1] / 255, col[2] / 255, col[3] / 255)
+                let col = m.strhexToRgbNormal(color);
+                x.gfx.color.setLight(col[0], col[1], col[2])
             }
         }
     }

@@ -27,12 +27,12 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
     exports.binarySearch = binarySearch;
     function binaryInsert(array, target, duplicate, comparator) {
         var i = binarySearch(array, target, comparator);
-        if (i >= 0) { /* if the binarySearch return value was zero or positive, a matching object was found */
+        if (i >= 0) {
             if (!duplicate) {
                 return i;
             }
         }
-        else { /* if the return value was negative, the bitwise complement of the return value is the correct index for this object */
+        else {
             i = ~i;
         }
         array.splice(i, 0, target);
@@ -85,6 +85,12 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
             var g = numhex >> 8 & 0xFF;
             var b = numhex & 0xFF;
             return [255, r, g, b];
+        };
+        M.prototype.numhexToRgbNormal = function (numhex) {
+            var r = numhex >> 16;
+            var g = numhex >> 8 & 0xFF;
+            var b = numhex & 0xFF;
+            return [r / 255., g / 255., b / 255.];
         };
         M.prototype.decimalAdjust = function (type, value, exp) {
             // Если степень не определена, либо равна нулю...
@@ -253,6 +259,10 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
                 }
             }
             return dataObject;
+        };
+        M.prototype.strhexToRgbNormal = function (hexstr) {
+            var r = parseInt(hexstr.slice(4, 6), 16), g = parseInt(hexstr.slice(6, 8), 16), b = parseInt(hexstr.slice(8, 10), 16);
+            return [r / 255., g / 255., b / 255.];
         };
         return M;
     }());
