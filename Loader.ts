@@ -54,15 +54,6 @@ export class Loader {
         return src;
     }
 
-    static  XMLtoJSON(x: any): Object{
-        if (!x) return {};
-        var o = {};
-        for (let c of x.children) {
-            o[c.tagName] = c.textContent;
-        }
-        return o;
-    }
-
     static addGfxToWorld(stage: Stage, layerName: string): PIXI.Container {
         if (layerName == 'gui') return Application.One.sm.gui;
         if (layerName == 'gui2') return Application.One.sm.gui2;
@@ -118,8 +109,8 @@ export class Loader {
         if (properties) {
             let propertyArray = properties.getElementsByTagName('property');
             for (let p of propertyArray) {
-                if (p.attributes.name.value.toLowerCase() == 'appear') {
-                    let prob = parseFloat(p.attributes.value.value);
+                if (p.attributes.getNamedItem('name').nodeValue.toLowerCase() == 'appear') {
+                    let prob = parseFloat(p.attributes.getNamedItem('value').nodeValue);
                     if (Math.random()*100 > prob) return false;
                 }
             }
@@ -129,19 +120,23 @@ export class Loader {
 
 
     load(stage: Stage, name: string, preInitCB: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
+        console.log("START LOADING LEVEL ", name);
         this.loading = true;
 
         let data = this.levels[name];
         if (!data) {
-            console.log('No such level as '+name);
+            console.log('No such level as ', name);
             return;
         }
 
         let bigtilesets: Array<BigTileset> = [];
         let images :{[key: number]:ImageData} = {};
         let map = this.levels[name].getElementsByTagName("map")[0];
-        let tw = parseFloat(map.attributes['tilewidth'].value);
-        let th = parseFloat(map.attributes['tileheight'].value);
+        if (map == null) {
+        }
+
+        let tw = parseFloat(map.attributes.getNamedItem('tilewidth').nodeValue);
+        let th = parseFloat(map.attributes.getNamedItem('tileheight').nodeValue);
         let objectsList: Array<O> = [];
         let globalProperties = this.getProps(map);
         if (addObjects)
@@ -149,14 +144,17 @@ export class Loader {
 
         let tilesets = map.getElementsByTagName("tileset");
         for (let t of tilesets) {
-            let firstgid = t.attributes['firstgid'] ? t.attributes['firstgid'].value : 0;
-            if (t.attributes['source']) {
-                let source = t.attributes['source'].value;
+            let firstgid = t.attributes.getNamedItem('firstgid') ? t.attributes.getNamedItem('firstgid').nodeValue : 0;
+            let sourceAttr = t.attributes.getNamedItem('source');
+            if (sourceAttr) {
+                let source = sourceAttr.nodeValue;
+
                 let sourceNoExt = source.substring(0, source.length - 4);
-                t = this.tilesets[sourceNoExt].children[0]
+                console.log("!!!!!1", this.tilesets, this.tilesets[sourceNoExt], 'len', Object.keys(this.tilesets).length)
+                t = this.tilesets[sourceNoExt].childNodes[0]
             }
-            let tilecount =  t.attributes['tilecount'].value;
-            let columns = t.attributes['columns'].value;
+            let tilecount =  t.attributes.getNamedItem('tilecount').nodeValue;
+            let columns = t.attributes.getNamedItem('columns').nodeValue;
             let tiles = t.getElementsByTagName('tile');
 
             if (!tiles[0]) {
@@ -168,7 +166,7 @@ export class Loader {
                     tw: tw,
                     th: th,
                     columns: columns,
-                    texname: img.attributes.source.value,
+                    texname: img.attributes.getNamedItem('source').nodeValue,
                 });
 
             } else {
@@ -176,22 +174,26 @@ export class Loader {
                     let img = t.getElementsByTagName('image')[0];
                     if (!img) continue;
 
-
-                    images[parseInt(t.attributes.id.value) + parseInt(firstgid)]  = {
+                    let watr = img.attributes.getNamedItem('width');
+                    let hatr = img.attributes.getNamedItem('height');
+                    let sourceattr = img.attributes.getNamedItem('source');
+                    images[parseInt(t.attributes.getNamedItem('id').nodeValue) + parseInt(firstgid)]  = {
                         tilesetWidth: tw,
                         tilesetHeight: th,
-                        width: img.attributes.width ? img.attributes.width.value : 0,
-                        height: img.attributes.height ? img.attributes.height.value : 0,
-                        source: img.attributes.source.value.replace(/^.*[\\\/]/, ''),
+                        width:  watr ? watr.nodeValue : 0,
+                        height: hatr ? hatr.nodeValue : 0,
+                        source: sourceattr.nodeValue.replace(/^.*[\\\/]/, ''),
                     };
                 }
             }
         }
         let addObjectsFunc = (c: any, ox: number, oy: number) => {
             if (c.nodeName == 'layer') {
-                let name = c.attributes.name.value.toLowerCase();
+                let name = c.attributes.getNamedItem('name').nodeValue.toLowerCase();
 
-                let offset: Vec2 = [c.attributes.offsetx ? parseFloat(c.attributes.offsetx.value) : 0, c.attributes.offsety ? parseFloat(c.attributes.offsety.value) : 0];
+                let ofsXattr = c.attributes.getNamedItem('offsetx');
+                let ofsYattr = c.attributes.getNamedItem('offsety');
+                let offset: Vec2 = [ofsXattr ? parseFloat(ofsXattr.nodeValue) : 0, ofsYattr ? parseFloat(ofsYattr.nodeValue) : 0];
 
                 offset[0] += ox;
                 offset[1] += oy;
@@ -209,7 +211,7 @@ export class Loader {
             }
 
             if (c.nodeName == 'objectgroup') {
-                let name = c.attributes.name.value.toLowerCase();
+                let name = c.attributes.getNamedItem('name').nodeValue.toLowerCase();
                 if (!stage.layers[name]) {
                     stage.addLayer(name, null)
                 }
@@ -224,9 +226,13 @@ export class Loader {
         };
 
         for (let c of map.childNodes) {
-            if (c.nodeName == 'group' && (!restrictGroup || c.attributes.name.value.toLowerCase() == restrictGroup.toLowerCase())) {
-                let ox: number= c.attributes.offsetx ? parseFloat(c.attributes.offsetx.value) : 0;
-                let oy: number = c.attributes.offsety ? parseFloat(c.attributes.offsety.value) : 0;
+            if (c.nodeName == 'group' && (!restrictGroup || c.attributes.getNamedItem('name').nodeValue.toLowerCase() == restrictGroup.toLowerCase())) {
+                let offsXattr = c.attributes.getNamedItem('offsetx');
+                let offsYattr = c.attributes.getNamedItem('offsety');
+
+                let ox: number = offsXattr? parseFloat(offsXattr.nodeValue) : 0;
+                let oy: number = offsYattr? parseFloat(offsYattr.nodeValue) : 0;
+
                 for (let x of c.childNodes) {
                     addObjectsFunc(x, ox, oy)
                 }
@@ -247,8 +253,6 @@ export class Loader {
 
         if (doInit)
         this.init(objectsList, noCameraOffset);
-        //let total = ((new Date()).getTime() - startLoad) / 1000.;
-        //console.log(objectsList.length, " objects. Load level ", total);
 
         this.objectsList = null;
         this.loading = false;
@@ -259,18 +263,18 @@ export class Loader {
     getProps(node: any): Object {
         let globalProperties = [];
         let props;
-        for (let pchildren of node.children) {
-            if (pchildren.tagName == 'properties') {
+        for (let pchildren of node.childNodes) {
+            if (pchildren.nodeName == 'properties') {
                 props = pchildren;
                 break;
             }
         }
 
         if (props) {
-            let propertyArray = props.getElementsByTagName('property');
+            let propertyArray = props.childNodes;
             for (let p of propertyArray) {
-                if (p.attributes.value)
-                    globalProperties[p.attributes.name.value] = p.attributes.value.value;
+                if (p.nodeName == 'property')
+                    globalProperties[p.attributes.getNamedItem('name').nodeValue] = p.attributes.getNamedItem('value').nodeValue;
             }
         }
 
@@ -279,17 +283,21 @@ export class Loader {
 
     addObjectGroup(stage: Stage, objectGroup, images: any): Array<O> {
         let objectsList: Array<O> = [];
-        let name = objectGroup.attributes.name.value;
-        let offsetx = objectGroup.attributes.offsetx ? parseFloat(objectGroup.attributes.offsetx.value) : 0;
-        let offsety = objectGroup.attributes.offsety ? parseFloat(objectGroup.attributes.offsety.value) : 0;
+        let name = objectGroup.attributes.getNamedItem('name').nodeValue;
+        let ofsXattr = objectGroup.attributes.getNamedItem('offsetx');
+        let ofsYattr = objectGroup.attributes.getNamedItem('offsety');
+
+        let offsetx = ofsXattr ? parseFloat(ofsXattr.nodeValue) : 0;
+        let offsety = ofsYattr ? parseFloat(ofsYattr.nodeValue) : 0;
         let objects = objectGroup.getElementsByTagName('object');
         let globalProperties = this.getProps(objectGroup);
 
         for (let o of objects) {
-            let gid = o.attributes.gid ?  parseInt(o.attributes.gid.value ): -1;
+            let gidAttr = o.attributes.getNamedItem('gid');
+            let gid = gidAttr ?  parseInt(gidAttr.nodeValue): -1;
             let flipped_horizontally = false;
             let flipped_vertically = false;
-                let textureName;
+            let textureName;
             let image;
             if (gid > 0) {
                 flipped_horizontally = (gid & FLIPPED_HORIZONTALLY_FLAG) == -FLIPPED_HORIZONTALLY_FLAG;
@@ -299,7 +307,6 @@ export class Loader {
                 if (flipped_vertically) gid &= ~FLIPPED_VERTICALLY_FLAG;
 
                 image = images[gid];
-
                 if (!image) {
                     console.log("Can't load texture with Tile Id: ", gid);
                 } else {
@@ -309,7 +316,6 @@ export class Loader {
                     }
                 }
             }
-
 
             let oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source: null, name, globalProperties, flipped_horizontally, flipped_vertically);
             if (oo) objectsList.push(oo);
@@ -325,8 +331,9 @@ export class Loader {
     }
 
     createGfx(o: any, textureName: string, x: number, y: number, frameName: string, properties: Array<string>): any {
-        let w = o.attributes.width.value;
-        let h = o.attributes.height.value;
+
+        let w = o.attributes.getNamedItem('width').nodeValue;
+        let h = o.attributes.getNamedItem('height').nodeValue;
         let gfx: any;
 
         if (properties['movieclip'] == 'true') {
@@ -377,14 +384,22 @@ export class Loader {
     }
 
     createObject(stage: Stage, o: any, textureName: any, offsetx: number, offsety: number, frameName: string, layerName: string, groupProps: Object, flipX: boolean, flipY: boolean): O{
-        let id = o.attributes.id.value;
-        let x = parseFloat(o.attributes.x.value);
-        let y = parseFloat(o.attributes.y.value);
-        let w = o.attributes.width ? parseFloat(o.attributes.width.value) : 0;
-        let h = o.attributes.height ? parseFloat(o.attributes.height.value) : 0;
-        let name: string = o.attributes.name ? o.attributes.name.value : '';
-        let type: string = o.attributes.type ? o.attributes.type.value : '';
-        let rot = o.attributes.rotation ? o.attributes.rotation.value : 0;
+        let id = o.attributes.getNamedItem('id').value;
+        let x = parseFloat(o.attributes.getNamedItem('x').nodeValue);
+        let y = parseFloat(o.attributes.getNamedItem('y').nodeValue);
+
+        let watr = o.attributes.getNamedItem('width');
+        let hatr = o.attributes.getNamedItem('height');
+        let w = watr ? parseFloat(watr.nodeValue) : 0;
+        let h = hatr ? parseFloat(hatr.nodeValue) : 0;
+
+        let nameAttr = o.attributes.getNamedItem('name');
+        let typeAttr = o.attributes.getNamedItem('type');
+        let rotAttr = o.attributes.getNamedItem('rotation');
+
+        let name: string = nameAttr ? nameAttr.nodeValue : '';
+        let type: string = typeAttr ? typeAttr.nodeValue : '';
+        let rot = rotAttr ? rotAttr.nodeValue : 0;
         rot = Math.PI * (rot / 180);
 
         //DO THIS ONLY FOR GFX SPRITES
@@ -409,7 +424,9 @@ export class Loader {
         let props = o.getElementsByTagName('property');
         let properties: any = {};
         for (let x of props) {
-            properties[x.attributes.name.value] = x.attributes.value ? x.attributes.value.value : x.textContent;
+            let name = x.attributes.getNamedItem('name').nodeValue;
+            let valattr = x.attributes.getNamedItem('value');
+            properties[name] = valattr ? valattr.nodeValue : x.textContent;
         }
 
         for (let x in groupProps) {
@@ -426,8 +443,6 @@ export class Loader {
             className = type;
         }
 
-
-
         if (properties["singleton"] == 'true') {
             //UniqueCheck
             if (ObjectNames[className] && Application.One.sm.findByType(ObjectNames[className]).length > 0) {
@@ -443,7 +458,11 @@ export class Loader {
             return null;
         }
 
-        if (className != '') {
+        if (className  && className.toLowerCase() == 'textbox') {
+            console.log("!1111")
+        }
+
+            if (className != '') {
             if (!ObjectNames[className]) {
                 console.log('[LevelManager] Cant find class: ', className);
             }
@@ -455,16 +474,15 @@ export class Loader {
         obj.stringID = name;
 
         if (polygon) {
-            properties["polygon"] = polygon.attributes.points.value;
+            properties["polygon"] = polygon.attributes.getNamedItem('points').nodeValue;
         }
 
         if (polyline) {
-            properties["polyline"] = polyline.attributes.points.value;
+            properties["polyline"] = polyline.attributes.getNamedItem('points').nodeValue;
         }
 
         obj.polygon = properties['polygon'];
         obj.polyline = properties['polyline'];
-
 
         if (textureName) { //has gfx
             obj.gfx = this.createGfx(o, textureName, 0, 0, frameName, properties);
@@ -472,7 +490,6 @@ export class Loader {
 
         let visibility: boolean = properties['visible'] == 'false' ? false : true;
         if (obj.gfx) obj.gfx.visible = visibility;
-
 
         let layer = Loader.addGfxToWorld(stage, layerName);
         obj.layer = layer;
@@ -501,11 +518,11 @@ export class Loader {
         let data = layer.getElementsByTagName('data')[0];
         let str = data.textContent;
         str = str.replace(/\r?\n|\r/g, '');
-        let name = layer.attributes.name.value;
+        let name = layer.attributes.getNamedItem('name').nodeValue;
         let arr = str.split(',');
         let len = arr.length;
-        let layerWidth = layer.attributes.width.value;
-        let layerHeight = layer.attributes.height.value;
+        let layerWidth = layer.attributes.getNamedItem('width').nodeValue;
+        let layerHeight = layer.attributes.getNamedItem('height').nodeValue;
 
         let globalProperties = this.getProps(layer);
 

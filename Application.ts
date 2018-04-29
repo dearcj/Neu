@@ -127,6 +127,8 @@ export class Application {
             resolution: this.appScale*window.devicePixelRatio, antialias: false,
             preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
         });
+        this.app.renderer = new PIXI.WebGLRenderer(this.SCR_WIDTH, this.SCR_HEIGHT  );
+
         document.body.appendChild(this.app.view);
 
         this.camera = new PIXI.Container();

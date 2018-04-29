@@ -41,6 +41,7 @@ export class ResourceManager  {
             onComplete();
         });
         loader.on('progress', (loader: any, evt:  any) => {
+            console.log("Loaded: ", evt.name);
             if (evt.name.indexOf('shaders') >= 0) {
                 let result = evt.name.substring(evt.name.lastIndexOf("/") + 1);
                 this.shaders[result] = evt.data
@@ -56,6 +57,7 @@ export class ResourceManager  {
                 }
 
                 if (ext == 'tmx') {
+                    console.log("Adding level, ", evt.data);
                     _.lm.add(result, evt.data);
                 }
 
