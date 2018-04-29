@@ -101,9 +101,9 @@ define(["require", "exports", "./IO", "../PIXIPlugins/AnimClip", "./TextBox", ".
             this.baseScale[0] = f.scale.x;
             this.baseScale[1] = f.scale.y;
             this.gfx.mousedown = function (evt) {
+                if (_this.customMouseDown)
+                    _this.customMouseDown();
                 if (_this.hoverMode) {
-                    if (_this.customMouseDown)
-                        _this.customMouseDown();
                     if (_this.fadeOnMouseDown) {
                         if (_this.gfx && _this.gfx.color)
                             _this.gfx.color.setLight(0.5, 0.5, 0.5);
@@ -116,9 +116,9 @@ define(["require", "exports", "./IO", "../PIXIPlugins/AnimClip", "./TextBox", ".
                 }
             };
             this.gfx.mouseup = function (evt) {
+                if (_this.customMouseUp)
+                    _this.customMouseUp();
                 if (_this.hoverMode) {
-                    if (_this.customMouseUp)
-                        _this.customMouseUp();
                     _this.resetFade();
                 }
             };

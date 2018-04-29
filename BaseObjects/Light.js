@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./O", "./Lighting", "../Application"], function (require, exports, O_1, Lighting_1, Application_1) {
+define(["require", "exports", "./O", "../Application", "./Lighting"], function (require, exports, O_1, Application_1, Lighting_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Light = /** @class */ (function (_super) {
@@ -20,6 +20,7 @@ define(["require", "exports", "./O", "./Lighting", "../Application"], function (
             return _this;
         }
         Light.prototype.onDestroy = function () {
+            this.gfx.parentLayer = null;
             _super.prototype.onDestroy.call(this);
             var li = Application_1.Application.One.sm.findByType(Lighting_1.Lighting)[0];
         };

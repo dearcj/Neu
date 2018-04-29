@@ -1,6 +1,6 @@
 import {O} from "./BaseObjects/O";
 import {m, Vec2} from "./Math";
-import {ColorGradingShader} from "../shaders/ColorGradingShader";
+import {ColorGradingShader} from "./shaders/ColorGradingShader";
 import {ObjectNames} from "../ObjectsList"
 import {Application} from "./Application";
 import {Stage} from "./Stage";
@@ -44,7 +44,7 @@ export class Loader {
     public levels: any = {};
     public objectsList: O[];
     private tilesets: any = {};
-    public  SkipSpriteExt: boolean = false;
+    static SkipSpriteExt: boolean = false;
     add(name: string, data: any) {
         this.levels[name] = data;
     }
@@ -132,9 +132,6 @@ export class Loader {
         let bigtilesets: Array<BigTileset> = [];
         let images :{[key: number]:ImageData} = {};
         let map = this.levels[name].getElementsByTagName("map")[0];
-        if (map == null) {
-        }
-
         let tw = parseFloat(map.attributes.getNamedItem('tilewidth').nodeValue);
         let th = parseFloat(map.attributes.getNamedItem('tileheight').nodeValue);
         let objectsList: Array<O> = [];
@@ -197,9 +194,9 @@ export class Loader {
 
                 offset[0] += ox;
                 offset[1] += oy;
-
+                let layerProps = this.getProps(c);
                 if (!stage.layers[name]) {
-                    stage.addLayer(name, null)
+                    stage.addLayer(name, null, layerProps['3d'] == true)
                 }
 
                 if (!this.shouldAppear(c)) {
@@ -207,13 +204,14 @@ export class Loader {
                 }
 
                 if (addObjects)
-                objectsList = objectsList.concat(this.addLayer(stage, c, bigtilesets, images, offset));
+                objectsList = objectsList.concat(this.addLayer(stage, c, bigtilesets, images, offset, layerProps));
             }
 
             if (c.nodeName == 'objectgroup') {
+                let layerProps = this.getProps(c);
                 let name = c.attributes.getNamedItem('name').nodeValue.toLowerCase();
                 if (!stage.layers[name]) {
-                    stage.addLayer(name, null)
+                    stage.addLayer(name, null, layerProps['3d'] == true)
                 }
 
                 if (!this.shouldAppear(c)) {
@@ -221,7 +219,7 @@ export class Loader {
                 }
 
                 if (addObjects)
-                objectsList = objectsList.concat(this.addObjectGroup(stage, c, images));
+                objectsList = objectsList.concat(this.addObjectGroup(stage, c, images, layerProps));
             }
         };
 
@@ -281,7 +279,7 @@ export class Loader {
         return globalProperties
     }
 
-    addObjectGroup(stage: Stage, objectGroup, images: any): Array<O> {
+    addObjectGroup(stage: Stage, objectGroup, images: any, layerProps: any): Array<O> {
         let objectsList: Array<O> = [];
         let name = objectGroup.attributes.getNamedItem('name').nodeValue;
         let ofsXattr = objectGroup.attributes.getNamedItem('offsetx');
@@ -290,7 +288,6 @@ export class Loader {
         let offsetx = ofsXattr ? parseFloat(ofsXattr.nodeValue) : 0;
         let offsety = ofsYattr ? parseFloat(ofsYattr.nodeValue) : 0;
         let objects = objectGroup.getElementsByTagName('object');
-        let globalProperties = this.getProps(objectGroup);
 
         for (let o of objects) {
             let gidAttr = o.attributes.getNamedItem('gid');
@@ -311,27 +308,28 @@ export class Loader {
                     console.log("Can't load texture with Tile Id: ", gid);
                 } else {
                     textureName = image.source;
-                    if (this.SkipSpriteExt) {
+                    if (Loader.SkipSpriteExt) {
                         textureName = this.removeExt(textureName)
                     }
                 }
             }
 
             let oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source: null, name, globalProperties, flipped_horizontally, flipped_vertically);
+
+            let oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source: null, name, layerProps, flipped_horizontally, flipped_vertically);
             if (oo) objectsList.push(oo);
         }
 
-        if (globalProperties["color"])
-            this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+        if (layerProps["color"])
+            this.setLayerColor(objectsList, layerProps["color"]);
 
-        if (globalProperties["light"])
-            this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+        if (layerProps["light"])
+            this.setLayerLightColor(objectsList, layerProps["light"]);
 
         return objectsList;
     }
 
     createGfx(o: any, textureName: string, x: number, y: number, frameName: string, properties: Array<string>): any {
-
         let w = o.attributes.getNamedItem('width').nodeValue;
         let h = o.attributes.getNamedItem('height').nodeValue;
         let gfx: any;
@@ -361,24 +359,59 @@ export class Loader {
         gfx.position.x = 0;
         gfx.position.y = 0;
         gfx.alpha = properties['alpha'] ? properties['alpha'] : 1;
+
         let blendMode = properties['blendMode'] ? properties['blendMode'].toLowerCase() : '';
-        if (blendMode || blendMode == 'normal') gfx.blendMode = PIXI.BLEND_MODES.NORMAL;
-        if (blendMode == 'add') gfx.blendMode = PIXI.BLEND_MODES.ADD;
-        if (blendMode == 'multiply') gfx.blendMode = PIXI.BLEND_MODES.MULTIPLY;
-        if (blendMode == 'screen') gfx.blendMode = PIXI.BLEND_MODES.SCREEN;
-        if (blendMode == 'overlay') gfx.blendMode = PIXI.BLEND_MODES.OVERLAY;
-        if (blendMode == 'darken') gfx.blendMode = PIXI.BLEND_MODES.DARKEN;
-        //if (blendMode == 'lighten') gfx.blendMode = PIXI.BLEND_MODES.LIGTHEN;
-        if (blendMode == 'dodge') gfx.blendMode = PIXI.BLEND_MODES.COLOR_DODGE;
-        if (blendMode == 'burn') gfx.blendMode = PIXI.BLEND_MODES.COLOR_BURN;
-        if (blendMode == 'hardLight') gfx.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
-        if (blendMode == 'softLight') gfx.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT;
-        if (blendMode == 'difference') gfx.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
-        if (blendMode == 'exclusion') gfx.blendMode = PIXI.BLEND_MODES.EXCLUSION;
-        if (blendMode == 'hue') gfx.blendMode = PIXI.BLEND_MODES.HUE;
-        if (blendMode == 'saturation') gfx.blendMode = PIXI.BLEND_MODES.SATURATION;
-        if (blendMode == 'color') gfx.blendMode = PIXI.BLEND_MODES.COLOR;
-        if (blendMode == 'luminosity') gfx.blendMode = PIXI.BLEND_MODES.LUMINOSITY;
+        switch (blendMode) {
+            case 'normal':
+                gfx.blendMode = PIXI.BLEND_MODES.NORMAL;
+                break;
+            case 'add':
+                gfx.blendMode = PIXI.BLEND_MODES.ADD;
+                break;
+            case 'multiply':
+                gfx.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+                break;
+            case 'screen':
+                gfx.blendMode = PIXI.BLEND_MODES.SCREEN;
+                break;
+            case 'overlay':
+                gfx.blendMode = PIXI.BLEND_MODES.OVERLAY;
+                break;
+            case 'darken':
+                gfx.blendMode = PIXI.BLEND_MODES.DARKEN;
+                break;
+            case 'dodge':
+                gfx.blendMode = PIXI.BLEND_MODES.COLOR_DODGE;
+                break;
+            case 'burn':
+                gfx.blendMode = PIXI.BLEND_MODES.COLOR_BURN;
+                break;
+            case 'hardLight':
+                gfx.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
+                break;
+            case 'softLight':
+                gfx.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT;
+                break;
+            case 'difference':
+                gfx.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
+                break;
+            case 'exclusion':
+                gfx.blendMode = PIXI.BLEND_MODES.EXCLUSION;
+                break;
+            case 'hue':
+                gfx.blendMode = PIXI.BLEND_MODES.HUE;
+                break;
+            case 'saturation':
+                gfx.blendMode = PIXI.BLEND_MODES.SATURATION;
+                break;
+            case 'color':
+                gfx.blendMode = PIXI.BLEND_MODES.COLOR;
+                break;
+            case 'luminosity':
+                gfx.blendMode = PIXI.BLEND_MODES.LUMINOSITY;
+                break;
+        }
+
 
         return gfx
     }
@@ -458,10 +491,6 @@ export class Loader {
             return null;
         }
 
-        if (className  && className.toLowerCase() == 'textbox') {
-            console.log("!1111")
-        }
-
             if (className != '') {
             if (!ObjectNames[className]) {
                 console.log('[LevelManager] Cant find class: ', className);
@@ -513,7 +542,7 @@ export class Loader {
         return obj
     }
 
-    addLayer(stage: Stage, layer: any, bigtilesets: Array<BigTileset>, images: any, offset: Vec2) : Array<O> {
+    addLayer(stage: Stage, layer: any, bigtilesets: Array<BigTileset>, images: any, offset: Vec2, layerProps: any) : Array<O> {
         let objectsList = [];
         let data = layer.getElementsByTagName('data')[0];
         let str = data.textContent;
@@ -524,7 +553,6 @@ export class Loader {
         let layerWidth = layer.attributes.getNamedItem('width').nodeValue;
         let layerHeight = layer.attributes.getNamedItem('height').nodeValue;
 
-        let globalProperties = this.getProps(layer);
 
         for (let i = 0 ; i < len; i++) {
             if (arr[i] > 0) {
@@ -542,7 +570,7 @@ export class Loader {
                     textureName = bt.texname;
                 }
 
-                if (this.SkipSpriteExt) {
+                if (Loader.SkipSpriteExt) {
                     textureName = this.removeExt(textureName);
                 }
 
@@ -551,20 +579,20 @@ export class Loader {
                 let posX = col * images[tileID].tilesetWidth;
                 let posY = row * images[tileID].tilesetHeight - (parseFloat(images[tileID].height) - images[tileID].tilesetHeight);
 
-                let type: string = globalProperties['type'];
-                let layername: string = globalProperties['name'];
+                let type: string = layerProps['type'];
+                let layername: string = layerProps['name'];
 
                 let o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername, col, row);
-                o.properties = globalProperties;
+                o.properties = layerProps;
                 objectsList.push(o);
             }
         }
 
-        if (globalProperties["color"])
-            this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
+        if (layerProps["color"])
+            this.setLayerColor(objectsList, layerProps["color"]);
 
-        if (globalProperties["light"])
-            this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+        if (layerProps["light"])
+            this.setLayerLightColor(objectsList, layerProps["light"]);
 
         return objectsList;
     }
@@ -574,8 +602,6 @@ export class Loader {
 
         sprite.anchor.x = 0.5;
         sprite.anchor.y = 0.5;
-
-
 
         let o: O;
         if (type && type != '' ) {
@@ -626,21 +652,21 @@ export class Loader {
 
         return arr;
     }
-    private setLayerLightColor(objectsList: O[], color: number) {
+    private setLayerLightColor(objectsList: O[], color: string) {
         for (let x of objectsList) {
             if (x.gfx && x.gfx.color) {
-                let col = m.numhexToRgb(color);
+                let col = m.strhexToRgbNormal(color);
 
-                x.gfx.color.setDark(col[1] / 255, col[2] / 255, col[3] / 255)
+                x.gfx.color.setDark(col[0], col[1], col[2])
             }
         }
     }
 
-    private setLayerColor(objectsList: O[], color: number) {
+    private setLayerColor(objectsList: O[], color: string) {
         for (let x of objectsList) {
             if (x.gfx && x.gfx.color) {
-                let col = m.numhexToRgb(color);
-                x.gfx.color.setLight(col[1] / 255, col[2] / 255, col[3] / 255)
+                let col = m.strhexToRgbNormal(color);
+                x.gfx.color.setLight(col[0], col[1], col[2])
             }
         }
     }

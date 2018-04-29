@@ -12,7 +12,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             this.loading = false;
             this.levels = {};
             this.tilesets = {};
-            this.SkipSpriteExt = false;
         }
         Loader.prototype.removeExt = function (t) {
             return t.replace(/\.[^/.]+$/, "");
@@ -63,6 +62,14 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     object.addChild(x);
                 }
                 list.push(x);
+                /*if (x.constructor == O && x.gfx) {
+                               O.rp(x.gfx);
+                                object.gfx.addChild(x.gfx);
+                               x.gfx = null;
+                               x.killNow();
+                           } else {
+                               list.push(x)
+                           }*/
             }
             return list;
         };
@@ -165,25 +172,27 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     var offset = [c.attributes.offsetx ? parseFloat(c.attributes.offsetx.value) : 0, c.attributes.offsety ? parseFloat(c.attributes.offsety.value) : 0];
                     offset[0] += ox;
                     offset[1] += oy;
+                    var layerProps = _this.getProps(c);
                     if (!stage.layers[name_1]) {
-                        stage.addLayer(name_1, null);
+                        stage.addLayer(name_1, null, layerProps['3d'] == true);
                     }
                     if (!_this.shouldAppear(c)) {
                         return;
                     }
                     if (addObjects)
-                        objectsList = objectsList.concat(_this.addLayer(stage, c, bigtilesets, images, offset));
+                        objectsList = objectsList.concat(_this.addLayer(stage, c, bigtilesets, images, offset, layerProps));
                 }
                 if (c.nodeName == 'objectgroup') {
+                    var layerProps = _this.getProps(c);
                     var name_2 = c.attributes.name.value.toLowerCase();
                     if (!stage.layers[name_2]) {
-                        stage.addLayer(name_2, null);
+                        stage.addLayer(name_2, null, layerProps['3d'] == true);
                     }
                     if (!_this.shouldAppear(c)) {
                         return;
                     }
                     if (addObjects)
-                        objectsList = objectsList.concat(_this.addObjectGroup(stage, c, images));
+                        objectsList = objectsList.concat(_this.addObjectGroup(stage, c, images, layerProps));
                 }
             };
             for (var _b = 0, _c = map.childNodes; _b < _c.length; _b++) {
@@ -239,13 +248,12 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             return globalProperties;
         };
-        Loader.prototype.addObjectGroup = function (stage, objectGroup, images) {
+        Loader.prototype.addObjectGroup = function (stage, objectGroup, images, layerProps) {
             var objectsList = [];
             var name = objectGroup.attributes.name.value;
             var offsetx = objectGroup.attributes.offsetx ? parseFloat(objectGroup.attributes.offsetx.value) : 0;
             var offsety = objectGroup.attributes.offsety ? parseFloat(objectGroup.attributes.offsety.value) : 0;
             var objects = objectGroup.getElementsByTagName('object');
-            var globalProperties = this.getProps(objectGroup);
             for (var _i = 0, objects_1 = objects; _i < objects_1.length; _i++) {
                 var o = objects_1[_i];
                 var gid = o.attributes.gid ? parseInt(o.attributes.gid.value) : -1;
@@ -266,19 +274,19 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                     }
                     else {
                         textureName = image.source;
-                        if (this.SkipSpriteExt) {
+                        if (Loader.SkipSpriteExt) {
                             textureName = this.removeExt(textureName);
                         }
                     }
                 }
-                var oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source : null, name, globalProperties, flipped_horizontally, flipped_vertically);
+                var oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source : null, name, layerProps, flipped_horizontally, flipped_vertically);
                 if (oo)
                     objectsList.push(oo);
             }
-            if (globalProperties["color"])
-                this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
-            if (globalProperties["light"])
-                this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+            if (layerProps["color"])
+                this.setLayerColor(objectsList, layerProps["color"]);
+            if (layerProps["light"])
+                this.setLayerLightColor(objectsList, layerProps["light"]);
             return objectsList;
         };
         Loader.prototype.createGfx = function (o, textureName, x, y, frameName, properties) {
@@ -310,39 +318,56 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             gfx.position.y = 0;
             gfx.alpha = properties['alpha'] ? properties['alpha'] : 1;
             var blendMode = properties['blendMode'] ? properties['blendMode'].toLowerCase() : '';
-            if (blendMode || blendMode == 'normal')
-                gfx.blendMode = PIXI.BLEND_MODES.NORMAL;
-            if (blendMode == 'add')
-                gfx.blendMode = PIXI.BLEND_MODES.ADD;
-            if (blendMode == 'multiply')
-                gfx.blendMode = PIXI.BLEND_MODES.MULTIPLY;
-            if (blendMode == 'screen')
-                gfx.blendMode = PIXI.BLEND_MODES.SCREEN;
-            if (blendMode == 'overlay')
-                gfx.blendMode = PIXI.BLEND_MODES.OVERLAY;
-            if (blendMode == 'darken')
-                gfx.blendMode = PIXI.BLEND_MODES.DARKEN;
-            //if (blendMode == 'lighten') gfx.blendMode = PIXI.BLEND_MODES.LIGTHEN;
-            if (blendMode == 'dodge')
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR_DODGE;
-            if (blendMode == 'burn')
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR_BURN;
-            if (blendMode == 'hardLight')
-                gfx.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
-            if (blendMode == 'softLight')
-                gfx.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT;
-            if (blendMode == 'difference')
-                gfx.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
-            if (blendMode == 'exclusion')
-                gfx.blendMode = PIXI.BLEND_MODES.EXCLUSION;
-            if (blendMode == 'hue')
-                gfx.blendMode = PIXI.BLEND_MODES.HUE;
-            if (blendMode == 'saturation')
-                gfx.blendMode = PIXI.BLEND_MODES.SATURATION;
-            if (blendMode == 'color')
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR;
-            if (blendMode == 'luminosity')
-                gfx.blendMode = PIXI.BLEND_MODES.LUMINOSITY;
+            switch (blendMode) {
+                case 'normal':
+                    gfx.blendMode = PIXI.BLEND_MODES.NORMAL;
+                    break;
+                case 'add':
+                    gfx.blendMode = PIXI.BLEND_MODES.ADD;
+                    break;
+                case 'multiply':
+                    gfx.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+                    break;
+                case 'screen':
+                    gfx.blendMode = PIXI.BLEND_MODES.SCREEN;
+                    break;
+                case 'overlay':
+                    gfx.blendMode = PIXI.BLEND_MODES.OVERLAY;
+                    break;
+                case 'darken':
+                    gfx.blendMode = PIXI.BLEND_MODES.DARKEN;
+                    break;
+                case 'dodge':
+                    gfx.blendMode = PIXI.BLEND_MODES.COLOR_DODGE;
+                    break;
+                case 'burn':
+                    gfx.blendMode = PIXI.BLEND_MODES.COLOR_BURN;
+                    break;
+                case 'hardLight':
+                    gfx.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
+                    break;
+                case 'softLight':
+                    gfx.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT;
+                    break;
+                case 'difference':
+                    gfx.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
+                    break;
+                case 'exclusion':
+                    gfx.blendMode = PIXI.BLEND_MODES.EXCLUSION;
+                    break;
+                case 'hue':
+                    gfx.blendMode = PIXI.BLEND_MODES.HUE;
+                    break;
+                case 'saturation':
+                    gfx.blendMode = PIXI.BLEND_MODES.SATURATION;
+                    break;
+                case 'color':
+                    gfx.blendMode = PIXI.BLEND_MODES.COLOR;
+                    break;
+                case 'luminosity':
+                    gfx.blendMode = PIXI.BLEND_MODES.LUMINOSITY;
+                    break;
+            }
             return gfx;
         };
         Loader.prototype.createObject = function (stage, o, textureName, offsetx, offsety, frameName, layerName, groupProps, flipX, flipY) {
@@ -420,7 +445,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             obj.polygon = properties['polygon'];
             obj.polyline = properties['polyline'];
-            if (textureName) { //has gfx
+            if (textureName) {
                 obj.gfx = this.createGfx(o, textureName, 0, 0, frameName, properties);
             }
             var visibility = properties['visible'] == 'false' ? false : true;
@@ -444,7 +469,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             obj.properties = properties;
             return obj;
         };
-        Loader.prototype.addLayer = function (stage, layer, bigtilesets, images, offset) {
+        Loader.prototype.addLayer = function (stage, layer, bigtilesets, images, offset, layerProps) {
             var objectsList = [];
             var data = layer.getElementsByTagName('data')[0];
             var str = data.textContent;
@@ -454,7 +479,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             var len = arr.length;
             var layerWidth = layer.attributes.width.value;
             var layerHeight = layer.attributes.height.value;
-            var globalProperties = this.getProps(layer);
             for (var i = 0; i < len; i++) {
                 if (arr[i] > 0) {
                     var textureName = void 0;
@@ -473,24 +497,24 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                             continue;
                         textureName = bt.texname;
                     }
-                    if (this.SkipSpriteExt) {
+                    if (Loader.SkipSpriteExt) {
                         textureName = this.removeExt(textureName);
                     }
                     var col = Math.floor(i % layerWidth);
                     var row = Math.floor(i / layerWidth);
                     var posX = col * images[tileID].tilesetWidth;
                     var posY = row * images[tileID].tilesetHeight - (parseFloat(images[tileID].height) - images[tileID].tilesetHeight);
-                    var type = globalProperties['type'];
-                    var layername = globalProperties['name'];
+                    var type = layerProps['type'];
+                    var layername = layerProps['name'];
                     var o = this.spawnTile(stage, textureName, posX + offset[0], posY + offset[1], name, type, layername, col, row);
-                    o.properties = globalProperties;
+                    o.properties = layerProps;
                     objectsList.push(o);
                 }
             }
-            if (globalProperties["color"])
-                this.setLayerColor(objectsList, parseInt(globalProperties["color"].replace('#', '0x')));
-            if (globalProperties["light"])
-                this.setLayerLightColor(objectsList, parseInt(globalProperties["light"].replace('#', '0x')));
+            if (layerProps["color"])
+                this.setLayerColor(objectsList, layerProps["color"]);
+            if (layerProps["light"])
+                this.setLayerLightColor(objectsList, layerProps["light"]);
             return objectsList;
         };
         Loader.prototype.spawnTile = function (stage, textureName, posX, posY, layerName, type, layerStringID, col, row) {
@@ -550,8 +574,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, objectsList_2 = objectsList; _i < objectsList_2.length; _i++) {
                 var x = objectsList_2[_i];
                 if (x.gfx && x.gfx.color) {
-                    var col = Math_1.m.numhexToRgb(color);
-                    x.gfx.color.setDark(col[1] / 255, col[2] / 255, col[3] / 255);
+                    var col = Math_1.m.strhexToRgbNormal(color);
+                    x.gfx.color.setDark(col[0], col[1], col[2]);
                 }
             }
         };
@@ -559,8 +583,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, objectsList_3 = objectsList; _i < objectsList_3.length; _i++) {
                 var x = objectsList_3[_i];
                 if (x.gfx && x.gfx.color) {
-                    var col = Math_1.m.numhexToRgb(color);
-                    x.gfx.color.setLight(col[1] / 255, col[2] / 255, col[3] / 255);
+                    var col = Math_1.m.strhexToRgbNormal(color);
+                    x.gfx.color.setLight(col[0], col[1], col[2]);
                 }
             }
         };
@@ -592,6 +616,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 this.customGlobalParamsCallback(globalProperties);
             }
         };
+        Loader.SkipSpriteExt = false;
         return Loader;
     }());
     exports.Loader = Loader;

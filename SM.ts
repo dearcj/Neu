@@ -32,6 +32,7 @@ export class SM {
     public globalIds: { [key: string]: O; } = {};
     private transition: ITransition;
     public light: PIXI.Container;
+    public bg: PIXI.Container;
 
 
     public ZOrderContainer(c: PIXI.Container): void {
@@ -109,6 +110,7 @@ export class SM {
     init() {
         this.superstage = new PIXI.Container();
 
+        this.bg = new PIXI.Container();
         this.main = new PIXI.Container();
         this.gui = new PIXI.Container();
         this.gui2 = new PIXI.Container();

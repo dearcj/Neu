@@ -1,145 +1,94 @@
-import {O} from "./O";
-import {Camera} from "./Camera";
-import {m, Vec2, ARGBColor} from "../Math";
-import {Light} from "./Light";
+import {BaseLighting} from "./BaseLighting";
 import {Application, Sine, TweenMax} from "../Application";
-import {_} from "../../main";
-import {MAX_SCR_HEIGHT, MAX_SCR_WIDTH} from "../../ClientSettings";
+import {Light} from "./Light";
+import {LightFilter} from "../shaders/LightFilter";
+import {O} from "./O";
+import {RGBColor} from "../Math";
 
-export class Lighting extends O {
-    private tweenStart: any;
-    lerp: number;
-    private tweenDest: any;
-    private tweenStartDark: ARGBColor;
-    private tweenDestDark: ARGBColor;
+export class Lighting extends BaseLighting {
+    private lightingLayer: PIXI.display.Layer;
+    public lightFilter: LightFilter;
+    private baseScaleX: number;
+    private baseScaleY: number;
 
-    public ambient: PIXI.heaven.Sprite;
-    public ambientContainer: PIXI.Container;
-    public envColor: ARGBColor = [255, 255, 255, 255];
-    public envColorDark: ARGBColor = [255, 0, 0, 0];
-    public defaultColor: ARGBColor = [255, 255, 150, 150];
-    public lights: Light[] = [];
-    private filterArea: PIXI.Rectangle;
 
     onDestroy() {
-        this.gfx.filters[0].blendMode = PIXI.BLEND_MODES.NORMAL;
-        this.gfx.filters = null;
-        this.gfx.filterArea = null;
-
-        TweenMax.killTweensOf(this);
-        O.rp(this.ambientContainer);
-        this.ambientContainer = null;
-        this.ambient = null;
-        this.lights = [];
-
-        console.log("LIGHT DESTROYED");
-
+        O.rp(this.ambient);
         super.onDestroy();
     }
 
-    addLight(l: Light): void {
-        l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
-        O.rp(l.gfx);
-        this.addChild(l);
-        //this.gfx.addChild(l.gfx);
-    }
-
-    tweenColorTo(col: ARGBColor, darkCol: ARGBColor, repeat: boolean = false, deltaTimeSec: number = 0.9) {
-        this.tweenStart = [this.envColor[0], this.envColor[1], this.envColor[2], this.envColor[3]];
-        this.tweenDest = col;
-
-        this.tweenStartDark = [this.envColorDark[0], this.envColorDark[1], this.envColorDark[2], this.envColorDark[3]];
-        this.tweenDestDark = darkCol;
-
-        this.lerp = 0;
-        let obj: any = {
-            ease: Sine.easeOut, lerp: 1, onComplete: () => {
-                this.tweenDest = null;
-            }
-        };
-
-        if (repeat) {
-            obj.yoyo = true;
-            obj.repeat = -1;
-        }
-        new TweenMax(this, deltaTimeSec, obj);
-    }
-
-    updateEnvironmentColor(col: ARGBColor) {
-    }
-
-    updateLight(): void {
-        for (let x of this.lights) {
-            //WE CAN REMOVE PREV SCENE WITH LIGHTS...
-            if (!x.doRemove && x.gfx.visible) {
-                x.gfx.x = x.pos[0] - Application.One.sm.camera.offset[0];
-                x.gfx.y = x.pos[1] - Application.One.sm.camera.offset[1];
-            }
-        }
-    }
-
     init(props: any) {
-        super.init(props);
         this.alwaysVisible = true;
         let delta = 0;
-        this.filterArea = new PIXI.Rectangle(-delta, -delta, Application.One.SCR_WIDTH + 2 * delta, Application.One.SCR_HEIGHT + 2 * delta);
-        this.gfx = new PIXI.Sprite();
-        this.ambient = <PIXI.heaven.Sprite>Application.One.cs('darkness');
-        this.ambient.anchor.x = 0.5;
-        this.ambient.anchor.y = 0.5;
-        this.ambient.x = Application.One.SCR_WIDTH / 2;
-        this.ambient.y = Application.One.SCR_HEIGHT/ 2;
+        this.ambient = <PIXI.heaven.Sprite>Application.One.cs(BaseLighting.DEFAULT_GFX);
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;
-        this.ambientContainer = new PIXI.Container();
-        this.ambientContainer.addChild(this.ambient);
-        console.log("ADDED LIGHT");
         this.envColor = this.defaultColor;
-        this.gfx.addChild(this.ambientContainer);
-        this.layer.addChild(this.gfx);
-        
 
-        this.gfx.filters = [new PIXI.filters.AlphaFilter()];
-        this.gfx.filterArea = this.filterArea;
-        this.gfx.filters[0].blendMode = PIXI.BLEND_MODES.MULTIPLY;
-        this.redraw();
+        this.baseScaleX = this.ambient.scale.x;
+        this.baseScaleY = this.ambient.scale.y;
+
+        this.lightingLayer = new PIXI.display.Layer();
+        this.lightingLayer.useRenderTexture = true;
+        this.layer.addChild(this.lightingLayer);
+
+        this.lightFilter = new LightFilter({saturation: -3, brightness: 0.7,  contrast: 0.5, gamma: 1, lightSampler: this.lightingLayer.getRenderTexture()});
+        Application.One.sm.main.filters = [this.lightFilter];
+        Application.One.sm.main.filterArea = Application.One.app.screen;
+        this.lightFilter.resolution = Application.One.resolution;
+
+        this.ambient.parentLayer = this.lightingLayer;
+        this.layer.addChild(this.ambient);
+
         this.updateLights();
-    }
+        this.redraw();
 
-    process() {
-        this.gfx.x = -_.sm.camera.x + MAX_SCR_WIDTH / 2;//c.offset[0];
-        this.gfx.y = -_.sm.camera.y + MAX_SCR_HEIGHT / 2;//c.offset[1];
-        if (this.tweenDest) {
-            let l = this.lerp;
-            let il = 1 - this.lerp;
-            this.envColor[0] = this.tweenStart[0] * il + l * this.tweenDest[0];
-            this.envColor[1] = this.tweenStart[1] * il + l * this.tweenDest[1];
-            this.envColor[2] = this.tweenStart[2] * il + l * this.tweenDest[2];
-            this.envColor[3] = this.tweenStart[3] * il + l * this.tweenDest[3];
-
-
-            this.envColorDark[0] = this.tweenStartDark[0] * il + l * this.tweenDestDark[0];
-            this.envColorDark[1] = this.tweenStartDark[1] * il + l * this.tweenDestDark[1];
-            this.envColorDark[2] = this.tweenStartDark[2] * il + l * this.tweenDestDark[2];
-            this.envColorDark[3] = this.tweenStartDark[3] * il + l * this.tweenDestDark[3];
-
-            this.redraw();
-        }
+        this.process();
     }
 
     public updateLights() {
-        for (let x = 1; x < this.gfx.children.length; ++x) {//SKIP AMBIENT CONTAINER
-            O.rp(x);
-        }
-
         this.lights = <Array<Light>>Application.One.sm.findByType(Light);
         for (let x of this.lights) {
             this.addLight(x)
         }
     }
 
+    tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9) {
+        TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0],
+            green: col[1],
+            blue: col[2],
+        });
+
+        if (illum)
+        TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0], lightG: illum[1], lightB: illum[2]});
+    }
+
     public redraw() {
-        this.ambient.color.setLight(this.envColor[1] / 255, this.envColor[2] / 255, this.envColor[3] / 255);
-        this.ambient.color.setDark(this.envColorDark[1] / 255, this.envColorDark[2] / 255, this.envColorDark[3] / 255);
+    }
+
+    addLight(l: Light): void {
+        O.rp(l.gfx);
+        this.layer.addChild(l.gfx);
+        if (!l.properties["blendMode"])
+        l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
+        l.gfx.parentLayer = this.lightingLayer;
+    }
+
+    process() {
+        this.ambient.x = -Application.One.SCR_WIDTH * (-0.5 );
+        this.ambient.y = -Application.One.SCR_HEIGHT * (-0.5 );
+        this.ambient.scale.x = (this.baseScaleX / Application.One.sm.camera.zoom);// -_.sm.camera.x - _.SCR_WIDTH_HALF;
+        this.ambient.scale.y = (this.baseScaleY / Application.One.sm.camera.zoom);// -_.sm.camera.y - _.SCR_HEIGHT_HALF;
+
+        this.redraw();
+    }
+
+    set(col: RGBColor, illum: RGBColor = null) {
+        this.lightFilter.uniforms.red = col[0];
+        this.lightFilter.uniforms.green = col[1];
+        this.lightFilter.uniforms.blue = col[2];
+
+        if (illum)
+        this.ambient.color.setLight(illum[0], illum[1], illum[2]);
     }
 }

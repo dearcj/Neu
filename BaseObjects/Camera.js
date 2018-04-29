@@ -31,6 +31,13 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             _this.removeable = false;
             _this.rect = new PIXI.Rectangle(0, 0, Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             return _this;
+            //  TweenMax.to(this, 100, {x: 1000});
+            //this.x += 1;
+            //    let o = new O();
+            //   o.updateLink = (dx: number, dy: number) => {
+            //       console.log("dx:", Math.round(dx * 10) / 10, "dy:", Math.round(dy * 10) / 10);
+            //   };
+            // this.linkObj(o);
         }
         Object.defineProperty(Camera.prototype, "zoom", {
             get: function () {
@@ -38,21 +45,21 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             },
             set: function (value) {
                 this._zoom = value;
-                var ofsx = Application_1.Application.One.SCR_WIDTH * (1 - this._zoom) / 2;
-                var ofsy = Application_1.Application.One.SCR_HEIGHT * (1 - this._zoom) / 2;
+                this.layerOfsX = Application_1.Application.One.SCR_WIDTH * (1 - this._zoom) / 2;
+                this.layerOfsY = Application_1.Application.One.SCR_HEIGHT * (1 - this._zoom) / 2;
                 var app = Application_1.Application.One;
-                app.sm.main.x = ofsx;
-                app.sm.main.y = ofsy;
+                app.sm.main.x = this.layerOfsX;
+                app.sm.main.y = this.layerOfsY;
                 app.sm.main.scale.x = value;
                 app.sm.main.scale.y = value;
                 app.sm.olgui.scale.x = value;
                 app.sm.olgui.scale.y = value;
-                app.sm.olgui.x = ofsx;
-                app.sm.olgui.y = ofsy;
+                app.sm.olgui.x = this.layerOfsX;
+                app.sm.olgui.y = this.layerOfsY;
                 app.sm.effects.scale.x = value;
                 app.sm.effects.scale.y = value;
-                app.sm.effects.x = ofsx;
-                app.sm.effects.y = ofsy;
+                app.sm.effects.x = this.layerOfsX;
+                app.sm.effects.y = this.layerOfsY;
             },
             enumerable: true,
             configurable: true
@@ -123,13 +130,13 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.focusPlace = function (worldPos) {
             var app = Application_1.Application.One;
             var prevPos = [this.pos[0], this.pos[1]];
-            Application_1.TweenMax.killChildTweensOf(app.camera, true);
+            Application_1.TweenMax.killChildTweensOf(app.sm.camera, true);
             Application_1.TweenMax.killChildTweensOf(this, true);
             console.log("FOCUS PLACE");
             new Application_1.TweenMax(this, .6, { x: worldPos[0], y: worldPos[1] });
-            new Application_1.TweenMax(app.camera, .6, { z: 20 });
+            new Application_1.TweenMax(app.sm.camera, .6, { z: 20 });
             new Application_1.TweenMax(this, 0.5, { delay: 0.6, x: prevPos[0], y: prevPos[1] });
-            new Application_1.TweenMax(app.camera, 0.5, { delay: 0.6, z: 0 });
+            new Application_1.TweenMax(app.sm.camera, 0.5, { delay: 0.6, z: 0 });
         };
         Camera.prototype.updateTransform = function (obj, clip, offsX, offsY) {
             if (offsX === void 0) { offsX = 0; }
@@ -156,6 +163,8 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             return this.pos[1] - Application_1.Application.One.SCR_HEIGHT_HALF;
         };
         Camera.prototype.process = function () {
+            //    this.x += 1;
+            //console.log(this.x);
         };
         Camera.prototype.isVisible = function (g) {
             g.getBounds(false, this.rect);

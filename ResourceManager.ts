@@ -6,7 +6,12 @@ import {_} from "../main";
 export class ResourceManager  {
     public shaders: Object = {};
     public spineData: Object = {};
+    private animFolder: string;
     private spineLoaderListneners: { [key:string]:Function[]; } = {};
+
+    constructor(animFolder: string) {
+        this.animFolder = animFolder;
+    }
 
     requestSpine(spineName: string, cb: (spineData: any)=>any) {
             if (this.spineData[spineName]) {
@@ -22,7 +27,7 @@ export class ResourceManager  {
 
             let loader = new PIXI.loaders.Loader();
             loader
-                .add(spineName,  'res/Json/' + spineName +'.json',)
+                .add(spineName,  this.animFolder + spineName +'.json',)
                 .load((loader, resources) => {
                     this.spineData[spineName] = resources[spineName].spineData;
                         for (let x in this.spineLoaderListneners[spineName]) {

@@ -33,6 +33,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.totalDelta = 0;
             this.timeScale = 1;
             this.isInitialLoading = true;
+            this.resolution = 1;
             this.MIN_SCR_HEIGHT = MIN_SCR_HEIGHT;
             this.MIN_SCR_WIDTH = MIN_SCR_WIDTH;
             Application.One = this;
@@ -40,6 +41,8 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.start = function () {
             var _this = this;
             this.engine = matter_1.Engine.create();
+            exports.TweenMax.lagSmoothing(0);
+            exports.TweenLite.ticker.useRAF(true);
             /*World.add(this.matterWorld, [
                 Bodies.rectangle(200, 150, 700, 20, { isStatic: true, angle: Math.PI * 0.06 }),
                 Bodies.rectangle(500, 350, 700, 20, { isStatic: true, angle: -Math.PI * 0.06 }),
@@ -71,20 +74,18 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             });
             this.controls = new Controls_1.Controls();
             this.PIXI = exports.PIXI;
+            this.resolution = this.appScale * window.devicePixelRatio;
             this.app = new exports.PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
                 autoStart: false,
                 clearBeforeRender: false,
-                resolution: this.appScale * window.devicePixelRatio, antialias: false,
+                resolution: this.resolution, antialias: false,
                 preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
             });
             document.body.appendChild(this.app.view);
-            this.camera = new exports.PIXI.Container();
-            this.camera.x = 0;
-            this.camera.y = 0;
-            this.app.stage = new exports.PIXI.Container();
-            this.statsPIXIHook = new GStats.PIXIHooks(this.app);
-            this.stats = new GStats.StatsJSAdapter(this.statsPIXIHook);
-            //document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
+            this.app.stage = new exports.PIXI.display.Stage();
+            this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
+            this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
+            document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
             this.stats.stats.domElement.style.position = "absolute";
             this.stats.stats.domElement.style.top = "0px";
             this.sm = new SM_1.SM();
@@ -95,8 +96,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.lastNetworkPing = this.lastLoop;
             var bindedProcess = this.process.bind(this);
             exports.TweenMax.ticker.addEventListener("tick", bindedProcess);
-            var bindedAnimate = this.animate.bind(this);
-            this.app.ticker.add(bindedAnimate);
+            this.app.ticker.add(this.animate, this, exports.PIXI.UPDATE_PRIORITY.HIGH);
             this.app.ticker.start();
         };
         Application.prototype.killTweensOf = function (obj) {
@@ -138,15 +138,15 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.timeScale = x;
         };
         Application.prototype.animate = function () {
+            this.controls.update();
+            this.process();
+            this.stats.update();
             this.timer.process();
             this.random = Math.random();
             this.time = (new Date()).getTime();
             this.cursorPos = this.app.renderer.plugins.interaction.mouse.global;
-            //if (this.stats)
-            //    this.stats.update();
         };
         Application.prototype.process = function () {
-            this.controls.update();
             if (!this.isInitialLoading) {
                 var timeD = (this.time - this.lastLoop);
                 this.lastLoop = this.time;
@@ -161,8 +161,8 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.appScale = baseH / ClientSettings_1.MIN_SCR_HEIGHT;
             if (this.appScale > 1.28)
                 this.appScale = 1.28;
-            this.SCR_WIDTH = baseW / this.appScale;
-            this.SCR_HEIGHT = baseH / this.appScale;
+            this.SCR_WIDTH = Math.floor(baseW / this.appScale);
+            this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
             this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
             this.SCR_HEIGHT_HALF = this.SCR_HEIGHT * .5;
             this.screenCenterOffset = [(this.SCR_WIDTH - ClientSettings_1.MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - ClientSettings_1.MIN_SCR_HEIGHT) * .5];
@@ -226,14 +226,47 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         };
         Application.prototype.cs = function (s, layer) {
             if (layer === void 0) { layer = null; }
-            if (!exports.PIXI.utils.TextureCache[s]) {
+            var texture;
+            if (exports.PIXI.utils.TextureCache[s]) {
+                texture = exports.PIXI.Texture.fromFrame(s);
+            }
+            else {
+                texture = exports.PIXI.Texture.fromFrame(s + '.png');
+            }
+            if (!texture) {
                 console.log("@@@@Can't find ", s);
                 return null;
             }
-            var texture = exports.PIXI.Texture.fromFrame(s);
-            texture = texture ? texture : exports.PIXI.Texture.fromFrame(s + '.png');
             if (texture) {
                 var gfx = new exports.PIXI.heaven.Sprite(texture);
+                gfx.anchor.x = .5;
+                gfx.anchor.y = .5;
+                if (layer)
+                    layer.addChild(gfx);
+                else {
+                }
+                return gfx;
+            }
+            else {
+                console.log("@@@@Can't find ", s);
+                return null;
+            }
+        };
+        Application.prototype.csStd = function (s, layer) {
+            if (layer === void 0) { layer = null; }
+            var texture;
+            if (exports.PIXI.utils.TextureCache[s]) {
+                texture = exports.PIXI.Texture.fromFrame(s);
+            }
+            else {
+                texture = exports.PIXI.Texture.fromFrame(s + '.png');
+            }
+            if (!texture) {
+                console.log("@@@@Can't find ", s);
+                return null;
+            }
+            if (texture) {
+                var gfx = new exports.PIXI.Sprite(texture);
                 gfx.anchor.x = .5;
                 gfx.anchor.y = .5;
                 if (layer)

@@ -5,10 +5,11 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
      * Created by MSI on 08.11.2017.
      */
     var ResourceManager = /** @class */ (function () {
-        function ResourceManager() {
+        function ResourceManager(animFolder) {
             this.shaders = {};
             this.spineData = {};
             this.spineLoaderListneners = {};
+            this.animFolder = animFolder;
         }
         ResourceManager.prototype.requestSpine = function (spineName, cb) {
             var _this = this;
@@ -24,7 +25,7 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
             }
             var loader = new PIXI.loaders.Loader();
             loader
-                .add(spineName, 'res/Json/' + spineName + '.json')
+                .add(spineName, this.animFolder + spineName + '.json')
                 .load(function (loader, resources) {
                 _this.spineData[spineName] = resources[spineName].spineData;
                 for (var x in _this.spineLoaderListneners[spineName]) {
