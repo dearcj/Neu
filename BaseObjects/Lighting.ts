@@ -69,6 +69,7 @@ export class Lighting extends BaseLighting {
     addLight(l: Light): void {
         O.rp(l.gfx);
         this.layer.addChild(l.gfx);
+        if (!l.properties["blendMode"])
         l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
         l.gfx.parentLayer = this.lightingLayer;
     }

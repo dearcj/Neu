@@ -130,13 +130,13 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.focusPlace = function (worldPos) {
             var app = Application_1.Application.One;
             var prevPos = [this.pos[0], this.pos[1]];
-            Application_1.TweenMax.killChildTweensOf(app.camera, true);
+            Application_1.TweenMax.killChildTweensOf(app.sm.camera, true);
             Application_1.TweenMax.killChildTweensOf(this, true);
             console.log("FOCUS PLACE");
             new Application_1.TweenMax(this, .6, { x: worldPos[0], y: worldPos[1] });
-            new Application_1.TweenMax(app.camera, .6, { z: 20 });
+            new Application_1.TweenMax(app.sm.camera, .6, { z: 20 });
             new Application_1.TweenMax(this, 0.5, { delay: 0.6, x: prevPos[0], y: prevPos[1] });
-            new Application_1.TweenMax(app.camera, 0.5, { delay: 0.6, z: 0 });
+            new Application_1.TweenMax(app.sm.camera, 0.5, { delay: 0.6, z: 0 });
         };
         Camera.prototype.updateTransform = function (obj, clip, offsX, offsY) {
             if (offsX === void 0) { offsX = 0; }

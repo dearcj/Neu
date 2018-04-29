@@ -63,22 +63,20 @@ export class Stage {
         _.sm.main.addChild(this.container);
     };
 
-    addLayer(name: string, l: any): any {
+    addLayer(name: string, l: any, is3d: boolean): any {
         if (l) {
             this.layers[name] = l;
         } else {
-            this.layers[name] = new PIXI.Container();
+            if (is3d) {
+                this.layers[name] = new PIXI.Container();
+            } else {
+                this.layers[name] = new PIXI.projection.Container3d();
+            }
         }
 
         this.container.addChild(this.layers[name]);
         return this.layers[name];
     }
 
-    addToLayer(s: string, d: DisplayObject) {
-        let l = this.layers[s];
-        if (!l) {
-            l = this.addLayer(s, null);
-        }
-        l.addChild(d);
-    }
+
 }

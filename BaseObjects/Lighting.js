@@ -64,7 +64,8 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
         Lighting.prototype.addLight = function (l) {
             O_1.O.rp(l.gfx);
             this.layer.addChild(l.gfx);
-            l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
+            if (!l.properties["blendMode"])
+                l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
             l.gfx.parentLayer = this.lightingLayer;
         };
         Lighting.prototype.process = function () {

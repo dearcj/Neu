@@ -41,6 +41,8 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.start = function () {
             var _this = this;
             this.engine = matter_1.Engine.create();
+            exports.TweenMax.lagSmoothing(0);
+            exports.TweenLite.ticker.useRAF(true);
             /*World.add(this.matterWorld, [
                 Bodies.rectangle(200, 150, 700, 20, { isStatic: true, angle: Math.PI * 0.06 }),
                 Bodies.rectangle(500, 350, 700, 20, { isStatic: true, angle: -Math.PI * 0.06 }),
@@ -80,9 +82,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
             });
             document.body.appendChild(this.app.view);
-            this.camera = new exports.PIXI.Container();
-            this.camera.x = 0;
-            this.camera.y = 0;
             this.app.stage = new exports.PIXI.display.Stage();
             this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
             this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
@@ -240,6 +239,34 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             }
             if (texture) {
                 var gfx = new exports.PIXI.heaven.Sprite(texture);
+                gfx.anchor.x = .5;
+                gfx.anchor.y = .5;
+                if (layer)
+                    layer.addChild(gfx);
+                else {
+                }
+                return gfx;
+            }
+            else {
+                console.log("@@@@Can't find ", s);
+                return null;
+            }
+        };
+        Application.prototype.csStd = function (s, layer) {
+            if (layer === void 0) { layer = null; }
+            var texture;
+            if (exports.PIXI.utils.TextureCache[s]) {
+                texture = exports.PIXI.Texture.fromFrame(s);
+            }
+            else {
+                texture = exports.PIXI.Texture.fromFrame(s + '.png');
+            }
+            if (!texture) {
+                console.log("@@@@Can't find ", s);
+                return null;
+            }
+            if (texture) {
+                var gfx = new exports.PIXI.Sprite(texture);
                 gfx.anchor.x = .5;
                 gfx.anchor.y = .5;
                 if (layer)

@@ -65,7 +65,6 @@ export class Application {
     public controls: Controls;
     public PIXI: any;
     public renderer: any;
-    public camera: any;
     public worldSpeed: number = 1;
     public debug: boolean = true;
 
@@ -86,6 +85,8 @@ export class Application {
 
     start() {
         this.engine = Engine.create();
+        TweenMax.lagSmoothing(0);
+        TweenLite.ticker.useRAF(true);
 
 
         /*World.add(this.matterWorld, [
@@ -130,10 +131,6 @@ export class Application {
         });
 
         document.body.appendChild(this.app.view);
-
-        this.camera = new PIXI.Container();
-        this.camera.x = 0;
-        this.camera.y = 0;
         this.app.stage = new PIXI.display.Stage();
 
         this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
@@ -297,7 +294,7 @@ export class Application {
         return p;
     }
 
-    public cs(s: string, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
+    public cs<T extends PIXI.Sprite>(s: string, layer: PIXI.Container = null): PIXI.heaven.Sprite{ //create sprite from frame and add to default layer
         let texture;
         if (PIXI.utils.TextureCache[s]) {
             texture = PIXI.Texture.fromFrame(s);
@@ -309,9 +306,35 @@ export class Application {
             console.log("@@@@Can't find ", s);
             return null;
         }
-
         if (texture) {
             let gfx = new PIXI.heaven.Sprite(texture);
+            gfx.anchor.x = .5;
+            gfx.anchor.y = .5;
+            if (layer)
+                layer.addChild(gfx); else {
+            }
+            return gfx
+        } else {
+            console.log("@@@@Can't find ", s);
+            return null;
+        }
+
+    }
+
+    public csStd(s: string, layer: PIXI.Container = null): PIXI.Sprite{ //create sprite from frame and add to default layer
+        let texture;
+        if (PIXI.utils.TextureCache[s]) {
+            texture = PIXI.Texture.fromFrame(s);
+        } else {
+            texture = PIXI.Texture.fromFrame(s + '.png');
+        }
+
+        if (!texture) {
+            console.log("@@@@Can't find ", s);
+            return null;
+        }
+        if (texture) {
+            let gfx = new PIXI.Sprite(texture);
             gfx.anchor.x = .5;
             gfx.anchor.y = .5;
             if (layer)

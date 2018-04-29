@@ -148,13 +148,13 @@ export class Camera extends O {
     focusPlace(worldPos:Vec2) {
         let app = Application.One;
         let prevPos = [this.pos[0], this.pos[1]];
-        TweenMax.killChildTweensOf(app.camera, true);
+        TweenMax.killChildTweensOf(app.sm.camera, true);
         TweenMax.killChildTweensOf(this, true);
         console.log("FOCUS PLACE");
         new TweenMax(this, .6, {x: worldPos[0], y: worldPos[1]});
-        new TweenMax(app.camera, .6, {z : 20});
+        new TweenMax(app.sm.camera, .6, {z : 20});
         new TweenMax(this, 0.5, {delay: 0.6, x: prevPos[0], y: prevPos[1]});
-        new TweenMax(app.camera, 0.5, {delay: 0.6, z: 0});
+        new TweenMax(app.sm.camera, 0.5, {delay: 0.6, z: 0});
     }
 
     updateTransform(obj:O, clip: PIXI.DisplayObject, offsX:number = 0, offsY:number = 0) {
