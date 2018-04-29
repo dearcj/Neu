@@ -314,8 +314,6 @@ export class Loader {
                 }
             }
 
-            let oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source: null, name, globalProperties, flipped_horizontally, flipped_vertically);
-
             let oo = this.createObject(stage, o, textureName, offsetx, offsety, image ? image.source: null, name, layerProps, flipped_horizontally, flipped_vertically);
             if (oo) objectsList.push(oo);
         }
