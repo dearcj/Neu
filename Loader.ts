@@ -196,7 +196,7 @@ export class Loader {
                 offset[1] += oy;
                 let layerProps = this.getProps(c);
                 if (!stage.layers[name]) {
-                    stage.addLayer(name, null, layerProps['3d'] == true)
+                    stage.addLayer(name, null)
                 }
 
                 if (!this.shouldAppear(c)) {
@@ -211,7 +211,7 @@ export class Loader {
                 let layerProps = this.getProps(c);
                 let name = c.attributes.getNamedItem('name').nodeValue.toLowerCase();
                 if (!stage.layers[name]) {
-                    stage.addLayer(name, null, layerProps['3d'] == true)
+                    stage.addLayer(name, null)
                 }
 
                 if (!this.shouldAppear(c)) {

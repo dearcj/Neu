@@ -5,7 +5,6 @@ import {O} from "./O";
 import {m, Vec2} from "../Math";
 import {Application, TweenMax} from "../Application";
 
-
 export class Camera extends O {
     private deltaAngle: number = 0;
     private deltaLen: number = 0;

@@ -63,15 +63,11 @@ export class Stage {
         _.sm.main.addChild(this.container);
     };
 
-    addLayer(name: string, l: any, is3d: boolean): any {
+    addLayer(name: string, l: any): any {
         if (l) {
             this.layers[name] = l;
         } else {
-            if (is3d) {
-                this.layers[name] = new PIXI.Container();
-            } else {
-                this.layers[name] = new PIXI.projection.Container3d();
-            }
+            this.layers[name] = new PIXI.Container();
         }
 
         this.container.addChild(this.layers[name]);

@@ -1,5 +1,6 @@
 import {_} from "../../main";
-export class ColorGradingShader extends PIXI.Filter<{lut: any, textureNum: number}> {
+import Filter = PIXI.Filter;
+export class ColorGradingShader extends Filter<{lut: any, textureNum: number}> {
 
     constructor(texturename: string, num: number) {
         let LUTSpriteTex = PIXI.Texture.fromFrame(texturename);

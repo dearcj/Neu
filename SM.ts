@@ -34,6 +34,8 @@ export class SM {
     public light: PIXI.Container;
     public bg: PIXI.Container;
 
+    public camera3d: PIXI.Container;
+
 
     public ZOrderContainer(c: PIXI.Container): void {
         c.children.sort(function (a, b) {

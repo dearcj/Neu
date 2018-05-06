@@ -6,11 +6,10 @@ import {Loader} from "./Loader";
 import {Vec2} from "./Math";
 import {FRAME_DELAY, MIN_SCR_HEIGHT, MIN_SCR_WIDTH} from "../ClientSettings";
 import {Controls} from "./Controls";
-import {_, FMath} from "../main";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
 import {Bodies, Engine, World} from "../lib/matter";
-
+export let FMath = (<any>window).FMath;
 
 declare let window: any;
 export let TweenMax = window.TweenMax;
@@ -88,13 +87,6 @@ export class Application {
         TweenMax.lagSmoothing(0);
         TweenLite.ticker.useRAF(true);
 
-
-        /*World.add(this.matterWorld, [
-            Bodies.rectangle(200, 150, 700, 20, { isStatic: true, angle: Math.PI * 0.06 }),
-            Bodies.rectangle(500, 350, 700, 20, { isStatic: true, angle: -Math.PI * 0.06 }),
-            Bodies.rectangle(340, 580, 700, 20, { isStatic: true, angle: Math.PI * 0.04 })
-        ]);*/
-
         document.addEventListener('contextmenu', (event) => {
             if (this.onContext) this.onContext();
             event.preventDefault()
@@ -102,22 +94,17 @@ export class Application {
 
         document.addEventListener('visibilitychange', () => {
             const TRICKYTIMECOEF = 0.75;
-            if (_.sm.stage == _.game) {
                 const SpeedUpCoef = 50;
                 if (document.hidden) {
-                    _.lostFocusAt = new Date().getTime();
+                    Application.One.lostFocusAt = new Date().getTime();
                 } else {
-                    let lag = new Date().getTime() - _.lostFocusAt;
-                    _.setTimeScale(SpeedUpCoef);
-                    //_.game.enableInput(false);
+                    let lag = new Date().getTime() - Application.One.lostFocusAt;
+                    Application.One.setTimeScale(SpeedUpCoef);
                     setTimeout(() => {
-                      //  _.game.enableInput(true);
-                        _.setTimeScale(1);
+                        Application.One.setTimeScale(1);
                     }, (lag / SpeedUpCoef) * TRICKYTIMECOEF);
                 }
-
                 this.activeTab = !document.hidden;
-            }
         });
 
         this.controls = new Controls();
@@ -129,8 +116,10 @@ export class Application {
             resolution: this.resolution, antialias: false,
             preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
         });
-        this.app.renderer = new PIXI.WebGLRenderer(this.SCR_WIDTH, this.SCR_HEIGHT  );
 
+       this.app.renderer = new PIXI.WebGLRenderer({width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
+       resolution: this.resolution,
+       });
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();
@@ -188,7 +177,9 @@ export class Application {
 
     removeFilter(main: PIXI.Container, f: PIXI.Filter<any>) {
         let m = <any>main;
-        m._filters.splice(_.sm.main.filters.indexOf(f), 1);
+        let inx = this.sm.main.filters.indexOf(f);
+        if (~inx)
+        m._filters.splice(inx, 1);
     }
 
     setTimeScale(x: number) {
