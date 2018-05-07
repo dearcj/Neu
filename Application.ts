@@ -9,7 +9,6 @@ import {Controls} from "./Controls";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
 import {Bodies, Engine, World} from "../lib/matter";
-export let FMath = (<any>window).FMath;
 
 declare let window: any;
 export let TweenMax = window.TweenMax;
@@ -28,11 +27,12 @@ export let Elastic = window.Elastic;
 export let SteppedEase = window.SteppedEase;
 export let SlowMo = window.SlowMo;
 export let Circ = window.Circ;
+export let FMath = (<any>window).FMath;
 
 export let TimelineMax = window.TimelineMax;
 
 export class Application {
-    public fMath = new FMath(null);
+    public fMath: any = new FMath(null);
     public engine: any;
 
     static One: Application;
@@ -190,7 +190,7 @@ export class Application {
     animate(): void {
         this.controls.update();
 
-        this.process();
+        //this.process();
         this.stats.update();
         this.timer.process();
         this.random = Math.random();
