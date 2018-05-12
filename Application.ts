@@ -81,6 +81,7 @@ export class Application {
     public globalMouseDown: Function;
     protected isInitialLoading: boolean = true;
     public resolution: number = 1;
+    protected addStats: boolean = true;
 
     start() {
         this.engine = Engine.create();
@@ -123,12 +124,13 @@ export class Application {
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();
-
-        this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
-        this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
-        document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
-        this.stats.stats.domElement.style.position = "absolute";
-        this.stats.stats.domElement.style.top = "0px";
+        if (this.addStats) {
+            this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
+            this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
+            document.body.appendChild(this.stats.stats.dom || this.stats.stats.domElement);
+            this.stats.stats.domElement.style.position = "absolute";
+            this.stats.stats.domElement.style.top = "0px";
+        }
         this.sm = new SM();
         this.sm.init();
         this.lm = new Loader();
@@ -191,7 +193,8 @@ export class Application {
         this.controls.update();
 
         //this.process();
-        this.stats.update();
+        if (this.addStats)
+            this.stats.update();
         this.timer.process();
         this.random = Math.random();
         this.time = (new Date()).getTime();
