@@ -72,7 +72,6 @@ export class Application {
     public totalFrames: number = 0;
     public totalDelta: number = 0;
     private statsPIXIHook: any;
-    private lostFocusAt: number;
     public stats: any;
     public timeScale: number = 1;
     public sound: Sound;
@@ -93,20 +92,7 @@ export class Application {
             event.preventDefault()
         });
 
-        document.addEventListener('visibilitychange', () => {
-            const TRICKYTIMECOEF = 0.75;
-                const SpeedUpCoef = 50;
-                if (document.hidden) {
-                    Application.One.lostFocusAt = new Date().getTime();
-                } else {
-                    let lag = new Date().getTime() - Application.One.lostFocusAt;
-                    Application.One.setTimeScale(SpeedUpCoef);
-                    setTimeout(() => {
-                        Application.One.setTimeScale(1);
-                    }, (lag / SpeedUpCoef) * TRICKYTIMECOEF);
-                }
-                this.activeTab = !document.hidden;
-        });
+
 
         this.controls = new Controls();
         this.PIXI = PIXI;

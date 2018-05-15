@@ -108,7 +108,7 @@ export class TrainEffect extends O {
             p.x = ix;
             p.y = iy;
         }
-        console.log(this.historyX.length, ' ', points.length)
+        //console.log(this.historyX.length, ' ', points.length)
         this.pos[0] += this.v[0];// * Application.One.worldSpeed * Application.One.delta2;
         this.pos[1] += this.v[1];// * Application.One.worldSpeed * Application.One.delta2;
 

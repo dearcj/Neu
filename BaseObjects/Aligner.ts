@@ -28,8 +28,6 @@ export class Aligner extends O {
         }
 
         let objectsUnderAligner = Aligner.collectObjectsUnder(this);
-        console.log("Objects under: ", objectsUnderAligner.length);
-
         let deltaX = Application.One.screenCenterOffset[0] * this.crossed[0];
         let deltaY = Application.One.screenCenterOffset[1] * this.crossed[1];
 
