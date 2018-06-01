@@ -4,6 +4,25 @@
 
 import {_} from "../main";
 
+export class LoadQueue {
+    private onEnd: Function;
+    private total: number = 0;
+    constructor(cb: Function) {
+        this.onEnd = cb;
+    }
+
+    onLoad(...any): Function{
+        this.total++;
+
+        return () => {
+            this.total--;
+            if (this.total == 0) {
+                this.onEnd();
+            }
+        }
+    }
+}
+
 export type Vec2 = [number, number]
 
 export type ARGBColor = [number, number, number, number]
