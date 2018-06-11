@@ -43,7 +43,7 @@ export class TrainEffect extends O {
         this.historyY = [];
         if (!props.scaleX) props.scaleX = 1;
         if (!props.scaleY) props.scaleY = 1;
-        this.points.push(new RopePoint(this.pos[0] / props.scaleX, this.pos[1] / props.scaleY))
+        this.points.push(new RopePoint(this.pos[0] / props.scaleX, this.pos[1] / props.scaleY));
 
         //for (let x = 0; x < this.totalPoints; x++) {
         //    this.points.push(new RopePoint(this.pos[0] / props.scaleX, this.pos[1] / props.scaleY))
@@ -109,8 +109,8 @@ export class TrainEffect extends O {
             p.y = iy;
         }
         //console.log(this.historyX.length, ' ', points.length)
-        this.pos[0] += this.v[0];// * Application.One.worldSpeed * Application.One.delta2;
-        this.pos[1] += this.v[1];// * Application.One.worldSpeed * Application.One.delta2;
+        this.x += this.v[0];// * Application.One.worldSpeed * Application.One.delta2;
+        this.y += this.v[1];// * Application.One.worldSpeed * Application.One.delta2;
 
         if (!this.noCameraOffset) {
             Application.One.sm.camera.transformPoint([0, 0], 1, this.pos2);

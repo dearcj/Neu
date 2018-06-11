@@ -352,7 +352,7 @@ export class O implements Contextable {
         if (!pos) {
             this.pos = [0, 0]
         } else {
-            this.pos = pos;
+            this.pos = m.v2cp(pos);
         }
 
         this.createTime = Application.One.timer.getTimer();

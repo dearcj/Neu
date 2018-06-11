@@ -11,7 +11,7 @@ export interface BaseParticle  {
 }
 
 export class BaseParticleSystem extends O{
-    protected particles: BaseParticle[] = [];
+    public particles: BaseParticle[] = [];
     public doOProcess: boolean = true;
 
     add<T extends BaseParticle>(p: T, gfx: DisplayObject): any {
@@ -44,7 +44,13 @@ export class BaseParticleSystem extends O{
     }
 
     processParticle(i: number, delta: number) {
+        let p = this.gfx.children[i];
+        let pobj: BaseParticle = this.particles[i];
 
+
+        p.x = pobj.x;
+        p.y = pobj.y;
+        p.alpha = pobj.alpha;
     }
 
     processParticles(timeDelta: number) {
