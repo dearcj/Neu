@@ -119,7 +119,6 @@ export class TrainEffect extends O {
         }
     }
 
-
     onDestroy() {
         this.pointFunc = null;
         this.historyX = null;

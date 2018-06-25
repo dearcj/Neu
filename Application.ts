@@ -12,6 +12,7 @@ import {Bodies, Engine, World} from "../lib/matter";
 
 declare let window: any;
 export let TweenMax = window.TweenMax;
+export let TimelineMax = window.TimelineMax;
 export let TweenLite = window.TweenLite;
 export let PIXI = window.PIXI;
 export let CustomEase = window.CustomEase;
@@ -24,12 +25,12 @@ export let Power3 = window.Power3;
 export let Power2 = window.Power2;
 export let Sine = window.Sine;
 export let Elastic = window.Elastic;
+export let Expo = window.Expo;
 export let SteppedEase = window.SteppedEase;
 export let SlowMo = window.SlowMo;
 export let Circ = window.Circ;
 export let FMath = (<any>window).FMath;
 
-export let TimelineMax = window.TimelineMax;
 
 export class Application {
     public fMath: any = new FMath(null);
@@ -141,9 +142,11 @@ export class Application {
         return null
     }
 
-    killTween(tween: any): null {
-        if (tween && tween.totalProgress() != 1)
-            tween.totalProgress(1).kill();
+    killTween(...tweens: any[]): null {
+        for (let tween of tweens) {
+            if (tween && tween.totalProgress() != 1)
+                tween.totalProgress(1).kill();
+        }
         return null
     }
 
@@ -276,7 +279,14 @@ export class Application {
         return p;
     }
 
-    public cs<T extends PIXI.Sprite>(s: string, layer: PIXI.Container = null): PIXI.heaven.Sprite{ //create sprite from frame and add to default layer
+    public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite{ //create sprite from frame and add to default layer
+        if (!s) {
+            let cont = new PIXI.Container();
+            if (layer)
+                layer.addChild(cont);
+            return cont;
+        }
+
         let texture;
         if (PIXI.utils.TextureCache[s]) {
             texture = PIXI.Texture.fromFrame(s);
@@ -293,9 +303,9 @@ export class Application {
             gfx.anchor.x = .5;
             gfx.anchor.y = .5;
             if (layer)
-                layer.addChild(gfx); else {
-            }
-            return gfx
+                layer.addChild(gfx);
+
+            return gfx;
         } else {
             console.log("@@@@Can't find ", s);
             return null;
