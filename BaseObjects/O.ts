@@ -391,7 +391,6 @@ export class O implements Contextable {
 
     init(props: any = null) {
         if (props) {
-
             if (props.color && this.gfx && this.gfx.color) {
                 (<PIXI.heaven.Sprite>this.gfx).color.tintBGR = parseInt(props.color.replace('#', '0x'));
             }
@@ -403,7 +402,7 @@ export class O implements Contextable {
         }
         this.createTime = Application.One.timer.getTimer();
 
-        if (this._gfx && !this._parent)
+        if (this._gfx && !this._parent && !this.noCameraOffset)
             Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
 
         this.updateBounds();

@@ -15,7 +15,6 @@ export interface BaseParticle  {
 
 export class BaseParticleSystem extends O{
     public particles: BaseParticle[] = [];
-    public doOProcess: boolean = true;
 
     constructor (pos: Vec2 = null, gfx: PIXI.DisplayObject = null) {
         super(pos, new PIXI.particles.ParticleContainer(300, {
@@ -41,11 +40,12 @@ export class BaseParticleSystem extends O{
     }
 
     init( props: any): void{
-        super.init(props);
-
-
         if (this.layer)
-        this.layer.addChild(this.gfx);
+            this.layer.addChild(this.gfx);
+
+
+
+        super.init(props);
     }
 
     onDestroy(): void{
@@ -78,7 +78,6 @@ export class BaseParticleSystem extends O{
     }
 
     process() {
-        if (this.doOProcess)
         super.process();
 
         this.processParticles(Application.One.deltaSec * Application.One.timeScale);
