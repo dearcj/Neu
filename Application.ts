@@ -93,8 +93,6 @@ export class Application {
             event.preventDefault()
         });
 
-
-
         this.controls = new Controls();
         this.PIXI = PIXI;
         this.resolution = this.appScale*window.devicePixelRatio;
@@ -343,6 +341,4 @@ export class Application {
     public _(s: string): O {
         return this.sm.findOne(s)
     }
-
-
 }
