@@ -1,7 +1,7 @@
 import {O} from "./BaseObjects/O";
 import {Camera} from "./BaseObjects/Camera";
 import {binarySearch, Vec2} from "./Math";
-import {Application} from "./Application";
+import {$DEBUG, Application} from "./Application";
 import {ITransition} from "./Transitions/ITransition";
 import {BlackTransition} from "./Transitions/BlackTransition";
 import {_, PIXIUI} from "../main";
@@ -234,6 +234,13 @@ export class SM {
                 if (obji.compositions && obji.compositions.length > 0)
                 obji.processCompositions();
                 obji.process();
+
+                if ($DEBUG) {
+                    if (obji.context.c != null) {
+                        throw "Context chain called without apply";
+                    }
+                }
+
             } else {
                 obji.onDestroy();
                 this.objects.splice(i, 1);

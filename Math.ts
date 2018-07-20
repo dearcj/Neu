@@ -279,6 +279,10 @@ class M {
         anchorDelta[1] = sa*prev0 + ca*anchorDelta[1];
     }
 
+    r(v: number = 1) {
+        return v*2*(Math.random() - 0.5)
+    }
+
     sqdist(pos: Vec2, pos2: Vec2) {
         return (pos[0] - pos2[0])*(pos[0] - pos2[0]) + (pos[1] - pos2[1])*(pos[1] - pos2[1])
     }

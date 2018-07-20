@@ -30,7 +30,7 @@ export let SteppedEase = window.SteppedEase;
 export let SlowMo = window.SlowMo;
 export let Circ = window.Circ;
 export let FMath = (<any>window).FMath;
-
+export let $DEBUG = true;
 
 export class Application {
     public fMath: any = new FMath(null);
