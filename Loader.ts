@@ -125,6 +125,7 @@ export class Loader {
 
         let data = this.levels[name];
         if (!data) {
+            throw 'No such level as ' + name;
             console.log('No such level as ', name);
             return;
         }
@@ -223,6 +224,7 @@ export class Loader {
             }
         };
 
+        let haveRestrictedGroup = false;
         for (let c of map.childNodes) {
             if (c.nodeName == 'group' && (!restrictGroup || c.attributes.getNamedItem('name').nodeValue.toLowerCase() == restrictGroup.toLowerCase())) {
                 let offsXattr = c.attributes.getNamedItem('offsetx');
@@ -230,7 +232,7 @@ export class Loader {
 
                 let ox: number = offsXattr? parseFloat(offsXattr.nodeValue) : 0;
                 let oy: number = offsYattr? parseFloat(offsYattr.nodeValue) : 0;
-
+                haveRestrictedGroup = true;
                 for (let x of c.childNodes) {
                     addObjectsFunc(x, ox, oy)
                 }
@@ -239,7 +241,11 @@ export class Loader {
             }
         }
 
-        if (offs != null) {
+        if (restrictGroup != null && !haveRestrictedGroup) {
+            throw "No such restricted group"
+        }
+
+            if (offs != null) {
             for (let x of objectsList) {
                 x.pos[0] += offs[0];
                 x.pos[1] += offs[1];
