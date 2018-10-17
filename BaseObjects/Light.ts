@@ -13,8 +13,8 @@ export class Light extends O{
 
     onDestroy() {
         this.gfx.parentLayer = null;
+        O.rp(this.gfx);
         super.onDestroy();
-        let li = <Lighting>Application.One.sm.findByType(Lighting)[0];
     }
 
     public createPolygon(polygon: any, properties: any) {

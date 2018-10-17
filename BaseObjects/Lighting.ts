@@ -19,7 +19,6 @@ export class Lighting extends BaseLighting {
 
     init(props: any) {
         this.alwaysVisible = true;
-        let delta = 0;
         this.ambient = <PIXI.heaven.Sprite>Application.One.cs(BaseLighting.DEFAULT_GFX);
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;

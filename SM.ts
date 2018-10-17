@@ -223,14 +223,27 @@ export class SM {
 
     }
 
-    process() {
+    cleanRemoved() {
         let len = this.objects.length;
-
-        Application.One.sm.camera.process();
 
         for (let i = len - 1; i >= 0; i--) {
             let obji: O = this.objects[i];
-            if (!obji.doRemove) {
+            if (obji.doRemove) {
+                obji.onDestroy();
+                this.objects.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    process() {
+        Application.One.sm.camera.process();
+
+        this.cleanRemoved();
+
+        let len = this.objects.length;
+        for (let i = len - 1; i >= 0; i--) {
+            let obji: O = this.objects[i];
                 if (obji.compositions && obji.compositions.length > 0)
                 obji.processCompositions();
                 obji.process();
@@ -239,12 +252,6 @@ export class SM {
                     if (obji.context.c != null) {
                         throw "Context chain called without apply";
                     }
-                }
-
-            } else {
-                obji.onDestroy();
-                this.objects.splice(i, 1);
-                i--;
             }
         }
 
