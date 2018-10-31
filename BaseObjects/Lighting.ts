@@ -3,14 +3,17 @@ import {Application, Sine, TweenMax} from "../Application";
 import {Light} from "./Light";
 import {LightFilter} from "../shaders/LightFilter";
 import {O} from "./O";
-import {RGBColor} from "../Math";
+import {m, RGBColor, Vec2} from "../Math";
+import {_} from "../../main";
 
 export class Lighting extends BaseLighting {
     private lightingLayer: PIXI.display.Layer;
     public lightFilter: LightFilter;
     private baseScaleX: number;
     private baseScaleY: number;
-
+    public baseLight: RGBColor = [1,1,1];
+    public baseIllum: RGBColor = [1,1,1];
+    public darkness: number = 1;
 
     onDestroy() {
         O.rp(this.ambient);
@@ -39,13 +42,41 @@ export class Lighting extends BaseLighting {
         this.ambient.parentLayer = this.lightingLayer;
         this.layer.addChild(this.ambient);
 
+
+        if (props['darkness']) {
+            this.darkness = parseFloat(props['darkness']);
+        }
+
+        if (props['color']) {
+            this.baseLight = m.numhexToRgbNormal(props['color'].replace('#', '0x'));
+        }
+        if (props['illum']) {
+            this.baseIllum = m.numhexToRgbNormal(props['illum'].replace('#', '0x'));
+        }
+
+        this.set(this.baseLight, this.baseIllum);
         this.updateLights();
         this.redraw();
 
+
         this.process();
+
+        console.log("Init new light");
     }
 
     public updateLights() {
+   //     _.app.renderer.bindRenderTexture(this.lightingLayer.getRenderTexture());
+   //     _.app.renderer.clear();
+   //        this.lightingLayer.getRenderTexture().
+   //     let par = this.lightingLayer.parent;
+   //     par.removeChild(this.lightingLayer);
+   //     par.addChild(this.lightingLayer);
+        for (let x = 2; x < this.lightingLayer.children.length; ++x) {//SKIP AMBIENT + LAYER CONTAINER
+            let c = this.lightingLayer.children[x];
+            c.parentLayer = null;
+            O.rp(c);
+        }
+
         this.lights = <Array<Light>>Application.One.sm.findByType(Light);
         for (let x of this.lights) {
             this.addLight(x)
@@ -53,23 +84,29 @@ export class Lighting extends BaseLighting {
     }
 
     tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9) {
-        TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0],
-            green: col[1],
-            blue: col[2],
+        TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0]*this.baseLight[0],
+            green: col[1]*this.baseLight[1],
+            blue: col[2]*this.baseLight[2],
         });
 
         if (illum)
-        TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0], lightG: illum[1], lightB: illum[2]});
+        TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0]*this.baseIllum[0], lightG: illum[1]*this.baseIllum[1], lightB: illum[2]*this.baseIllum[2]});
     }
 
     public redraw() {
     }
 
     addLight(l: Light): void {
+        if (l.stringID)
+        console.log("Added light [", l.stringID, "]");
+
+        l.gfx.parentLayer = null;
         O.rp(l.gfx);
+        l.gfx.stringID = l.stringID;
         this.layer.addChild(l.gfx);
         if (l.properties && !l.properties["blendMode"])
         l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
+        l.gfx.alpha = this.darkness;
         l.gfx.parentLayer = this.lightingLayer;
     }
 

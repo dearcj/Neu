@@ -63,7 +63,7 @@ export class SM {
         if (!list) list = this.objects;
         let res: Array<O> = [];
         for (let o of list)
-            if (o.properties[prop]) res.push(o);
+            if (!o.doRemove && o.properties[prop]) res.push(o);
 
         return res
     }
@@ -72,7 +72,7 @@ export class SM {
         if (!list) list = this.objects;
         let res: Array<O> = [];
         for (let o of list)
-            if (o.stringID == stringId) res.push(o);
+            if (!o.doRemove && o.stringID == stringId) res.push(o);
 
         return res
     }
@@ -85,13 +85,13 @@ export class SM {
 
         if (!list) list = this.objects;
         for (let o of list)
-            if (o.stringID == stringId) return o;
+            if (!o.doRemove && o.stringID == stringId) return o;
     }
 
     public findByTypeOne<T extends O>(constructor: { new (p: Vec2, gfx: any): T }, list: Array<O> = null): T {
         if (!list) list = this.objects;
         for (let o of list) {
-            if (o instanceof constructor) {
+            if (!o.doRemove && o instanceof constructor) {
                 return <T>o
             }
         }
@@ -102,7 +102,7 @@ export class SM {
         if (!list) list = this.objects;
         let res: Array<T> = [];
         for (let o of list) {
-            if (o instanceof constructor) {
+            if (!o.doRemove && o instanceof constructor) {
                 res.push(<T>o)
             }
         }

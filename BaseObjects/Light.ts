@@ -5,14 +5,18 @@ import {Application} from "../Application";
 import {Lighting} from "./Lighting";
 import {_} from "../../main";
 
-export class Light extends O{
+export class Light extends O {
     public initSize: Vec2;
     public rndSeed: number = 0;
     public isCandle: boolean = false;
     static POWER: number = 1;
 
     onDestroy() {
+        console.log("Light with ID = ", this.stringID, " destroyed");
+        if (this.gfx.parentLayer)
+            this.gfx.parentLayer.removeChild(this.gfx);
         this.gfx.parentLayer = null;
+
         O.rp(this.gfx);
         super.onDestroy();
     }
@@ -37,8 +41,8 @@ export class Light extends O{
         g.drawPolygon(arr);
         let b = g.getBounds();
 
-        let dx = g.width*0.4;
-        let dy = g.height*0.4;
+        let dx = g.width * 0.4;
+        let dy = g.height * 0.4;
         g.x = -minx + dx / 2;
         g.y = -miny + dy / 2;
         g.endFill();
@@ -55,7 +59,7 @@ export class Light extends O{
         // spr.anchor.x = 0.5;
         // spr.anchor.y = 0.5;
         spr.x = minx - dx / 2;
-        spr.y = miny - dy / 2 ;
+        spr.y = miny - dy / 2;
         container.addChild(spr);
         return container;
     }
@@ -80,21 +84,17 @@ export class Light extends O{
 
     process() {
         if (this.gfx.visible) {
-
             if (this.isCandle) {
                 let coef = (this.gfx.height / 1640);
-                let as =  Application.One.fMath.sin(Application.One.time / 120 + this.rndSeed / 10) * coef;
-
+                let as = Application.One.fMath.sin(Application.One.time / 120 + this.rndSeed / 10) * coef;
 
                 this.rndSeed += Math.random();
-                this.gfx.width = Light.POWER * this.initSize[0] + 8*Application.One.fMath.cos(Application.One.time / 70 + this.rndSeed / 10);
-                this.gfx.height = Light.POWER * this.initSize[1] + 8*as;
+                this.gfx.width = Light.POWER * this.initSize[0] + 8 * Application.One.fMath.cos(Application.One.time / 70 + this.rndSeed / 10);
+                this.gfx.height = Light.POWER * this.initSize[1] + 8 * as;
                 this.y += as;
             }
-
         }
 
-
-            super.process();
+        super.process();
     }
 }
