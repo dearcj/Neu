@@ -35,6 +35,63 @@ type BigTileset = {
     texname: string;
 }
 
+
+export function extractBlendMode(bm: string): number {
+    switch (bm) {
+        case 'normal':
+            return PIXI.BLEND_MODES.NORMAL;
+            break;
+        case 'add':
+            return PIXI.BLEND_MODES.ADD;
+            break;
+        case 'multiply':
+            return PIXI.BLEND_MODES.MULTIPLY;
+            break;
+        case 'screen':
+            return PIXI.BLEND_MODES.SCREEN;
+            break;
+        case 'overlay':
+            return PIXI.BLEND_MODES.OVERLAY;
+            break;
+        case 'darken':
+            return PIXI.BLEND_MODES.DARKEN;
+            break;
+        case 'dodge':
+            return PIXI.BLEND_MODES.COLOR_DODGE;
+            break;
+        case 'burn':
+            return PIXI.BLEND_MODES.COLOR_BURN;
+            break;
+        case 'hardlight':
+            return PIXI.BLEND_MODES.HARD_LIGHT;
+            break;
+        case 'softlight':
+            return PIXI.BLEND_MODES.SOFT_LIGHT;
+            break;
+        case 'difference':
+            return PIXI.BLEND_MODES.DIFFERENCE;
+            break;
+        case 'exclusion':
+            return PIXI.BLEND_MODES.EXCLUSION;
+            break;
+        case 'hue':
+            return PIXI.BLEND_MODES.HUE;
+            break;
+        case 'saturation':
+            return PIXI.BLEND_MODES.SATURATION;
+            break;
+        case 'color':
+            return PIXI.BLEND_MODES.COLOR;
+            break;
+        case 'luminosity':
+            return PIXI.BLEND_MODES.LUMINOSITY;
+            break;
+    }
+
+    return PIXI.BLEND_MODES.NORMAL;
+}
+
+
 export class Loader {
     removeExt(t: string): string {
         return t.replace(/\.[^/.]+$/, "")
@@ -365,59 +422,9 @@ export class Loader {
         gfx.position.x = 0;
         gfx.position.y = 0;
         gfx.alpha = properties['alpha'] ? properties['alpha'] : 1;
-
-        let blendMode = properties['blendMode'] ? properties['blendMode'].toLowerCase() : '';
-        switch (blendMode) {
-            case 'normal':
-                gfx.blendMode = PIXI.BLEND_MODES.NORMAL;
-                break;
-            case 'add':
-                gfx.blendMode = PIXI.BLEND_MODES.ADD;
-                break;
-            case 'multiply':
-                gfx.blendMode = PIXI.BLEND_MODES.MULTIPLY;
-                break;
-            case 'screen':
-                gfx.blendMode = PIXI.BLEND_MODES.SCREEN;
-                break;
-            case 'overlay':
-                gfx.blendMode = PIXI.BLEND_MODES.OVERLAY;
-                break;
-            case 'darken':
-                gfx.blendMode = PIXI.BLEND_MODES.DARKEN;
-                break;
-            case 'dodge':
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR_DODGE;
-                break;
-            case 'burn':
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR_BURN;
-                break;
-            case 'hardLight':
-                gfx.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
-                break;
-            case 'softLight':
-                gfx.blendMode = PIXI.BLEND_MODES.SOFT_LIGHT;
-                break;
-            case 'difference':
-                gfx.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
-                break;
-            case 'exclusion':
-                gfx.blendMode = PIXI.BLEND_MODES.EXCLUSION;
-                break;
-            case 'hue':
-                gfx.blendMode = PIXI.BLEND_MODES.HUE;
-                break;
-            case 'saturation':
-                gfx.blendMode = PIXI.BLEND_MODES.SATURATION;
-                break;
-            case 'color':
-                gfx.blendMode = PIXI.BLEND_MODES.COLOR;
-                break;
-            case 'luminosity':
-                gfx.blendMode = PIXI.BLEND_MODES.LUMINOSITY;
-                break;
+        if (properties['blendMode']) {
+            gfx.blendMode = extractBlendMode(properties['blendMode'].toLowerCase());
         }
-
 
         return gfx
     }

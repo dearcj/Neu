@@ -63,6 +63,9 @@ export  function binaryInsert (array, target, duplicate, comparator) {
 }
 
 class M {
+    ARGBtoRGB(arg0: ARGBColor): RGBColor{
+        return [arg0[1], arg0[2], arg0[3]];
+    }
     v2cp(v: Vec2): Vec2{
         return [v[0], v[1]]
     }
@@ -111,19 +114,12 @@ class M {
     }
 
 
-    numhexToRgb(numhex: number): ARGBColor{
-        let r = numhex >> 16;
-        let g = numhex >> 8 & 0xFF;
-        let b = numhex & 0xFF;
-        return [255, r,g,b];
-    }
-
-    numhexToRgbNormal(numhex: number): RGBColor{
+  /*  numhexToRgbNormal(numhex: number): RGBColor{
         let r = numhex >> 16;
         let g = numhex >> 8 & 0xFF;
         let b = numhex & 0xFF;
         return [r / 255.,g / 255.,b / 255.];
-    }
+    }*/
 
     decimalAdjust(type: string, value: any, exp:number) {
         // Если степень не определена, либо равна нулю...
@@ -172,14 +168,26 @@ class M {
         return obj[Math.floor(Math.random() * obj.length)];
     }
 
-    hexToRgb(hex): ARGBColor {
+    ARGBNormal(a: ARGBColor): ARGBColor {
+        a[0] = a[0] / 255.;
+        a[1] = a[1] / 255.;
+        a[2] = a[2] / 255.;
+        a[3] = a[3] / 255.;
+
+        return a;
+    }
+
+    hexToRgb(hex, normal: boolean = true): ARGBColor {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? [
+        let res: ARGBColor = result ? [
                 parseInt(result[1], 16),
                 parseInt(result[2], 16),
                 parseInt(result[3], 16),
                 parseInt(result[4], 16),
             ] : null;
+        if (res && normal) {
+            return this.ARGBNormal(res)
+        }
     }
 
     hslToRgb(h: number, s: number, l: number): number {

@@ -10,6 +10,7 @@ export class Light extends O {
     public rndSeed: number = 0;
     public isCandle: boolean = false;
     static POWER: number = 1;
+    public baseAlpha: number = 1;
 
     onDestroy() {
         console.log("Light with ID = ", this.stringID, " destroyed");
@@ -73,6 +74,7 @@ export class Light extends O {
         this.initSize = [this.gfx.width, this.gfx.height];
         this.isCandle = props.candle == "true";
         super.init(props)
+        this.baseAlpha = this.gfx.alpha;
     }
 
     addToScene() {

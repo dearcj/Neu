@@ -17,9 +17,9 @@ export class BaseLighting extends O {
 
     public ambient: PIXI.heaven.Sprite;
     public ambientContainer: PIXI.Container;
-    public envColor: RGBColor = [1, 1, 1];
-    public envColorDark: RGBColor = [0, 0, 0];
-    public defaultColor: RGBColor = [1, 1, 1];
+    public envColor: ARGBColor = [1, 1, 1, 1];
+    public envColorDark: ARGBColor = [1, 0, 0, 0];
+    public defaultColor: ARGBColor = [1, 1, 1, 1];
     public lights: Light[] = [];
     protected filterArea: PIXI.Rectangle;
     public illum: RGBColor = [0.5, 0.5, 0.5];
@@ -87,7 +87,6 @@ export class BaseLighting extends O {
         this.ambient.height = Application.One.SCR_HEIGHT;
         this.ambientContainer = new PIXI.Container();
         this.ambientContainer.addChild(this.ambient);
-        console.log("ADDED LIGHT");
         this.envColor = this.defaultColor;
         this.gfx.addChild(this.ambientContainer);
         this.layer.addChild(this.gfx);

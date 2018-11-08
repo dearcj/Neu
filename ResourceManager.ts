@@ -68,7 +68,6 @@ export class ResourceManager  {
 
             }
 
-
             onProcess(loader, evt)
         });
         loader.load();

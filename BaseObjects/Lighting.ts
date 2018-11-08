@@ -3,10 +3,49 @@ import {Application, Sine, TweenMax} from "../Application";
 import {Light} from "./Light";
 import {LightFilter} from "../shaders/LightFilter";
 import {O} from "./O";
-import {m, RGBColor, Vec2} from "../Math";
+import {ARGBColor, m, RGBColor, Vec2} from "../Math";
 import {_} from "../../main";
+import {extractBlendMode} from "../Loader";
+import BlendMode = PIXI.spine.core.BlendMode;
 
 export class Lighting extends BaseLighting {
+    get brightness(): number {
+        return this._brightness;
+    }
+
+    set brightness(value: number) {
+        this._brightness = value;
+        this.lightFilter.uniforms.brightness = value;
+    }
+    get gamma(): number {
+        return this._gamma;
+    }
+
+    set gamma(value: number) {
+        this._gamma = value;
+        this.lightFilter.uniforms.gamma = value;
+    }
+    private _gamma: number;
+    private _brightness: number;
+
+    get contrast(): number {
+        return this._contrast;
+    }
+
+    set contrast(value: number) {
+        this._contrast = value;
+        this.lightFilter.uniforms.contrast = value;
+    }
+
+    get saturation(): number {
+        return this._saturation;
+    }
+
+    set saturation(value: number) {
+        this._saturation = value;
+        this.lightFilter.uniforms.saturation = value;
+    }
+
     private lightingLayer: PIXI.display.Layer;
     public lightFilter: LightFilter;
     private baseScaleX: number;
@@ -14,6 +53,10 @@ export class Lighting extends BaseLighting {
     public baseLight: RGBColor = [1,1,1];
     public baseIllum: RGBColor = [1,1,1];
     public darkness: number = 1;
+    private blendMode: number;
+
+    private _saturation: number;
+    private _contrast: number;
 
     onDestroy() {
         O.rp(this.ambient);
@@ -34,7 +77,28 @@ export class Lighting extends BaseLighting {
         this.lightingLayer.useRenderTexture = true;
         this.layer.addChild(this.lightingLayer);
 
-        this.lightFilter = new LightFilter({saturation: -3, brightness: 0.7,  contrast: 0.5, gamma: 1, lightSampler: this.lightingLayer.getRenderTexture()});
+        this.lightFilter = new LightFilter({saturation: 0, brightness: 0.,  contrast: 0., gamma: 1, lightSampler: this.lightingLayer.getRenderTexture()});
+
+        this.saturation = -3;
+        if (props["saturation"]) {
+            this.saturation = parseFloat(props["saturation"]);
+        }
+
+        this.contrast = 0.5;
+        if (props["contrast"]) {
+            this.contrast = parseFloat(props["contrast"]);
+        }
+
+        this.gamma = 1;
+        if (props["gamma"]) {
+            this.gamma = parseFloat(props["gamma"]);
+        }
+
+        this.brightness = 1;
+        if (props["brightness"]) {
+            this.brightness = parseFloat(props["brightness"]);
+        }
+
         Application.One.sm.main.filters = [this.lightFilter];
         Application.One.sm.main.filterArea = Application.One.app.screen;
         this.lightFilter.resolution = Application.One.resolution;
@@ -42,39 +106,36 @@ export class Lighting extends BaseLighting {
         this.ambient.parentLayer = this.lightingLayer;
         this.layer.addChild(this.ambient);
 
+        this.blendMode = PIXI.BLEND_MODES.ADD;
+        if (props && !props["blendmode"])
+            this.blendMode = PIXI.BLEND_MODES.ADD; else
+            this.blendMode = extractBlendMode(props["blendmode"]);
 
         if (props['darkness']) {
             this.darkness = parseFloat(props['darkness']);
         }
 
         if (props['color']) {
-            this.baseLight = m.numhexToRgbNormal(props['color'].replace('#', '0x'));
+            this.baseLight = m.ARGBtoRGB(m.hexToRgb(props['color']));
         }
         if (props['illum']) {
-            this.baseIllum = m.numhexToRgbNormal(props['illum'].replace('#', '0x'));
+            this.baseIllum = m.ARGBtoRGB(m.hexToRgb(props['illum']));
         }
-
-        this.set(this.baseLight, this.baseIllum);
-        this.updateLights();
+        this.wait(0).call(this.updateLights.bind(this)).apply();
         this.redraw();
-
+        this.set(this.baseLight, this.baseIllum);
 
         this.process();
-
-        console.log("Init new light");
     }
 
     public updateLights() {
-   //     _.app.renderer.bindRenderTexture(this.lightingLayer.getRenderTexture());
-   //     _.app.renderer.clear();
-   //        this.lightingLayer.getRenderTexture().
-   //     let par = this.lightingLayer.parent;
-   //     par.removeChild(this.lightingLayer);
-   //     par.addChild(this.lightingLayer);
-        for (let x = 2; x < this.lightingLayer.children.length; ++x) {//SKIP AMBIENT + LAYER CONTAINER
-            let c = this.lightingLayer.children[x];
-            c.parentLayer = null;
-            O.rp(c);
+        if (this.lights) {
+            for (let x of this.lights) {//SKIP AMBIENT + LAYER CONTAINER
+                if (x.gfx) {
+                    x.gfx.parentLayer = null;
+                    O.rp(x.gfx);
+                }
+            }
         }
 
         this.lights = <Array<Light>>Application.One.sm.findByType(Light);
@@ -103,11 +164,11 @@ export class Lighting extends BaseLighting {
         l.gfx.parentLayer = null;
         O.rp(l.gfx);
         l.gfx.stringID = l.stringID;
-        this.layer.addChild(l.gfx);
-        if (l.properties && !l.properties["blendMode"])
-        l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
-        l.gfx.alpha = this.darkness;
+        l.gfx.blendMode = this.blendMode;
+
+        l.gfx.alpha = l.baseAlpha * this.darkness;
         l.gfx.parentLayer = this.lightingLayer;
+        this.layer.addChild(l.gfx);
     }
 
     process() {
