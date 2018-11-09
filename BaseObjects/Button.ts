@@ -125,7 +125,7 @@ export class Button extends IO {
                 }
 
                 if (this.clickAnimation) {
-                    this._upTween = Application.One.killTween( this._upTween);
+                    this._upTween = Application.One.killTweens( this._upTween);
                     this._downTween = new TweenMax(this, 0.1, {y: this.y + CLICK_STEP, ease: Linear.easeIn});
                 }
             }
@@ -148,8 +148,8 @@ export class Button extends IO {
     }
 
     onDestroy() {
-        this._downTween = Application.One.killTween(this._downTween);
-        this._upTween = Application.One.killTween(this._upTween);
+        this._downTween = Application.One.killTweens(this._downTween);
+        this._upTween = Application.One.killTweens(this._upTween);
 
         if (this.gfx) {
             this.gfx.mouseover = null;
@@ -167,7 +167,7 @@ export class Button extends IO {
     highlight() {
         let loop = 0;
         if (this.__highlight)
-            this.__highlight = Application.One.killTween(this.__highlight);
+            this.__highlight = Application.One.killTweens(this.__highlight);
 
         this.__highlight = this.setInterval(() => {
             loop += 0.38;
@@ -178,14 +178,14 @@ export class Button extends IO {
         this.wait(0.12).call(() => {
             this.gfx.color.setDark(0, 0, 0);
             //  this.gfx.color.setLight(1,1,1);
-            this.__highlight = Application.One.killTween(this.__highlight);
+            this.__highlight = Application.One.killTweens(this.__highlight);
         }).apply();
     }
 
     private resetFade() {
         if (this.clickAnimation) {
             if (this._downTween) {
-                this._downTween = Application.One.killTween(this._downTween);
+                this._downTween = Application.One.killTweens(this._downTween);
                 this._upTween = new TweenMax(this, 0.1, {y: this.y-CLICK_STEP, ease: Linear.easeOut});
             }
         }

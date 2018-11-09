@@ -8,7 +8,19 @@ import {_} from "../../main";
 import {extractBlendMode} from "../Loader";
 import BlendMode = PIXI.spine.core.BlendMode;
 
-export class Lighting extends BaseLighting {
+export class Lighting extends O {
+    get darkness(): number {
+        return this._darkness;
+    }
+
+    set darkness(value: number) {
+        this._darkness = value;
+
+        if (this.lights)
+        for (let l of this.lights) {
+            l.gfx.alpha = l.baseAlpha * this._darkness;
+        }
+    }
     get brightness(): number {
         return this._brightness;
     }
@@ -46,20 +58,37 @@ export class Lighting extends BaseLighting {
         this.lightFilter.uniforms.saturation = value;
     }
 
+    public ambient: PIXI.heaven.Sprite;
+    public ambientContainer: PIXI.Container;
+    public lights: Light[] = [];
     private lightingLayer: PIXI.display.Layer;
     public lightFilter: LightFilter;
     private baseScaleX: number;
     private baseScaleY: number;
     public baseLight: RGBColor = [1,1,1];
     public baseIllum: RGBColor = [1,1,1];
-    public darkness: number = 1;
+    private _darkness: number = 1;
     private blendMode: number;
-
+    public color: RGBColor;
+    public illum: RGBColor;
     private _saturation: number;
     private _contrast: number;
 
     onDestroy() {
+        if (this.gfx) {
+            this.gfx.filters[0].blendMode = PIXI.BLEND_MODES.NORMAL;
+            this.gfx.filters = null;
+            this.gfx.filterArea = null;
+
+            TweenMax.killTweensOf(this);
+        }
+
+        O.rp(this.ambientContainer);
         O.rp(this.ambient);
+        this.ambientContainer = null;
+        this.ambient = null;
+        this.lights = [];
+
         super.onDestroy();
     }
 
@@ -68,7 +97,6 @@ export class Lighting extends BaseLighting {
         this.ambient = <PIXI.heaven.Sprite>Application.One.cs(BaseLighting.DEFAULT_GFX);
         this.ambient.width = Application.One.SCR_WIDTH;
         this.ambient.height = Application.One.SCR_HEIGHT;
-        this.envColor = this.defaultColor;
 
         this.baseScaleX = this.ambient.scale.x;
         this.baseScaleY = this.ambient.scale.y;
@@ -111,19 +139,19 @@ export class Lighting extends BaseLighting {
             this.blendMode = PIXI.BLEND_MODES.ADD; else
             this.blendMode = extractBlendMode(props["blendmode"]);
 
-        if (props['darkness']) {
-            this.darkness = parseFloat(props['darkness']);
+        if (props['_darkness']) {
+            this._darkness = parseFloat(props['_darkness']);
         }
 
         if (props['color']) {
-            this.baseLight = m.ARGBtoRGB(m.hexToRgb(props['color']));
+            this.color = m.ARGBtoRGB(m.hexToRgb(props['color']));
         }
         if (props['illum']) {
-            this.baseIllum = m.ARGBtoRGB(m.hexToRgb(props['illum']));
+            this.illum = m.ARGBtoRGB(m.hexToRgb(props['illum']));
         }
         this.wait(0).call(this.updateLights.bind(this)).apply();
         this.redraw();
-        this.set(this.baseLight, this.baseIllum);
+        this.set(this.color, this.illum);
 
         this.process();
     }
@@ -144,14 +172,17 @@ export class Lighting extends BaseLighting {
         }
     }
 
-    tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9) {
-        TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0]*this.baseLight[0],
-            green: col[1]*this.baseLight[1],
-            blue: col[2]*this.baseLight[2],
-        });
+    tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9): Array<any> {
+        let tweens = [
+        TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0],
+            green: col[1],
+            blue: col[2],
+        })];
 
         if (illum)
-        TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0]*this.baseIllum[0], lightG: illum[1]*this.baseIllum[1], lightB: illum[2]*this.baseIllum[2]});
+        tweens.push(TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0]*this.baseIllum[0], lightG: illum[1]*this.baseIllum[1], lightB: illum[2]*this.baseIllum[2]}));
+
+        return tweens;
     }
 
     public redraw() {
@@ -166,7 +197,7 @@ export class Lighting extends BaseLighting {
         l.gfx.stringID = l.stringID;
         l.gfx.blendMode = this.blendMode;
 
-        l.gfx.alpha = l.baseAlpha * this.darkness;
+        l.gfx.alpha = l.baseAlpha * this._darkness;
         l.gfx.parentLayer = this.lightingLayer;
         this.layer.addChild(l.gfx);
     }
@@ -176,11 +207,18 @@ export class Lighting extends BaseLighting {
         this.ambient.y = -Application.One.SCR_HEIGHT * (-0.5 );
         this.ambient.scale.x = (this.baseScaleX / Application.One.sm.camera.zoom);// -_.sm.camera.x - _.SCR_WIDTH_HALF;
         this.ambient.scale.y = (this.baseScaleY / Application.One.sm.camera.zoom);// -_.sm.camera.y - _.SCR_HEIGHT_HALF;
-
+        let arr  = [Math.round(this.lightFilter.uniforms.red*255), Math.round(this.lightFilter.uniforms.green*255), Math.round(this.lightFilter.uniforms.blue*255),
+            Math.round(100*this.lightFilter.uniforms.saturation)/ 100,
+            Math.round(100*this.lightFilter.uniforms.contrast)/ 100,
+            Math.round(100*this.lightFilter.uniforms.brightness)/ 100];
+        console.log(arr);
         this.redraw();
     }
 
     set(col: RGBColor, illum: RGBColor = null) {
+        this.illum = illum;
+        this.color = col;
+
         this.lightFilter.uniforms.red = col[0];
         this.lightFilter.uniforms.green = col[1];
         this.lightFilter.uniforms.blue = col[2];

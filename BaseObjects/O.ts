@@ -476,7 +476,7 @@ export class O implements Contextable {
         let ff = this.setInterval(f, delaySecs);
 
         TweenMax.delayedCall(timeoutSecs, () => {
-            ff = Application.One.killTween(ff);
+            ff = Application.One.killTweens(ff);
         });
         return ff;
     }
@@ -484,7 +484,7 @@ export class O implements Contextable {
     setInterval(f: Function, delaySecs: number = 0.03): any {
         if (delaySecs < 0.03) delaySecs = 0.03;
         let interval = new TimelineMax({repeat: -1}).call(() => {
-            if (this.doRemove) return Application.One.killTween(interval);
+            if (this.doRemove) return Application.One.killTweens(interval);
             return f();
         }, null, null, delaySecs);
 

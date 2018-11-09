@@ -140,7 +140,7 @@ export class Application {
         return null
     }
 
-    killTween(...tweens: any[]): null {
+    killTweens(...tweens: any[]): null {
         for (let tween of tweens) {
             if (tween && tween.totalProgress() != 1)
                 tween.totalProgress(1).kill();
