@@ -258,7 +258,10 @@ export class O implements Contextable {
             (Math.abs(o.y - this.y) < (o.height + this.height) / 2));
     }
 
-
+    /*****
+    * Link object list to this
+    * any this movement will move linked objects
+     ***/
     linkObj(...o: O[]) {
         if (!this.linkedObjects) this.linkedObjects = [];
         for (let x of o) {

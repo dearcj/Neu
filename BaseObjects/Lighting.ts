@@ -177,10 +177,16 @@ export class Lighting extends O {
         TweenMax.to(this.lightFilter.uniforms, deltaTimeSec, {red: col[0],
             green: col[1],
             blue: col[2],
+            ease: Sine.easeIn,
         })];
 
         if (illum)
-        tweens.push(TweenMax.to(this.ambient.color, deltaTimeSec, {lightR: illum[0]*this.baseIllum[0], lightG: illum[1]*this.baseIllum[1], lightB: illum[2]*this.baseIllum[2]}));
+        tweens.push(TweenMax.to(this.ambient.color, deltaTimeSec, {
+            lightR: illum[0]*this.baseIllum[0],
+            lightG: illum[1]*this.baseIllum[1],
+            lightB: illum[2]*this.baseIllum[2],
+            ease: Sine.easeIn,
+        }));
 
         return tweens;
     }
@@ -208,6 +214,8 @@ export class Lighting extends O {
         this.ambient.scale.x = (this.baseScaleX / Application.One.sm.camera.zoom);// -_.sm.camera.x - _.SCR_WIDTH_HALF;
         this.ambient.scale.y = (this.baseScaleY / Application.One.sm.camera.zoom);// -_.sm.camera.y - _.SCR_HEIGHT_HALF;
         let arr  = [Math.round(this.lightFilter.uniforms.red*255), Math.round(this.lightFilter.uniforms.green*255), Math.round(this.lightFilter.uniforms.blue*255),
+            Math.round(this.ambient.color.lightR*255), Math.round(this.ambient.color.lightG*255), Math.round(this.ambient.color.lightB*255),
+
             Math.round(100*this.lightFilter.uniforms.saturation)/ 100,
             Math.round(100*this.lightFilter.uniforms.contrast)/ 100,
             Math.round(100*this.lightFilter.uniforms.brightness)/ 100];

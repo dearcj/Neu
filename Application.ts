@@ -293,7 +293,7 @@ export class Application {
         }
 
         if (!texture) {
-            console.log("@@@@Can't find ", s);
+            console.log("Can't find ", s);
             return null;
         }
         if (texture) {
@@ -305,7 +305,7 @@ export class Application {
 
             return gfx;
         } else {
-            console.log("@@@@Can't find ", s);
+            console.log("Can't find ", s);
             return null;
         }
 
@@ -320,7 +320,7 @@ export class Application {
         }
 
         if (!texture) {
-            console.log("@@@@Can't find ", s);
+            console.log("Can't find ", s);
             return null;
         }
         if (texture) {
@@ -332,7 +332,7 @@ export class Application {
             }
             return gfx
         } else {
-            console.log("@@@@Can't find ", s);
+            console.log("Can't find ", s);
             return null;
         }
 
