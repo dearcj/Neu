@@ -127,10 +127,10 @@ export class Lighting extends O {
             this.brightness = parseFloat(props["brightness"]);
         }
 
-        Application.One.sm.main.filters = [this.lightFilter];
+       // this.lightFilter.resolution = _.app.renderer.resolution;// 1 / window.devicePixelRatio;//Application.One.resolution;
         Application.One.sm.main.filterArea = Application.One.app.screen;
-        this.lightFilter.resolution = Application.One.resolution;
-
+        Application.One.sm.main.filters = [this.lightFilter];
+        console.log("LIGHTING FILTER RESOLUTION: ", this.lightFilter.resolution);
         this.ambient.parentLayer = this.lightingLayer;
         this.layer.addChild(this.ambient);
 

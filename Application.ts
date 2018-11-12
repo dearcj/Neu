@@ -95,7 +95,9 @@ export class Application {
 
         this.controls = new Controls();
         this.PIXI = PIXI;
-        this.resolution = this.appScale*window.devicePixelRatio;
+
+
+        this.resolution = this.appScale * window.devicePixelRatio;
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
             clearBeforeRender: false,
@@ -103,9 +105,12 @@ export class Application {
             preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
         });
 
-       this.app.renderer = new PIXI.WebGLRenderer({width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
-       resolution: this.resolution,
-       });
+        this.app.renderer = new PIXI.WebGLRenderer({
+            width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
+            resolution: this.resolution,
+        });
+
+        PIXI.settings.FILTER_RESOLUTION = this.app.renderer.resolution;
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();
@@ -134,7 +139,7 @@ export class Application {
         let tweens = TweenMax.getTweensOf(obj);
         for (let t of tweens) {
             if (t.totalProgress() != 1)
-            t.totalProgress(1).kill();
+                t.totalProgress(1).kill();
         }
 
         return null
@@ -168,7 +173,7 @@ export class Application {
         let m = <any>main;
         let inx = this.sm.main.filters.indexOf(f);
         if (~inx)
-        m._filters.splice(inx, 1);
+            m._filters.splice(inx, 1);
     }
 
     setTimeScale(x: number) {
@@ -277,7 +282,7 @@ export class Application {
         return p;
     }
 
-    public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite{ //create sprite from frame and add to default layer
+    public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
         if (!s) {
             let cont = new PIXI.Container();
             if (layer)
@@ -311,7 +316,7 @@ export class Application {
 
     }
 
-    public csStd(s: string, layer: PIXI.Container = null): PIXI.Sprite{ //create sprite from frame and add to default layer
+    public csStd(s: string, layer: PIXI.Container = null): PIXI.Sprite { //create sprite from frame and add to default layer
         let texture;
         if (PIXI.utils.TextureCache[s]) {
             texture = PIXI.Texture.fromFrame(s);
