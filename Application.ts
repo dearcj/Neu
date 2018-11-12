@@ -110,7 +110,7 @@ export class Application {
             resolution: this.resolution,
         });
 
-        PIXI.settings.FILTER_RESOLUTION = this.app.renderer.resolution;
+        PIXI.settings.FILTER_RESOLUTION = this.resolution;
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();
@@ -214,7 +214,7 @@ export class Application {
 
     public setScreenRes(baseW: number, baseH: number) {
         this.appScale = baseH / MIN_SCR_HEIGHT;
-        if (this.appScale > 1.28) this.appScale = 1.28;
+      //  if (this.appScale > 1.28) this.appScale = 1.28;
         this.SCR_WIDTH = Math.floor(baseW / this.appScale);
         this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
         this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;

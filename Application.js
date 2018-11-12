@@ -65,7 +65,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
                 resolution: this.resolution,
             });
-            exports.PIXI.settings.FILTER_RESOLUTION = this.app.renderer.resolution;
+            exports.PIXI.settings.FILTER_RESOLUTION = this.resolution;
             document.body.appendChild(this.app.view);
             this.app.stage = new exports.PIXI.display.Stage();
             if (this.addStats) {
@@ -156,8 +156,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         };
         Application.prototype.setScreenRes = function (baseW, baseH) {
             this.appScale = baseH / ClientSettings_1.MIN_SCR_HEIGHT;
-            if (this.appScale > 1.28)
-                this.appScale = 1.28;
+            //  if (this.appScale > 1.28) this.appScale = 1.28;
             this.SCR_WIDTH = Math.floor(baseW / this.appScale);
             this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
             this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
