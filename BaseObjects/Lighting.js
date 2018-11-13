@@ -164,6 +164,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                 var x = _c[_b];
                 this.addLight(x);
             }
+            console.log(main_1._.sm.findByType(Lighting));
         };
         Lighting.prototype.tweenColorTo = function (col, illum, deltaTimeSec) {
             if (illum === void 0) { illum = null; }

@@ -170,6 +170,8 @@ export class Lighting extends O {
         for (let x of this.lights) {
             this.addLight(x)
         }
+
+        console.log( _.sm.findByType(Lighting));
     }
 
     tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9): Array<any> {

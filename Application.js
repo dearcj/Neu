@@ -59,7 +59,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 autoStart: false,
                 clearBeforeRender: false,
                 resolution: this.resolution, antialias: false,
-                preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
+                preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x111111,
             });
             this.app.renderer = new exports.PIXI.WebGLRenderer({
                 width: this.SCR_WIDTH, height: this.SCR_HEIGHT,

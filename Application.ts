@@ -101,7 +101,7 @@ export class Application {
             autoStart: false,
             clearBeforeRender: false,
             resolution: this.resolution, antialias: false,
-            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0xaaaaaa,
+            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x111111,
         });
 
         this.app.renderer = new PIXI.WebGLRenderer({
