@@ -3,7 +3,7 @@
  */
 import {O} from "./O";
 import {m, Vec2} from "../Math";
-import {Application, TweenMax} from "../Application";
+import {Application, Power2, TweenMax} from "../Application";
 
 export class Camera extends O {
     private deltaAngle: number = 0;
@@ -66,6 +66,10 @@ export class Camera extends O {
 
     follow(o: O) {
         this.followObj = o;
+    }
+
+    makeShake(powerPercentage: number, duration: number): void {
+        TweenMax.to(this, duration, {zoom: this.zoom * (1 + powerPercentage), yoyo: true, repeat: 1, ease: Power2.easeOut});
     }
 
     constructor(pos: Vec2) {

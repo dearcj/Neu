@@ -96,7 +96,6 @@ export class Application {
         this.controls = new Controls();
         this.PIXI = PIXI;
 
-
         this.resolution = this.appScale * window.devicePixelRatio;
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
@@ -109,8 +108,6 @@ export class Application {
             width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
             resolution: this.resolution,
         });
-
-        PIXI.settings.FILTER_RESOLUTION = this.resolution;
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();

@@ -65,7 +65,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
                 resolution: this.resolution,
             });
-            exports.PIXI.settings.FILTER_RESOLUTION = this.resolution;
             document.body.appendChild(this.app.view);
             this.app.stage = new exports.PIXI.display.Stage();
             if (this.addStats) {

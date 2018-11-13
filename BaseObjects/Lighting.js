@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./BaseLighting", "../Application", "./Light", "../shaders/LightFilter", "./O", "../Math", "../Loader"], function (require, exports, BaseLighting_1, Application_1, Light_1, LightFilter_1, O_1, Math_1, Loader_1) {
+define(["require", "exports", "./BaseLighting", "../Application", "./Light", "../shaders/LightFilter", "./O", "../Math", "../../main", "../Loader"], function (require, exports, BaseLighting_1, Application_1, Light_1, LightFilter_1, O_1, Math_1, main_1, Loader_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Lighting = /** @class */ (function (_super) {
@@ -124,7 +124,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
             if (props["brightness"]) {
                 this.brightness = parseFloat(props["brightness"]);
             }
-            // this.lightFilter.resolution = _.app.renderer.resolution;// 1 / window.devicePixelRatio;//Application.One.resolution;
+            this.lightFilter.resolution = main_1._.app.renderer.resolution; // 1 / window.devicePixelRatio;//Application.One.resolution;
             Application_1.Application.One.sm.main.filterArea = Application_1.Application.One.app.screen;
             Application_1.Application.One.sm.main.filters = [this.lightFilter];
             console.log("LIGHTING FILTER RESOLUTION: ", this.lightFilter.resolution);

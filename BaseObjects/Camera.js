@@ -83,6 +83,9 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.follow = function (o) {
             this.followObj = o;
         };
+        Camera.prototype.makeShake = function (powerPercentage, duration) {
+            Application_1.TweenMax.to(this, duration, { zoom: this.zoom * (1 + powerPercentage), yoyo: true, repeat: 1, ease: Application_1.Power2.easeOut });
+        };
         Camera.prototype.stop = function () {
             this.v[0] = 0;
             this.v[1] = 0;
