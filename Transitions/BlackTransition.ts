@@ -14,11 +14,11 @@ export class BlackTransition implements ITransition {
         x.drawRect(0, 0, Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
         x.endFill();
 
-        let c = Application.One.cp(Application.One.sm.superstage);
+        let c = Application.One.cc(Application.One.sm.superstage);
         c.addChild(x);
         c.alpha = 0;
 
-        let c2 = Application.One.cp(c);
+        let c2 = Application.One.cc(c);
         for (let x = 0; x < 12; x ++) {
             let sand1 = Application.One.cs("dirtsand", c2);
             sand1.x = Application.One.SCR_WIDTH_HALF + Math.random()*5000;

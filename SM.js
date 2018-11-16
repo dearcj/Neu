@@ -200,7 +200,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             Application_1.Application.One.sm.camera.process();
             this.cleanRemoved();
             var len = this.objects.length;
-            for (var i = len - 1; i >= 0; i--) {
+            for (var i = len - 1; i >= 0; --i) {
                 var obji = this.objects[i];
                 if (obji.compositions && obji.compositions.length > 0)
                     obji.processCompositions();

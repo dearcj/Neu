@@ -11,8 +11,7 @@ const LINE_BREAK = 18;
 
 export type ColorFunc = (obj: any, word: string, tags: string[]) => {color: number; word: string}
 
-export class Tooltip {
-    public pos: Vec2;
+export class Tooltip extends O {
     currentObject: any; //any kind of object we made tooltip for
 
     get currentTip(): PIXI.Container {
@@ -31,16 +30,6 @@ export class Tooltip {
     }
 
     protected _currentTip: PIXI.Container;
-
-    constructor(p: Vec2) {
-        if (!p) {
-            this.pos = [0, 0];
-        } else {
-            this.pos = p;
-        }
-    }
-
-
 
     addSpaces(texts: Array<any>, y: number, boundWidth: number) {
         let line = [];

@@ -85,7 +85,7 @@ export class Application {
 
     start() {
         this.engine = Engine.create();
-        TweenMax.lagSmoothing(0);
+        //TweenMax.lagSmoothing(0);
         TweenLite.ticker.useRAF(true);
 
         document.addEventListener('contextmenu', (event) => {
@@ -273,7 +273,7 @@ export class Application {
         return gfx
     }
 
-    public cp(layer: PIXI.Container = null): PIXI.Container {
+    public cc(layer: PIXI.Container = null): PIXI.Container {
         let p = new PIXI.Container();
         layer.addChild(p);
         return p;

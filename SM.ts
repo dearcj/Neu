@@ -242,7 +242,7 @@ export class SM {
         this.cleanRemoved();
 
         let len = this.objects.length;
-        for (let i = len - 1; i >= 0; i--) {
+        for (let i = len - 1; i >= 0; --i) {
             let obji: O = this.objects[i];
                 if (obji.compositions && obji.compositions.length > 0)
                 obji.processCompositions();

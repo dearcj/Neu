@@ -45,7 +45,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.start = function () {
             var _this = this;
             this.engine = matter_1.Engine.create();
-            exports.TweenMax.lagSmoothing(0);
+            //TweenMax.lagSmoothing(0);
             exports.TweenLite.ticker.useRAF(true);
             document.addEventListener('contextmenu', function (event) {
                 if (_this.onContext)
@@ -213,7 +213,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             }
             return gfx;
         };
-        Application.prototype.cp = function (layer) {
+        Application.prototype.cc = function (layer) {
             if (layer === void 0) { layer = null; }
             var p = new exports.PIXI.Container();
             layer.addChild(p);

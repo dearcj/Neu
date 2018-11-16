@@ -1,17 +1,26 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "./O", "../Application"], function (require, exports, O_1, Application_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TOOLTIP_WIDTH = 260, exports.TOOLTIP_HEIGHT = 260;
     var SPACE_SIZE = 8;
     var LINE_BREAK = 18;
-    var Tooltip = /** @class */ (function () {
-        function Tooltip(p) {
-            if (!p) {
-                this.pos = [0, 0];
-            }
-            else {
-                this.pos = p;
-            }
+    var Tooltip = /** @class */ (function (_super) {
+        __extends(Tooltip, _super);
+        function Tooltip() {
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         Object.defineProperty(Tooltip.prototype, "currentTip", {
             get: function () {
@@ -125,6 +134,6 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             return desc;
         };
         return Tooltip;
-    }());
+    }(O_1.O));
     exports.Tooltip = Tooltip;
 });

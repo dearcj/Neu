@@ -12,10 +12,10 @@ define(["require", "exports", "../Application", "../Application"], function (req
             x.beginFill(0x000000, 1);
             x.drawRect(0, 0, Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             x.endFill();
-            var c = Application_1.Application.One.cp(Application_1.Application.One.sm.superstage);
+            var c = Application_1.Application.One.cc(Application_1.Application.One.sm.superstage);
             c.addChild(x);
             c.alpha = 0;
-            var c2 = Application_1.Application.One.cp(c);
+            var c2 = Application_1.Application.One.cc(c);
             for (var x_1 = 0; x_1 < 12; x_1++) {
                 var sand1 = Application_1.Application.One.cs("dirtsand", c2);
                 sand1.x = Application_1.Application.One.SCR_WIDTH_HALF + Math.random() * 5000;
