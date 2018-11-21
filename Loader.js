@@ -155,7 +155,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (restrictGroup === void 0) { restrictGroup = null; }
             if (addObjects === void 0) { addObjects = true; }
             if (doInit === void 0) { doInit = true; }
-            console.log("START LOADING LEVEL ", name);
             this.loading = true;
             var data = this.levels[name];
             if (!data) {
@@ -180,7 +179,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 if (sourceAttr) {
                     var source = sourceAttr.nodeValue;
                     var sourceNoExt = source.substring(0, source.length - 4);
-                    console.log("!!!!!1", this.tilesets, this.tilesets[sourceNoExt], 'len', Object.keys(this.tilesets).length);
                     t = this.tilesets[sourceNoExt].childNodes[0];
                 }
                 var tilecount = t.attributes.getNamedItem('tilecount').nodeValue;
@@ -562,12 +560,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
                 var o = list_1[_i];
                 o.noCameraOffset = noCameraOffset;
-                var start = (new Date()).getTime();
                 o.init(o.properties);
-                var end = (new Date()).getTime();
-                if ((end - start) / 1000 > 0.05) {
-                    console.log("ANUS");
-                }
             }
         };
         Loader.prototype.getGroups = function (level, filter) {

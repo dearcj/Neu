@@ -13,7 +13,6 @@ export class Light extends O {
     public baseAlpha: number = 1;
 
     onDestroy() {
-        console.log("Light with ID = ", this.stringID, " destroyed");
         if (this.gfx.parentLayer)
             this.gfx.parentLayer.removeChild(this.gfx);
         this.gfx.parentLayer = null;

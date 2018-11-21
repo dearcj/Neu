@@ -179,7 +179,6 @@ export class Loader {
 
 
     load(stage: Stage, name: string, preInitCB: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
-        console.log("START LOADING LEVEL ", name);
         this.loading = true;
 
         let data = this.levels[name];
@@ -207,7 +206,6 @@ export class Loader {
                 let source = sourceAttr.nodeValue;
 
                 let sourceNoExt = source.substring(0, source.length - 4);
-                console.log("!!!!!1", this.tilesets, this.tilesets[sourceNoExt], 'len', Object.keys(this.tilesets).length)
                 t = this.tilesets[sourceNoExt].childNodes[0]
             }
             let tilecount = t.attributes.getNamedItem('tilecount').nodeValue;
@@ -637,12 +635,7 @@ export class Loader {
     init(list: Array<O>, noCameraOffset) {
         for (let o of list) {
             o.noCameraOffset = noCameraOffset;
-            let start = (new Date()).getTime();
             o.init(o.properties);
-            let end = (new Date()).getTime();
-            if ((end - start) / 1000 > 0.05) {
-                console.log("ANUS");
-            }
         }
     }
 

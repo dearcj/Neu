@@ -22,6 +22,8 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
             _this.baseLight = [1, 1, 1];
             _this.baseIllum = [1, 1, 1];
             _this._darkness = 1;
+            _this.color = [.5, .5, .5];
+            _this.illum = [1, 1, 1];
             return _this;
         }
         Object.defineProperty(Lighting.prototype, "darkness", {
@@ -126,7 +128,6 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
             this.lightFilter.resolution = main_1._.app.renderer.resolution; // 1 / window.devicePixelRatio;//Application.One.resolution;
             Application_1.Application.One.sm.main.filterArea = Application_1.Application.One.app.screen;
             Application_1.Application.One.sm.main.filters = [this.lightFilter];
-            console.log("LIGHTING FILTER RESOLUTION: ", this.lightFilter.resolution);
             this.ambient.parentLayer = this.lightingLayer;
             this.layer.addChild(this.ambient);
             this.blendMode = PIXI.BLEND_MODES.ADD;
@@ -163,7 +164,6 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                 var x = _c[_b];
                 this.addLight(x);
             }
-            console.log(main_1._.sm.findByType(Lighting));
         };
         Lighting.prototype.tweenColorTo = function (col, illum, deltaTimeSec) {
             if (illum === void 0) { illum = null; }
@@ -187,8 +187,6 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
         Lighting.prototype.redraw = function () {
         };
         Lighting.prototype.addLight = function (l) {
-            if (l.stringID)
-                console.log("Added light [", l.stringID, "]");
             l.gfx.parentLayer = null;
             O_1.O.rp(l.gfx);
             l.gfx.stringID = l.stringID;

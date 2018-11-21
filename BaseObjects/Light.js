@@ -24,7 +24,6 @@ define(["require", "exports", "./O", "../Application", "./Lighting"], function (
             return _this;
         }
         Light.prototype.onDestroy = function () {
-            console.log("Light with ID = ", this.stringID, " destroyed");
             if (this.gfx.parentLayer)
                 this.gfx.parentLayer.removeChild(this.gfx);
             this.gfx.parentLayer = null;

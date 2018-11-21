@@ -74,16 +74,16 @@ export class O implements Contextable {
     public polygon: string;
     public polyline: string;
     tileColRow: Vec2;
-    get parent(): O {
+    public get parent(): O {
         return this._parent;
     }
 
-    set parent(value: O) {
+    public set parent(value: O) {
         this._parent = value;
     }
 
     compositions: Extension[];
-    private _parent: O;
+    protected _parent: O;
     protected _gfx: any;
     bounds: Array<number> = [0, 0];
     context: Context = new Context(null, null);
@@ -103,7 +103,7 @@ export class O implements Contextable {
     public type: number;
     public alwaysVisible: boolean = false;
     private events: Array<EngineEvent>;
-    private linkedObjects: O[];
+    protected linkedObjects: O[];
     private _width: number = 0;
     private _height: number = 0;
     public createTime: number = 0;
@@ -193,7 +193,7 @@ export class O implements Contextable {
         this._gfx = value;
     }
 
-    public set x(v) {
+    public set x(v: number) {
         if (this._parent) {
             this.gfx.x = v;
             //throw "Can't set X to embedded object <O>";
@@ -206,7 +206,7 @@ export class O implements Contextable {
 
     }
 
-    public set y(v) {
+    public set y(v: number) {
         if (this._parent) {
             this.gfx.y = v;
             //throw "Can't set Y to embedded object <O>";
@@ -466,14 +466,14 @@ export class O implements Contextable {
         return initContext;
     }
 
-    setTimeout(f: Function, delaySecs: number = 0): Function {
+    setTimeout(f: Function, delaySecs: number = 0): gsap.TweenMax {
         return TweenMax.delayedCall(delaySecs, () => {
             if (this.doRemove) return -1;
             return f();
         })
     }
 
-    setIntervalTimeout(f: Function, delaySecs: number, timeoutSecs: number): Function {
+    setIntervalTimeout(f: Function, delaySecs: number, timeoutSecs: number): gsap.Animation {
         if (delaySecs < 0.03) delaySecs = 0.03;
 
         let ff = this.setInterval(f, delaySecs);
@@ -484,7 +484,7 @@ export class O implements Contextable {
         return ff;
     }
 
-    setInterval(f: Function, delaySecs: number = 0.03): any {
+    setInterval(f: Function, delaySecs: number = 0.03): gsap.Animation {
         if (delaySecs < 0.03) delaySecs = 0.03;
         let interval = new TimelineMax({repeat: -1}).call(() => {
             if (this.doRemove) return Application.One.killTweens(interval);
@@ -537,7 +537,7 @@ export class O implements Contextable {
         }
     }
 
-    private updateLinked(x: number, y: number) {
+    protected updateLinked(x: number, y: number) {
         for (let a of this.linkedObjects) {
             a.updateLink(x, y);
         }

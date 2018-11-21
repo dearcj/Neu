@@ -42,7 +42,6 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
                 onComplete();
             });
             loader.on('progress', function (loader, evt) {
-                console.log("Loaded: ", evt.name);
                 if (evt.name.indexOf('shaders') >= 0) {
                     var result = evt.name.substring(evt.name.lastIndexOf("/") + 1);
                     _this.shaders[result] = evt.data;
@@ -55,7 +54,6 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
                         main_1._.lm.addTileset(result, evt.data);
                     }
                     if (ext == 'tmx') {
-                        console.log("Adding level, ", evt.data);
                         main_1._.lm.add(result, evt.data);
                     }
                 }

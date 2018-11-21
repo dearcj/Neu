@@ -6,7 +6,7 @@ import {O} from "./O";
 import {ARGBColor, m, RGBColor, Vec2} from "../Math";
 import {_} from "../../main";
 import {extractBlendMode} from "../Loader";
-import BlendMode = PIXI.spine.core.BlendMode;
+import {Layer} from "pixi-layers";
 
 export class Lighting extends O {
     get darkness(): number {
@@ -69,8 +69,8 @@ export class Lighting extends O {
     public baseIllum: RGBColor = [1,1,1];
     private _darkness: number = 1;
     private blendMode: number;
-    public color: RGBColor;
-    public illum: RGBColor;
+    public color: RGBColor = [.5, .5, .5] ;
+    public illum: RGBColor = [1 ,1 ,1] ;
     private _saturation: number;
     private _contrast: number;
 
@@ -129,8 +129,7 @@ export class Lighting extends O {
         this.lightFilter.resolution = _.app.renderer.resolution;// 1 / window.devicePixelRatio;//Application.One.resolution;
         Application.One.sm.main.filterArea = Application.One.app.screen;
         Application.One.sm.main.filters = [this.lightFilter];
-        console.log("LIGHTING FILTER RESOLUTION: ", this.lightFilter.resolution);
-        this.ambient.parentLayer = this.lightingLayer;
+        (<any>this.ambient).parentLayer = this.lightingLayer;
         this.layer.addChild(this.ambient);
 
         this.blendMode = PIXI.BLEND_MODES.ADD;
@@ -169,8 +168,6 @@ export class Lighting extends O {
         for (let x of this.lights) {
             this.addLight(x)
         }
-
-        console.log( _.sm.findByType(Lighting));
     }
 
     tweenColorTo(col: RGBColor, illum: RGBColor = null, deltaTimeSec: number = 1.9): Array<any> {
@@ -196,9 +193,6 @@ export class Lighting extends O {
     }
 
     addLight(l: Light): void {
-        if (l.stringID)
-        console.log("Added light [", l.stringID, "]");
-
         l.gfx.parentLayer = null;
         O.rp(l.gfx);
         l.gfx.stringID = l.stringID;
