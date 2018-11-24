@@ -400,7 +400,7 @@ export class O implements Contextable {
 
             if (props.light && this.gfx && this.gfx.color) {
                 let col = m.hexToRgb(props.light);
-                (<PIXI.heaven.Sprite>this.gfx).color.setDark(col[1] / 255, col[2] / 255, col[3] / 255);
+                (<PIXI.heaven.Sprite>this.gfx).color.setDark(col[1], col[2], col[3]);
             }
         }
         this.createTime = Application.One.timer.getTimer();

@@ -276,7 +276,8 @@ export class Application {
 
     public cc(layer: PIXI.Container = null): PIXI.Container {
         let p = new PIXI.Container();
-        layer.addChild(p);
+        if (layer)
+            layer.addChild(p);
         return p;
     }
 

@@ -216,7 +216,8 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.cc = function (layer) {
             if (layer === void 0) { layer = null; }
             var p = new exports.PIXI.Container();
-            layer.addChild(p);
+            if (layer)
+                layer.addChild(p);
             return p;
         };
         Application.prototype.cs = function (s, layer) {

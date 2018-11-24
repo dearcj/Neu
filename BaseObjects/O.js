@@ -363,7 +363,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
                 }
                 if (props.light && this.gfx && this.gfx.color) {
                     var col = Math_1.m.hexToRgb(props.light);
-                    this.gfx.color.setDark(col[1] / 255, col[2] / 255, col[3] / 255);
+                    this.gfx.color.setDark(col[1], col[2], col[3]);
                 }
             }
             this.createTime = Application_1.Application.One.timer.getTimer();
