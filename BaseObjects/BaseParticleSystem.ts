@@ -15,7 +15,7 @@ export interface BaseParticle  {
 
 export class BaseParticleSystem extends O{
     public particles: BaseParticle[] = [];
-
+    public globalAlpha: number = 1;
     constructor (pos: Vec2 = null, gfx: PIXI.DisplayObject = null) {
         super(pos, new PIXI.particles.ParticleContainer(300, {
             scale: true,
@@ -34,7 +34,7 @@ export class BaseParticleSystem extends O{
 
         this.width = Application.One.SCR_WIDTH;
         this.height = Application.One.SCR_HEIGHT;
-
+        p.alpha = this.globalAlpha;
 
         return p;
     }
@@ -42,8 +42,6 @@ export class BaseParticleSystem extends O{
     init( props: any): void{
         if (this.layer)
             this.layer.addChild(this.gfx);
-
-
 
         super.init(props);
     }

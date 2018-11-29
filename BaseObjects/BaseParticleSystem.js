@@ -28,6 +28,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                 alpha: true,
             })) || this;
             _this.particles = [];
+            _this.globalAlpha = 1;
             return _this;
         }
         BaseParticleSystem.prototype.add = function (p, gfx) {
@@ -36,6 +37,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             this.processParticle(this.particles.length - 1, Application_1.Application.One.delta);
             this.width = Application_1.Application.One.SCR_WIDTH;
             this.height = Application_1.Application.One.SCR_HEIGHT;
+            p.alpha = this.globalAlpha;
             return p;
         };
         BaseParticleSystem.prototype.init = function (props) {
