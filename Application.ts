@@ -5,7 +5,7 @@ import {SM} from "./SM";
 import {ResourceManager} from "./ResourceManager";
 import {Loader} from "./Loader";
 import {Vec2} from "./Math";
-import {FRAME_DELAY, MIN_SCR_HEIGHT, MIN_SCR_WIDTH} from "../ClientSettings";
+import {FRAME_DELAY} from "../ClientSettings";
 import {Controls} from "./Controls";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
