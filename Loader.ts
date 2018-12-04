@@ -1,7 +1,7 @@
 import {O} from "./BaseObjects/O";
 import {m, Vec2} from "./Math";
 import {ColorGradingShader} from "./shaders/ColorGradingShader";
-import {ObjectNames} from "../ObjectsList.ts"
+import {ObjectNames} from "../ObjectsList"
 import {Application} from "./Application";
 import {Stage} from "./Stage";
 
