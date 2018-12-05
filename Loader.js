@@ -1,11 +1,11 @@
-define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList.ts", "./Application"], function (require, exports, O_1, Math_1, ObjectsList_ts_1, Application_1) {
+define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./Application"], function (require, exports, O_1, Math_1, ObjectsList_1, Application_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
     var FLIPPED_VERTICALLY_FLAG = 0x40000000;
     var FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-    for (var x in ObjectsList_ts_1.ObjectNames) {
-        ObjectsList_ts_1.ObjectNames[x.toLowerCase()] = ObjectsList_ts_1.ObjectNames[x];
+    for (var x in ObjectsList_1.ObjectNames) {
+        ObjectsList_1.ObjectNames[x.toLowerCase()] = ObjectsList_1.ObjectNames[x];
     }
     function extractBlendMode(bm) {
         switch (bm) {
@@ -436,7 +436,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList.ts", 
             }
             if (properties["singleton"] == 'true') {
                 //UniqueCheck
-                if (ObjectsList_ts_1.ObjectNames[className] && Application_1.Application.One.sm.findByType(ObjectsList_ts_1.ObjectNames[className]).length > 0) {
+                if (ObjectsList_1.ObjectNames[className] && Application_1.Application.One.sm.findByType(ObjectsList_1.ObjectNames[className]).length > 0) {
                     return null;
                 }
             }
@@ -446,10 +446,10 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList.ts", 
                 return null;
             }
             if (className != '') {
-                if (!ObjectsList_ts_1.ObjectNames[className]) {
+                if (!ObjectsList_1.ObjectNames[className]) {
                     console.log('[LevelManager] Cant find class: ', className);
                 }
-                obj = new (ObjectsList_ts_1.ObjectNames[className])(startPos);
+                obj = new (ObjectsList_1.ObjectNames[className])(startPos);
             }
             else {
                 obj = new O_1.O(startPos);
@@ -541,7 +541,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList.ts", 
             sprite.anchor.y = 0.5;
             var o;
             if (type && type != '') {
-                o = new ObjectsList_ts_1.ObjectNames[type.toLowerCase()]([posX, posY]);
+                o = new ObjectsList_1.ObjectNames[type.toLowerCase()]([posX, posY]);
             }
             else {
                 o = new O_1.O([posX, posY]);

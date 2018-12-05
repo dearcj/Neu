@@ -211,13 +211,13 @@ export class Application {
     }
 
     public setScreenRes(baseW: number, baseH: number) {
-        this.appScale = baseH / MIN_SCR_HEIGHT;
+        this.appScale = baseH / this.MIN_SCR_HEIGHT;
       //  if (this.appScale > 1.28) this.appScale = 1.28;
         this.SCR_WIDTH = Math.floor(baseW / this.appScale);
         this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
         this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
         this.SCR_HEIGHT_HALF = this.SCR_HEIGHT * .5;
-        this.screenCenterOffset = [(this.SCR_WIDTH - MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - MIN_SCR_HEIGHT) * .5];
+        this.screenCenterOffset = [(this.SCR_WIDTH - this.MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - this.MIN_SCR_HEIGHT) * .5];
     }
 
 
