@@ -1,4 +1,4 @@
-define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../ClientSettings", "./Controls", "./PauseTimer", "../lib/matter", "pixi-heaven/dist/pixi-heaven.js"], function (require, exports, AnimClip_1, SM_1, Loader_1, ClientSettings_1, Controls_1, PauseTimer_1, matter_1) {
+define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../ClientSettings", "./Controls", "./PauseTimer", "../lib/matter"], function (require, exports, AnimClip_1, SM_1, Loader_1, ClientSettings_1, Controls_1, PauseTimer_1, matter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TweenMax = window.TweenMax;

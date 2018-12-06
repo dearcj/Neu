@@ -10,7 +10,6 @@ import {Controls} from "./Controls";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
 import {Bodies, Engine, World} from "../lib/matter";
-import "pixi-heaven/dist/pixi-heaven.js";
 
 declare let window: any;
 export let TweenMax = window.TweenMax;
