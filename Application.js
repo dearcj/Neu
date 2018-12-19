@@ -36,7 +36,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.totalDelta = 0;
             this.timeScale = 1;
             this.isInitialLoading = true;
-            this.resolution = 1;
+            this.resolution = window.devicePixelRatio;
             this.addStats = true;
             this.MIN_SCR_HEIGHT = MIN_SCR_HEIGHT;
             this.MIN_SCR_WIDTH = MIN_SCR_WIDTH;
@@ -45,8 +45,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.start = function () {
             var _this = this;
             this.engine = matter_1.Engine.create();
-            //TweenMax.lagSmoothing(0);
-            exports.TweenLite.ticker.useRAF(true);
             document.addEventListener('contextmenu', function (event) {
                 if (_this.onContext)
                     _this.onContext();
@@ -54,7 +52,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             });
             this.controls = new Controls_1.Controls();
             this.PIXI = exports.PIXI;
-            this.resolution = this.appScale * window.devicePixelRatio;
             this.app = new exports.PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
                 autoStart: false,
                 clearBeforeRender: false,
@@ -134,7 +131,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         };
         Application.prototype.animate = function () {
             this.controls.update();
-            //this.process();
             if (this.addStats)
                 this.stats.update();
             this.timer.process();
@@ -152,15 +148,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 this.totalFrames++;
                 this.sm.process();
             }
-        };
-        Application.prototype.setScreenRes = function (baseW, baseH) {
-            this.appScale = baseH / this.MIN_SCR_HEIGHT;
-            //  if (this.appScale > 1.28) this.appScale = 1.28;
-            this.SCR_WIDTH = Math.floor(baseW / this.appScale);
-            this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
-            this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
-            this.SCR_HEIGHT_HALF = this.SCR_HEIGHT * .5;
-            this.screenCenterOffset = [(this.SCR_WIDTH - this.MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - this.MIN_SCR_HEIGHT) * .5];
         };
         Application.prototype.cm = function (s, layer, autoplay, times) {
             if (layer === void 0) { layer = null; }

@@ -81,13 +81,11 @@ export class Application {
     public cursorPos: PIXI.Point;
     public globalMouseDown: Function;
     protected isInitialLoading: boolean = true;
-    public resolution: number = 1;
+    public resolution: number = window.devicePixelRatio;
     protected addStats: boolean = true;
 
     start() {
         this.engine = Engine.create();
-        //TweenMax.lagSmoothing(0);
-        TweenLite.ticker.useRAF(true);
 
         document.addEventListener('contextmenu', (event) => {
             if (this.onContext) this.onContext();
@@ -97,7 +95,6 @@ export class Application {
         this.controls = new Controls();
         this.PIXI = PIXI;
 
-        this.resolution = this.appScale * window.devicePixelRatio;
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
             clearBeforeRender: false,
@@ -112,6 +109,7 @@ export class Application {
 
         document.body.appendChild(this.app.view);
         this.app.stage = new PIXI.display.Stage();
+
         if (this.addStats) {
             this.statsPIXIHook = new window.GStats.PIXIHooks(this.app);
             this.stats = new window.GStats.StatsJSAdapter(this.statsPIXIHook);
@@ -119,6 +117,7 @@ export class Application {
             this.stats.stats.domElement.style.position = "absolute";
             this.stats.stats.domElement.style.top = "0px";
         }
+
         this.sm = new SM();
         this.sm.init();
         this.lm = new Loader();
@@ -182,9 +181,9 @@ export class Application {
     animate(): void {
         this.controls.update();
 
-        //this.process();
         if (this.addStats)
             this.stats.update();
+
         this.timer.process();
         this.random = Math.random();
         this.time = (new Date()).getTime();
@@ -201,7 +200,6 @@ export class Application {
             this.totalFrames++;
             this.sm.process();
         }
-
     }
 
     constructor(MIN_SCR_WIDTH, MIN_SCR_HEIGHT: number) {
@@ -209,17 +207,6 @@ export class Application {
         this.MIN_SCR_WIDTH = MIN_SCR_WIDTH;
         Application.One = this;
     }
-
-    public setScreenRes(baseW: number, baseH: number) {
-        this.appScale = baseH / this.MIN_SCR_HEIGHT;
-      //  if (this.appScale > 1.28) this.appScale = 1.28;
-        this.SCR_WIDTH = Math.floor(baseW / this.appScale);
-        this.SCR_HEIGHT = Math.floor(baseH / this.appScale);
-        this.SCR_WIDTH_HALF = this.SCR_WIDTH * .5;
-        this.SCR_HEIGHT_HALF = this.SCR_HEIGHT * .5;
-        this.screenCenterOffset = [(this.SCR_WIDTH - this.MIN_SCR_WIDTH) * .5, (this.SCR_HEIGHT - this.MIN_SCR_HEIGHT) * .5];
-    }
-
 
     public cm(s: string, layer: PIXI.Container = null, autoplay: boolean = false, times: number[] = null): AnimClip { //create sprite from frame and add to default layer
         let textures = [];
