@@ -107,7 +107,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 }
                 list.push(x);
                 /*if (x.constructor == O && x.gfx) {
-                               O.rp(x.gfx);
+                               Application.One.rp(x.gfx);
                                 object.gfx.addChild(x.gfx);
                                x.gfx = null;
                                x.killNow();
@@ -126,7 +126,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
                 var x = a_2[_i];
                 if (x.gfx) {
-                    O_1.O.rp(x.gfx);
+                    Application_1.Application.One.rp(x.gfx);
                     c.addChild(x.gfx);
                 }
             }
@@ -610,7 +610,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             for (var _i = 0, list_2 = list; _i < list_2.length; _i++) {
                 var x = list_2[_i];
                 if (x.gfx) {
-                    O_1.O.rp(x.gfx);
+                    Application_1.Application.One.rp(x.gfx);
                     x.gfx.x = x.x;
                     x.gfx.y = x.y;
                     container.addChild(x.gfx);

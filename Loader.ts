@@ -139,7 +139,7 @@ export class Loader {
             }
             list.push(x);
             /*if (x.constructor == O && x.gfx) {
-                           O.rp(x.gfx);
+                           Application.One.rp(x.gfx);
                             object.gfx.addChild(x.gfx);
                            x.gfx = null;
                            x.killNow();
@@ -156,7 +156,7 @@ export class Loader {
         let a = this.load(stage, name, cb, noCameraOffset, offs, group);
         for (let x of a) {
             if (x.gfx) {
-                O.rp(x.gfx);
+                Application.One.rp(x.gfx);
                 c.addChild(x.gfx);
             }
         }
@@ -686,7 +686,7 @@ export class Loader {
         let retList = [];
         for (let x of list) {
             if (x.gfx) {
-                O.rp(x.gfx);
+                Application.One.rp(x.gfx);
                 x.gfx.x = x.x;
                 x.gfx.y = x.y;
                 container.addChild(x.gfx);

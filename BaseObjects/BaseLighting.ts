@@ -33,7 +33,7 @@ export class BaseLighting extends O {
             TweenMax.killTweensOf(this);
         }
 
-        O.rp(this.ambientContainer);
+        _.rp(this.ambientContainer);
         this.ambientContainer = null;
         this.ambient = null;
         this.lights = [];
@@ -45,7 +45,7 @@ export class BaseLighting extends O {
 
     addLight(l: Light): void {
         l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
-        O.rp(l.gfx);
+        _.rp(l.gfx);
         this.addChild(l);
     }
 
@@ -124,7 +124,7 @@ export class BaseLighting extends O {
 
     public updateLights() {
         for (let x = 1; x < this.gfx.children.length; ++x) {//SKIP AMBIENT CONTAINER
-            O.rp(x);
+            _.rp(x);
         }
 
         this.lights = <Array<Light>>Application.One.sm.findByType(Light);

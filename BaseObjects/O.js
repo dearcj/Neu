@@ -118,7 +118,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             else {
                 this._children.push(o);
                 o.gfx.visible = true;
-                O.rp(o.gfx);
+                Application_1.Application.One.rp(o.gfx);
                 if (relOffset) {
                     o.gfx.x = relOffset[0];
                     o.gfx.y = relOffset[1];
@@ -285,13 +285,6 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
         };
         O.prototype.onCollide = function (b) {
         };
-        O.rp = function (c) {
-            if (c && c.parent) {
-                var pp = c.parent;
-                c.parent.removeChild(c);
-            }
-            return null;
-        };
         O.hideList = function (list, visibility) {
             if (visibility === void 0) { visibility = false; }
             for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
@@ -319,7 +312,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             this.linkedObjects = [];
             this.emmit(exports.DEF_EVENTS.killed);
             if (this._gfx && this._gfx.parent) {
-                O.rp(this._gfx);
+                Application_1.Application.One.rp(this._gfx);
                 this._gfx = null;
             }
         };
@@ -499,7 +492,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             }
         };
         O.prototype.changeGfxLayer = function (layer) {
-            O.rp(this.gfx);
+            Application_1.Application.One.rp(this.gfx);
             layer.addChild(this.gfx);
         };
         O.prototype.extendProcess = function (f) {

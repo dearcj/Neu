@@ -3,7 +3,6 @@ import {Camera} from "./Camera";
 import {m, Vec2} from "../Math";
 import {Application} from "../Application";
 import {Lighting} from "./Lighting";
-import {_} from "../../main";
 
 export class Light extends O {
     public initSize: Vec2;
@@ -17,12 +16,12 @@ export class Light extends O {
             this.gfx.parentLayer.removeChild(this.gfx);
         this.gfx.parentLayer = null;
 
-        O.rp(this.gfx);
+        Application.One.rp(this.gfx);
         super.onDestroy();
     }
 
     public createPolygon(polygon: any, properties: any) {
-        let g = new PIXI.Graphics();
+        let g = Application.One.cg();
         let points = polygon;
         let pointsArr = points.split(' ');
         g.clear();

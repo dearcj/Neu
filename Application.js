@@ -149,6 +149,13 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 this.sm.process();
             }
         };
+        Application.prototype.rp = function (c) {
+            if (c && c.parent) {
+                var pp = c.parent;
+                c.parent.removeChild(c);
+            }
+            return null;
+        };
         Application.prototype.cm = function (s, layer, autoplay, times) {
             if (layer === void 0) { layer = null; }
             if (autoplay === void 0) { autoplay = false; }
@@ -203,6 +210,13 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.cc = function (layer) {
             if (layer === void 0) { layer = null; }
             var p = new exports.PIXI.Container();
+            if (layer)
+                layer.addChild(p);
+            return p;
+        };
+        Application.prototype.cg = function (layer) {
+            if (layer === void 0) { layer = null; }
+            var p = new exports.PIXI.Graphics();
             if (layer)
                 layer.addChild(p);
             return p;

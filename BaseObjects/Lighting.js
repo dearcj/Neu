@@ -92,8 +92,8 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                 this.gfx.filterArea = null;
                 Application_1.TweenMax.killTweensOf(this);
             }
-            O_1.O.rp(this.ambientContainer);
-            O_1.O.rp(this.ambient);
+            main_1._.rp(this.ambientContainer);
+            main_1._.rp(this.ambient);
             this.ambientContainer = null;
             this.ambient = null;
             this.lights = [];
@@ -155,7 +155,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                     var x = _a[_i];
                     if (x.gfx) {
                         x.gfx.parentLayer = null;
-                        O_1.O.rp(x.gfx);
+                        main_1._.rp(x.gfx);
                     }
                 }
             }
@@ -188,7 +188,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
         };
         Lighting.prototype.addLight = function (l) {
             l.gfx.parentLayer = null;
-            O_1.O.rp(l.gfx);
+            main_1._.rp(l.gfx);
             l.gfx.stringID = l.stringID;
             l.gfx.blendMode = this.blendMode;
             l.gfx.alpha = l.baseAlpha * this._darkness;

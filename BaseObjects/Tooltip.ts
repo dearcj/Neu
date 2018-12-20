@@ -19,7 +19,7 @@ export class Tooltip extends O {
     }
 
     set currentTip(value: PIXI.Container) {
-        if (this._currentTip) O.rp(this._currentTip);
+        if (this._currentTip) Application.One.rp(this._currentTip);
 
         if (value) {
             Application.One.sm.fonts.addChild(value);

@@ -5,7 +5,7 @@ define(["require", "exports", "../Application", "../Application"], function (req
         function BlackTransition() {
         }
         BlackTransition.prototype.Run = function (prevStage, newStage) {
-            var x = new PIXI.Graphics();
+            var x = Application_1.Application.One.cg();
             x.width = Application_1.Application.One.SCR_WIDTH;
             x.height = Application_1.Application.One.SCR_HEIGHT;
             x.clear();

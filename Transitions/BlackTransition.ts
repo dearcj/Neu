@@ -6,7 +6,7 @@ import {Stage} from "../Stage";
 export class BlackTransition implements ITransition {
 
     Run(prevStage: Stage, newStage: Stage) {
-        let x = new PIXI.Graphics();
+        let x = Application.One.cg();
         x.width = Application.One.SCR_WIDTH;
         x.height = Application.One.SCR_HEIGHT;
         x.clear();

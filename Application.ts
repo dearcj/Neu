@@ -208,6 +208,15 @@ export class Application {
         Application.One = this;
     }
 
+    public rp(c: any): null {
+        if (c && c.parent) {
+            let pp = c.parent;
+            c.parent.removeChild(c);
+        }
+
+        return null;
+    }
+
     public cm(s: string, layer: PIXI.Container = null, autoplay: boolean = false, times: number[] = null): AnimClip { //create sprite from frame and add to default layer
         let textures = [];
         let keys: Array<string> = [];
@@ -267,6 +276,15 @@ export class Application {
             layer.addChild(p);
         return p;
     }
+
+    public cg(layer: PIXI.Container = null): PIXI.Graphics {
+        let p = new PIXI.Graphics();
+        if (layer)
+            layer.addChild(p);
+
+        return p;
+    }
+
 
     public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
         if (!s) {

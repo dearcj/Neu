@@ -83,8 +83,8 @@ export class Lighting extends O {
             TweenMax.killTweensOf(this);
         }
 
-        O.rp(this.ambientContainer);
-        O.rp(this.ambient);
+        _.rp(this.ambientContainer);
+        _.rp(this.ambient);
         this.ambientContainer = null;
         this.ambient = null;
         this.lights = [];
@@ -159,7 +159,7 @@ export class Lighting extends O {
             for (let x of this.lights) {//SKIP AMBIENT + LAYER CONTAINER
                 if (x.gfx) {
                     x.gfx.parentLayer = null;
-                    O.rp(x.gfx);
+                    _.rp(x.gfx);
                 }
             }
         }
@@ -194,7 +194,7 @@ export class Lighting extends O {
 
     addLight(l: Light): void {
         l.gfx.parentLayer = null;
-        O.rp(l.gfx);
+        _.rp(l.gfx);
         l.gfx.stringID = l.stringID;
         l.gfx.blendMode = this.blendMode;
 

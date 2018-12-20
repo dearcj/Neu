@@ -28,7 +28,7 @@ export class ColorTextBox extends TextBox {
 
     set text(value:string) {
         this._text = value;
-        if (this.tf) O.rp(this.tf);
+        if (this.tf) Application.One.rp(this.tf);
         this.tf = this.getTextBox(value, this.tooltip, this.maxWidth);
         this.gfx.addChild(this.tf);
     }

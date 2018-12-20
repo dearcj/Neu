@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./TextBox", "./Tooltip", "./O", "../Application"], function (require, exports, TextBox_1, Tooltip_1, O_1, Application_1) {
+define(["require", "exports", "./TextBox", "./Tooltip", "../Application"], function (require, exports, TextBox_1, Tooltip_1, Application_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -33,7 +33,7 @@ define(["require", "exports", "./TextBox", "./Tooltip", "./O", "../Application"]
             set: function (value) {
                 this._text = value;
                 if (this.tf)
-                    O_1.O.rp(this.tf);
+                    Application_1.Application.One.rp(this.tf);
                 this.tf = this.getTextBox(value, this.tooltip, this.maxWidth);
                 this.gfx.addChild(this.tf);
             },

@@ -27,11 +27,11 @@ define(["require", "exports", "./O", "../Application", "./Lighting"], function (
             if (this.gfx.parentLayer)
                 this.gfx.parentLayer.removeChild(this.gfx);
             this.gfx.parentLayer = null;
-            O_1.O.rp(this.gfx);
+            Application_1.Application.One.rp(this.gfx);
             _super.prototype.onDestroy.call(this);
         };
         Light.prototype.createPolygon = function (polygon, properties) {
-            var g = new PIXI.Graphics();
+            var g = Application_1.Application.One.cg();
             var points = polygon;
             var pointsArr = points.split(' ');
             g.clear();

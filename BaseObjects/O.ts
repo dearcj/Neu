@@ -139,7 +139,7 @@ export class O implements Contextable {
         } else {
             this._children.push(o);
             o.gfx.visible = true;
-            O.rp(o.gfx);
+            Application.One.rp(o.gfx);
             if (relOffset) {
                 o.gfx.x = relOffset[0];
                 o.gfx.y = relOffset[1];
@@ -293,14 +293,7 @@ export class O implements Contextable {
 
     }
 
-    static rp(c: any): null {
-        if (c && c.parent) {
-            let pp = c.parent;
-            c.parent.removeChild(c);
-        }
 
-        return null;
-    }
 
     static hideList(list: O[], visibility: boolean = false): void {
         for (let x of list) {
@@ -331,7 +324,7 @@ export class O implements Contextable {
         this.emmit(DEF_EVENTS.killed);
 
         if (this._gfx && this._gfx.parent) {
-            O.rp(this._gfx);
+            Application.One.rp(this._gfx);
             this._gfx = null;
         }
     }
@@ -544,7 +537,7 @@ export class O implements Contextable {
     }
 
     changeGfxLayer(layer: PIXI.Container) {
-        O.rp(this.gfx);
+        Application.One.rp(this.gfx);
         layer.addChild(this.gfx);
     }
 

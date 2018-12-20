@@ -32,7 +32,7 @@ define(["require", "exports", "./O", "./Light", "../Application", "../../main", 
                 this.gfx.filterArea = null;
                 Application_1.TweenMax.killTweensOf(this);
             }
-            O_1.O.rp(this.ambientContainer);
+            main_1._.rp(this.ambientContainer);
             this.ambientContainer = null;
             this.ambient = null;
             this.lights = [];
@@ -41,7 +41,7 @@ define(["require", "exports", "./O", "./Light", "../Application", "../../main", 
         };
         BaseLighting.prototype.addLight = function (l) {
             l.gfx.blendMode = PIXI.BLEND_MODES.ADD;
-            O_1.O.rp(l.gfx);
+            main_1._.rp(l.gfx);
             this.addChild(l);
         };
         BaseLighting.prototype.tweenColorTo = function (col, darkCol, deltaTimeSec) {
@@ -111,7 +111,7 @@ define(["require", "exports", "./O", "./Light", "../Application", "../../main", 
         };
         BaseLighting.prototype.updateLights = function () {
             for (var x = 1; x < this.gfx.children.length; ++x) { //SKIP AMBIENT CONTAINER
-                O_1.O.rp(x);
+                main_1._.rp(x);
             }
             this.lights = Application_1.Application.One.sm.findByType(Light_1.Light);
             for (var _i = 0, _a = this.lights; _i < _a.length; _i++) {
