@@ -33,7 +33,7 @@ define(["require", "exports", "./TextBox", "./Tooltip", "../Application"], funct
             set: function (value) {
                 this._text = value;
                 if (this.tf)
-                    Application_1.Application.One.rp(this.tf);
+                    Application_1.Application.One.free(this.tf);
                 this.tf = this.getTextBox(value, this.tooltip, this.maxWidth);
                 this.gfx.addChild(this.tf);
             },

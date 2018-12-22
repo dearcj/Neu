@@ -149,6 +149,26 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 this.sm.process();
             }
         };
+        Application.prototype.free = function (o) {
+            if (!o)
+                return;
+            if (o.inPool) {
+                return;
+            }
+            this.rp(o);
+            if (o instanceof exports.PIXI.heaven.spine.Spine || o instanceof exports.PIXI.spine.Spine) {
+                return null;
+            }
+            if (o instanceof exports.PIXI.Sprite || o instanceof exports.PIXI.heaven.Sprite || o instanceof exports.PIXI.Container) {
+                if (o.children) {
+                    while (o.children.length > 0) {
+                        this.free(o.children[o.children.length - 1]);
+                    }
+                }
+                this.sm.toPool(o);
+            }
+            return null;
+        };
         Application.prototype.rp = function (c) {
             if (c && c.parent) {
                 var pp = c.parent;
@@ -188,13 +208,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             }
             return gfx;
         };
-        Application.prototype.cont = function (parentLayer) {
-            var x = new exports.PIXI.Container();
-            if (parentLayer) {
-                parentLayer.addChild(x);
-            }
-            return x;
-        };
         Application.prototype.csproj = function (s, layer) {
             if (layer === void 0) { layer = null; }
             var texture = exports.PIXI.Texture.fromFrame(s);
@@ -209,14 +222,24 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         };
         Application.prototype.cc = function (layer) {
             if (layer === void 0) { layer = null; }
-            var p = new exports.PIXI.Container();
+            var p = this.sm.fromPool(SM_1.POOL_TAG_SPRITE);
+            if (!p)
+                p = new exports.PIXI.Container();
+            else {
+                console.log("Container from pool");
+            }
             if (layer)
                 layer.addChild(p);
             return p;
         };
         Application.prototype.cg = function (layer) {
             if (layer === void 0) { layer = null; }
-            var p = new exports.PIXI.Graphics();
+            var p = this.sm.fromPool(SM_1.POOL_TAG_GRAPHICS);
+            if (!p)
+                p = new exports.PIXI.Graphics();
+            else {
+                console.log("Graphics from pool");
+            }
             if (layer)
                 layer.addChild(p);
             return p;
@@ -224,12 +247,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
         Application.prototype.cs = function (s, layer) {
             if (s === void 0) { s = null; }
             if (layer === void 0) { layer = null; }
-            if (!s) {
-                var cont = new exports.PIXI.Container();
-                if (layer)
-                    layer.addChild(cont);
-                return cont;
-            }
             var texture;
             if (exports.PIXI.utils.TextureCache[s]) {
                 texture = exports.PIXI.Texture.fromFrame(s);
@@ -242,7 +259,13 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 return null;
             }
             if (texture) {
-                var gfx = new exports.PIXI.heaven.Sprite(texture);
+                var gfx = this.sm.fromPool(SM_1.POOL_TAG_HEAVEN_SPRITE);
+                if (!gfx)
+                    gfx = new exports.PIXI.heaven.Sprite(texture);
+                else {
+                    gfx.texture = texture;
+                    console.log("POOL_TAG_HEAVEN_SPRITE");
+                }
                 gfx.anchor.x = .5;
                 gfx.anchor.y = .5;
                 if (layer)

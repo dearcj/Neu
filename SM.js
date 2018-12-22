@@ -1,8 +1,13 @@
 define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application", "./Transitions/BlackTransition", "../main"], function (require, exports, Camera_1, Math_1, Application_1, BlackTransition_1, main_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.POOL_TAG_SPRITE = "sprite";
+    exports.POOL_TAG_HEAVEN_SPRITE = "heaven_sprite";
+    exports.POOL_TAG_CONTAINER = "container";
+    exports.POOL_TAG_GRAPHICS = "graphics";
     var SM = /** @class */ (function () {
         function SM() {
+            this.pool = {};
             this.stage = null;
             this.prevStage = null;
             this.inTransit = false;
@@ -13,6 +18,86 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.dynamic = [];
             this.globalIds = {};
         }
+        SM.prototype.resetObj = function (obj) {
+            obj.visible = true;
+            obj.alpha = 1;
+            obj.blendMode = PIXI.BLEND_MODES.NORMAL;
+            obj._activeParentLayer = null;
+            obj.cacheAsBitmap = false;
+            obj.interactive = false;
+            obj.interactiveChildren = false;
+            obj.x = 0;
+            obj.y = 0;
+            obj.width = 0;
+            obj.height = 0;
+            obj.rotation = 0;
+            if (obj instanceof PIXI.DisplayObject) {
+                obj.buttonMode = false;
+                obj.hitArea = null;
+                obj.setTransform(0, 0, 1, 1, 0, 0, 0, 0, 0);
+            }
+            if (obj instanceof PIXI.Graphics) {
+                obj.tint = 0xffffff;
+                obj.clear();
+            }
+            if (obj instanceof PIXI.heaven.Sprite) {
+                obj.anchor.x = 0;
+                obj.anchor.y = 0;
+                obj.skew.set();
+                obj.filters = [];
+                obj.filterArea = null;
+                obj.color.clear();
+                obj.maskSprite = null;
+                obj.maskVertexData = null;
+                obj.mask = null;
+                obj.renderable = true;
+            }
+            if (obj instanceof PIXI.Sprite) {
+                obj.anchor.x = 0;
+                obj.anchor.y = 0;
+                obj.renderable = true;
+                obj.skew.set();
+                obj.filters = [];
+                obj.filterArea = null;
+                obj.tint = 0xffffff;
+                obj.mask = null;
+            }
+            obj.displayOrder = 0;
+        };
+        SM.prototype.toPool = function (obj) {
+            var tagname;
+            var constructor = Object.getPrototypeOf(obj).constructor;
+            if (constructor == PIXI.Container) {
+                //    tagname = POOL_TAG_CONTAINER;
+            }
+            if (constructor == PIXI.Graphics) {
+                //    tagname = POOL_TAG_GRAPHICS;
+            }
+            if (constructor == PIXI.Sprite) {
+                //    tagname = POOL_TAG_SPRITE;
+            }
+            if (constructor == PIXI.heaven.Sprite) {
+                tagname = exports.POOL_TAG_HEAVEN_SPRITE;
+            }
+            obj.inPool = true;
+            if (!this.pool[tagname]) {
+                this.pool[tagname] = [];
+            }
+            this.pool[tagname].push(obj);
+        };
+        SM.prototype.fromPool = function (tag) {
+            if (!this.pool[tag]) {
+                return null;
+            }
+            else {
+                var p = this.pool[tag].shift();
+                if (p) {
+                    p.inPool = null;
+                    this.resetObj(p);
+                }
+                return p;
+            }
+        };
         SM.prototype.ZOrderContainer = function (c) {
             c.children.sort(function (a, b) {
                 return a.position.y - b.position.y;
@@ -103,6 +188,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.effects = new PIXI.Container();
             this.cursorlayer = new PIXI.Container();
             this.light = new PIXI.Container();
+            this.pool = { POOL_TAG_HEAVEN_SPRITE: [] };
             this.main.interactive = false;
             this.gui.interactive = true;
             this.gui2.interactive = true;

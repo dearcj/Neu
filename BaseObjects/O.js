@@ -312,8 +312,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             this.linkedObjects = [];
             this.emmit(exports.DEF_EVENTS.killed);
             if (this._gfx && this._gfx.parent) {
-                Application_1.Application.One.rp(this._gfx);
-                this._gfx = null;
+                this._gfx = Application_1.Application.One.free(this._gfx);
             }
         };
         O.prototype.killNow = function () {

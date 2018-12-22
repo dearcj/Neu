@@ -1,7 +1,6 @@
-
 import {AnimClip} from "./PIXIPlugins/AnimClip";
 import {O} from "./BaseObjects/O";
-import {SM} from "./SM";
+import {POOL_TAG_GRAPHICS, POOL_TAG_HEAVEN_SPRITE, POOL_TAG_SPRITE, SM} from "./SM";
 import {ResourceManager} from "./ResourceManager";
 import {Loader} from "./Loader";
 import {Vec2} from "./Math";
@@ -9,7 +8,7 @@ import {FRAME_DELAY} from "../ClientSettings";
 import {Controls} from "./Controls";
 import {PauseTimer} from "./PauseTimer";
 import {Sound} from "./Sound";
-import {Bodies, Engine, World} from "../lib/matter";
+import {Engine} from "../lib/matter";
 
 declare let window: any;
 export let TweenMax = window.TweenMax;
@@ -208,6 +207,32 @@ export class Application {
         Application.One = this;
     }
 
+    free(o: PIXI.Sprite | PIXI.heaven.Sprite | PIXI.Graphics | PIXI.Container | PIXI.DisplayObject): null {
+        if (!o) return;
+
+        if ((<any>o).inPool) {
+            return
+        }
+
+        this.rp(o);
+
+        if (o instanceof PIXI.heaven.spine.Spine || o instanceof PIXI.spine.Spine ) {
+            return null
+        }
+
+        if (o instanceof PIXI.Sprite || o instanceof PIXI.heaven.Sprite || o instanceof PIXI.Container) {
+            if ((<any>o).children) {
+                while ((<any>o).children.length > 0) {
+                    this.free((<any>o).children[(<any>o).children.length - 1]);
+                }
+            }
+
+            this.sm.toPool(o);
+        }
+
+        return null;
+    }
+
     public rp(c: any): null {
         if (c && c.parent) {
             let pp = c.parent;
@@ -250,14 +275,6 @@ export class Application {
         return gfx;
     }
 
-    public cont(parentLayer: PIXI.Container): PIXI.Container {
-        let x = new PIXI.Container();
-        if (parentLayer) {
-            parentLayer.addChild(x);
-        }
-        return x;
-    }
-
     public csproj(s: string, layer: PIXI.Container = null): any {
         let texture = PIXI.Texture.fromFrame(s);
         let gfx = new PIXI.projection.Sprite(texture);
@@ -271,14 +288,21 @@ export class Application {
     }
 
     public cc(layer: PIXI.Container = null): PIXI.Container {
-        let p = new PIXI.Container();
+        let p = this.sm.fromPool(POOL_TAG_SPRITE);
+        if (!p) p = new PIXI.Container(); else {
+            console.log("Container from pool")
+        }
+
         if (layer)
             layer.addChild(p);
         return p;
     }
 
     public cg(layer: PIXI.Container = null): PIXI.Graphics {
-        let p = new PIXI.Graphics();
+        let p = this.sm.fromPool(POOL_TAG_GRAPHICS);
+        if (!p) p = new PIXI.Graphics(); else {
+            console.log("Graphics from pool")
+        }
         if (layer)
             layer.addChild(p);
 
@@ -287,13 +311,6 @@ export class Application {
 
 
     public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
-        if (!s) {
-            let cont = new PIXI.Container();
-            if (layer)
-                layer.addChild(cont);
-            return cont;
-        }
-
         let texture;
         if (PIXI.utils.TextureCache[s]) {
             texture = PIXI.Texture.fromFrame(s);
@@ -305,8 +322,15 @@ export class Application {
             console.log("Can't find ", s);
             return null;
         }
+
         if (texture) {
-            let gfx = new PIXI.heaven.Sprite(texture);
+            let gfx = this.sm.fromPool(POOL_TAG_HEAVEN_SPRITE);
+
+            if (!gfx) gfx = new PIXI.heaven.Sprite(texture); else {
+                (<PIXI.heaven.Sprite>gfx).texture = texture;
+                console.log("POOL_TAG_HEAVEN_SPRITE")
+            }
+
             gfx.anchor.x = .5;
             gfx.anchor.y = .5;
             if (layer)

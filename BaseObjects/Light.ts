@@ -14,9 +14,9 @@ export class Light extends O {
     onDestroy() {
         if (this.gfx.parentLayer)
             this.gfx.parentLayer.removeChild(this.gfx);
+
         this.gfx.parentLayer = null;
 
-        Application.One.rp(this.gfx);
         super.onDestroy();
     }
 
@@ -71,7 +71,7 @@ export class Light extends O {
 
         this.initSize = [this.gfx.width, this.gfx.height];
         this.isCandle = props.candle == "true";
-        super.init(props)
+        super.init(props);
         this.baseAlpha = this.gfx.alpha;
     }
 

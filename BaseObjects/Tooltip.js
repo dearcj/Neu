@@ -28,7 +28,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             },
             set: function (value) {
                 if (this._currentTip)
-                    Application_1.Application.One.rp(this._currentTip);
+                    Application_1.Application.One.free(this._currentTip);
                 if (value) {
                     Application_1.Application.One.sm.fonts.addChild(value);
                 }

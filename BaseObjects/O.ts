@@ -324,8 +324,7 @@ export class O implements Contextable {
         this.emmit(DEF_EVENTS.killed);
 
         if (this._gfx && this._gfx.parent) {
-            Application.One.rp(this._gfx);
-            this._gfx = null;
+            this._gfx = Application.One.free(this._gfx);
         }
     }
 

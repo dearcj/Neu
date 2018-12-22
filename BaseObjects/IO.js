@@ -151,8 +151,7 @@ define(["require", "exports", "../../main", "./O"], function (require, exports, 
         IO.prototype.onDestroy = function () {
             this.click = null;
             if (this.textField) {
-                this.textField.parent.removeChild(this.textField);
-                this.textField = null;
+                this.textField = main_1._.free(this.textField);
             }
             _super.prototype.onDestroy.call(this);
         };

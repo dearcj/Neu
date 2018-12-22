@@ -77,13 +77,6 @@ export class Camera extends O {
         this.zoom = 1;
         this.removeable = false;
         this.rect = new PIXI.Rectangle(0, 0, Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
-      //  TweenMax.to(this, 100, {x: 1000});
-        //this.x += 1;
-    //    let o = new O();
-     //   o.updateLink = (dx: number, dy: number) => {
-     //       console.log("dx:", Math.round(dx * 10) / 10, "dy:", Math.round(dy * 10) / 10);
-     //   };
-       // this.linkObj(o);
     }
 
     stop() {
@@ -171,7 +164,7 @@ export class Camera extends O {
 
 
         if (!obj.alwaysVisible && !obj.noCameraOffset) {
-            clip.visible = this.isVisible(clip)
+//            clip.visible = this.isVisible(clip)
         }
 
         if (clip.visible) {

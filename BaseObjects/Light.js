@@ -27,7 +27,6 @@ define(["require", "exports", "./O", "../Application", "./Lighting"], function (
             if (this.gfx.parentLayer)
                 this.gfx.parentLayer.removeChild(this.gfx);
             this.gfx.parentLayer = null;
-            Application_1.Application.One.rp(this.gfx);
             _super.prototype.onDestroy.call(this);
         };
         Light.prototype.createPolygon = function (polygon, properties) {

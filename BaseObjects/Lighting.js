@@ -92,10 +92,8 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                 this.gfx.filterArea = null;
                 Application_1.TweenMax.killTweensOf(this);
             }
-            main_1._.rp(this.ambientContainer);
-            main_1._.rp(this.ambient);
-            this.ambientContainer = null;
-            this.ambient = null;
+            this.ambientContainer = main_1._.free(this.ambientContainer);
+            this.ambient = main_1._.free(this.ambient);
             this.lights = [];
             _super.prototype.onDestroy.call(this);
         };
@@ -154,7 +152,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
                 for (var _i = 0, _a = this.lights; _i < _a.length; _i++) { //SKIP AMBIENT + LAYER CONTAINER
                     var x = _a[_i];
                     if (x.gfx) {
-                        x.gfx.parentLayer = null;
+                        x.gfx.parentLayer.removeChild(x.gfx);
                         main_1._.rp(x.gfx);
                     }
                 }

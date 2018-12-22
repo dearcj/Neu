@@ -10,55 +10,55 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
     function extractBlendMode(bm) {
         switch (bm) {
             case 'normal':
-                return PIXI.BLEND_MODES.NORMAL;
+                return Application_1.PIXI.BLEND_MODES.NORMAL;
                 break;
             case 'add':
-                return PIXI.BLEND_MODES.ADD;
+                return Application_1.PIXI.BLEND_MODES.ADD;
                 break;
             case 'multiply':
-                return PIXI.BLEND_MODES.MULTIPLY;
+                return Application_1.PIXI.BLEND_MODES.MULTIPLY;
                 break;
             case 'screen':
-                return PIXI.BLEND_MODES.SCREEN;
+                return Application_1.PIXI.BLEND_MODES.SCREEN;
                 break;
             case 'overlay':
-                return PIXI.BLEND_MODES.OVERLAY;
+                return Application_1.PIXI.BLEND_MODES.OVERLAY;
                 break;
             case 'darken':
-                return PIXI.BLEND_MODES.DARKEN;
+                return Application_1.PIXI.BLEND_MODES.DARKEN;
                 break;
             case 'dodge':
-                return PIXI.BLEND_MODES.COLOR_DODGE;
+                return Application_1.PIXI.BLEND_MODES.COLOR_DODGE;
                 break;
             case 'burn':
-                return PIXI.BLEND_MODES.COLOR_BURN;
+                return Application_1.PIXI.BLEND_MODES.COLOR_BURN;
                 break;
             case 'hardlight':
-                return PIXI.BLEND_MODES.HARD_LIGHT;
+                return Application_1.PIXI.BLEND_MODES.HARD_LIGHT;
                 break;
             case 'softlight':
-                return PIXI.BLEND_MODES.SOFT_LIGHT;
+                return Application_1.PIXI.BLEND_MODES.SOFT_LIGHT;
                 break;
             case 'difference':
-                return PIXI.BLEND_MODES.DIFFERENCE;
+                return Application_1.PIXI.BLEND_MODES.DIFFERENCE;
                 break;
             case 'exclusion':
-                return PIXI.BLEND_MODES.EXCLUSION;
+                return Application_1.PIXI.BLEND_MODES.EXCLUSION;
                 break;
             case 'hue':
-                return PIXI.BLEND_MODES.HUE;
+                return Application_1.PIXI.BLEND_MODES.HUE;
                 break;
             case 'saturation':
-                return PIXI.BLEND_MODES.SATURATION;
+                return Application_1.PIXI.BLEND_MODES.SATURATION;
                 break;
             case 'color':
-                return PIXI.BLEND_MODES.COLOR;
+                return Application_1.PIXI.BLEND_MODES.COLOR;
                 break;
             case 'luminosity':
-                return PIXI.BLEND_MODES.LUMINOSITY;
+                return Application_1.PIXI.BLEND_MODES.LUMINOSITY;
                 break;
         }
-        return PIXI.BLEND_MODES.NORMAL;
+        return Application_1.PIXI.BLEND_MODES.NORMAL;
     }
     exports.extractBlendMode = extractBlendMode;
     var Loader = /** @class */ (function () {
@@ -121,7 +121,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (noCameraOffset === void 0) { noCameraOffset = false; }
             if (offs === void 0) { offs = null; }
             if (group === void 0) { group = null; }
-            var c = new PIXI.Container();
+            var c = new Application_1.PIXI.Container();
             var a = this.load(stage, name, cb, noCameraOffset, offs, group);
             for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
                 var x = a_2[_i];
@@ -349,8 +349,8 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             return objectsList;
         };
         Loader.prototype.createGfx = function (o, textureName, x, y, frameName, properties) {
-            var w = o.attributes.getNamedItem('width').nodeValue;
-            var h = o.attributes.getNamedItem('height').nodeValue;
+            var w = parseFloat(o.attributes.getNamedItem('width').nodeValue);
+            var h = parseFloat(o.attributes.getNamedItem('height').nodeValue);
             var gfx;
             if (properties['movieclip'] == 'true') {
                 var noExtensionFrameName = frameName.replace(/\.[^/.]+$/, "");
@@ -367,6 +367,11 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             else {
                 //TODO: camera
+                /*if (textureName.toLowerCase() == "sky.png") {
+                    gfx = Application.One.sm.fromPool(POOL_TAG_HEAVEN_SPRITE);
+                    gfx.texture = PIXI.Texture.fromFrame(textureName);
+                    gfx._activeParentLayer = null;
+                } else*/
                 gfx = Application_1.Application.One.cs(textureName);
             }
             gfx.anchor.x = .5;
@@ -379,6 +384,23 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (properties['blendMode']) {
                 gfx.blendMode = extractBlendMode(properties['blendMode'].toLowerCase());
             }
+            /* if (textureName.toLowerCase() == "sky.png")  {
+                 let g = new PIXI.heaven.Sprite(PIXI.Texture.fromFrame(textureName));
+                 g.anchor.x = .5;
+                 g.anchor.y = .5;
+                 g.width = w;
+                 g.height = h;
+                 g.x = x;
+                 g.y = y;
+                 g.position.x = 0;
+                 g.position.y = 0;
+     
+                 Application.One.sm.main.addChild(g);
+                 Application.One.sm.camera.wait(0).call(()=>{
+                     console.log(gfx);
+                     console.log(g);
+                 }).apply();
+             }*/
             return gfx;
         };
         Loader.prototype.createObject = function (stage, o, textureName, offsetx, offsety, frameName, layerName, groupProps, flipX, flipY) {

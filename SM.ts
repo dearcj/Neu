@@ -7,7 +7,14 @@ import {BlackTransition} from "./Transitions/BlackTransition";
 import {_, PIXIUI} from "../main";
 import {Stage} from "./Stage";
 
+export const POOL_TAG_SPRITE = "sprite";
+export const POOL_TAG_HEAVEN_SPRITE = "heaven_sprite";
+export const POOL_TAG_CONTAINER = "container";
+export const POOL_TAG_GRAPHICS = "graphics";
+
 export class SM {
+    public pool:  { [key:string]: any; } = {};
+
     public superstage: PIXI.Container;
     public pixiUiStage: any;
 
@@ -36,6 +43,99 @@ export class SM {
 
     public camera3d: PIXI.Container;
 
+    public resetObj(obj: any) {
+        obj.visible = true;
+        obj.alpha = 1;
+        obj.blendMode = PIXI.BLEND_MODES.NORMAL;
+        obj._activeParentLayer = null;
+        obj.cacheAsBitmap = false;
+        obj.interactive = false;
+        obj.interactiveChildren = false;
+        obj.x = 0;
+        obj.y = 0;
+        obj.width = 0;
+        obj.height = 0;
+        obj.rotation = 0;
+
+        if (obj instanceof PIXI.DisplayObject) {
+            obj.buttonMode  = false;
+            obj.hitArea = null;
+            obj.setTransform(0,0,1,1,0,0,0,0,0);
+        }
+
+        if (obj instanceof PIXI.Graphics) {
+            (<PIXI.Graphics>obj).tint = 0xffffff;
+            (<PIXI.Graphics>obj).clear();
+        }
+
+        if (obj instanceof PIXI.heaven.Sprite) {
+            (<PIXI.Sprite>obj).anchor.x = 0;
+            (<PIXI.Sprite>obj).anchor.y = 0;
+            (<PIXI.heaven.Sprite>obj).skew.set();
+            (<PIXI.heaven.Sprite>obj).filters = [];
+            (<PIXI.heaven.Sprite>obj).filterArea = null;
+            (<PIXI.heaven.Sprite>obj).color.clear();
+            (<PIXI.heaven.Sprite>obj).maskSprite = null;
+            (<PIXI.heaven.Sprite>obj).maskVertexData = null;
+            (<PIXI.Sprite>obj).mask = null;
+            (<PIXI.heaven.Sprite>obj).renderable = true;
+        }
+
+        if (obj instanceof PIXI.Sprite) {
+            (<PIXI.Sprite>obj).anchor.x = 0;
+            (<PIXI.Sprite>obj).anchor.y = 0;
+            (<PIXI.Sprite>obj).renderable = true;
+            (<PIXI.Sprite>obj).skew.set();
+            (<PIXI.Sprite>obj).filters = [];
+            (<PIXI.Sprite>obj).filterArea = null;
+            (<PIXI.Sprite>obj).tint = 0xffffff;
+            (<PIXI.Sprite>obj).mask = null;
+        }
+
+        obj.displayOrder = 0;
+    }
+
+    public toPool(obj: any) {
+        let tagname: string;
+
+        let constructor = Object.getPrototypeOf(obj).constructor;
+        if (constructor == PIXI.Container) {
+        //    tagname = POOL_TAG_CONTAINER;
+        }
+
+        if (constructor == PIXI.Graphics) {
+        //    tagname = POOL_TAG_GRAPHICS;
+        }
+
+        if (constructor == PIXI.Sprite) {
+        //    tagname = POOL_TAG_SPRITE;
+        }
+
+        if (constructor == PIXI.heaven.Sprite) {
+            tagname = POOL_TAG_HEAVEN_SPRITE;
+        }
+
+        (<any>obj).inPool = true;
+        if (!this.pool[tagname]) {
+            this.pool[tagname] = [];
+        }
+
+        this.pool[tagname].push(obj);
+    }
+
+    public fromPool(tag: string): any {
+        if (!this.pool[tag]) {
+            return null;
+        } else {
+            let p = this.pool[tag].shift();
+            if (p) {
+                p.inPool = null;
+                this.resetObj(p);
+            }
+
+            return p;
+        }
+    }
 
     public ZOrderContainer(c: PIXI.Container): void {
         c.children.sort(function (a, b) {
@@ -121,7 +221,7 @@ export class SM {
         this.effects = new PIXI.Container();
         this.cursorlayer = new PIXI.Container();
         this.light = new PIXI.Container();
-
+        this.pool = {POOL_TAG_HEAVEN_SPRITE: []};
         this.main.interactive = false;
         this.gui.interactive = true;
         this.gui2.interactive = true;

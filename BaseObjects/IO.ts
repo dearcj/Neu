@@ -151,8 +151,7 @@ export class IO extends O {
     onDestroy() {
         this.click = null;
         if (this.textField) {
-            this.textField.parent.removeChild(this.textField);
-            this.textField = null;
+            this.textField = _.free(this.textField);
         }
 
         super.onDestroy();

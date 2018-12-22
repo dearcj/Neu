@@ -34,13 +34,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             _this.removeable = false;
             _this.rect = new PIXI.Rectangle(0, 0, Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             return _this;
-            //  TweenMax.to(this, 100, {x: 1000});
-            //this.x += 1;
-            //    let o = new O();
-            //   o.updateLink = (dx: number, dy: number) => {
-            //       console.log("dx:", Math.round(dx * 10) / 10, "dy:", Math.round(dy * 10) / 10);
-            //   };
-            // this.linkObj(o);
         }
         Object.defineProperty(Camera.prototype, "zoom", {
             get: function () {
@@ -156,7 +149,7 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
             }
             if (!obj.alwaysVisible && !obj.noCameraOffset) {
-                clip.visible = this.isVisible(clip);
+                //            clip.visible = this.isVisible(clip)
             }
             if (clip.visible) {
                 clip.rotation = obj.a + this.a;
