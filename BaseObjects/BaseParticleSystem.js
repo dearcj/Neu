@@ -35,14 +35,14 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             this.particles.push(p);
             this.gfx.addChild(gfx);
             this.processParticle(this.gfx.children.length - 1, Application_1.Application.One.delta);
-            this.width = Application_1.Application.One.SCR_WIDTH;
-            this.height = Application_1.Application.One.SCR_HEIGHT;
             p.alpha = this.globalAlpha;
             return p;
         };
         BaseParticleSystem.prototype.init = function (props) {
             if (this.layer)
                 this.layer.addChild(this.gfx);
+            this.width = Application_1.Application.One.SCR_WIDTH;
+            this.height = Application_1.Application.One.SCR_HEIGHT;
             _super.prototype.init.call(this, props);
         };
         BaseParticleSystem.prototype.onDestroy = function () {
@@ -57,6 +57,8 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
         };
         BaseParticleSystem.prototype.processParticles = function (timeDelta) {
             var len = this.particles.length;
+            if (len != this.gfx.children.length)
+                console.log("!!!! ", len, " xx ", this.gfx.children.length);
             for (var i = 0; i < len; ++i) {
                 var part = this.particles[i];
                 part.lifeTime -= timeDelta;

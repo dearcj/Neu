@@ -1,18 +1,32 @@
 import {Application} from "../Application";
 import ColorTransform = PIXI.heaven.ColorTransform;
+import BitmapTextStyle = PIXI.extras.BitmapTextStyle;
 
 export class PoolHeavenBitmapText extends PIXI.extras.BitmapText {
-    color: ColorTransform = new PIXI.heaven.ColorTransform();
+    get color(): PIXI.heaven.ColorTransform {
+        return this._color;
+    }
 
-    updateText = function updateText() {
-        var data = PIXI.extras.BitmapText.fonts[this._font.name];
-        var scale = this._font.size / data.size;
+    set color(value: PIXI.heaven.ColorTransform) {
+        this._color = value;
+    }
+    private _color: ColorTransform;
+
+    constructor(text, style?: BitmapTextStyle) {
+        super(text, style);
+    }
+
+    updateText () {
+        if (!this._color) this._color = new PIXI.heaven.ColorTransform();
+
+        var data = PIXI.extras.BitmapText.fonts[(<any>this._font).name];
+        var scale = (<any>this._font).size / data.size;
         var pos = new PIXI.Point();
         var chars = [];
         var lineWidths = [];
         var text = this.text.replace(/(?:\r\n|\r)/g, '\n');
         var textLength = text.length;
-        var maxWidth = this._maxWidth * data.size / this._font.size;
+        var maxWidth = this._maxWidth * data.size / (<any>this._font).size;
 
         var prevCharCode = null;
         var lastLineWidth = 0;
@@ -58,9 +72,9 @@ export class PoolHeavenBitmapText extends PIXI.extras.BitmapText {
                 texture: charData.texture,
                 line: line,
                 charCode: charCode,
-                position: new PIXI.Point(pos.x + charData.xOffset + this._letterSpacing / 2, pos.y + charData.yOffset)
+                position: new PIXI.Point(pos.x + charData.xOffset + (<any>this)._letterSpacing / 2, pos.y + charData.yOffset)
             });
-            pos.x += charData.xAdvance + this._letterSpacing;
+            pos.x += charData.xAdvance + (<any>this)._letterSpacing;
             lastLineWidth = pos.x;
             maxLineHeight = Math.max(maxLineHeight, charData.yOffset + charData.texture.height);
             prevCharCode = charCode;
@@ -97,9 +111,9 @@ export class PoolHeavenBitmapText extends PIXI.extras.BitmapText {
         for (var _i = 0; _i <= line; _i++) {
             var alignOffset = 0;
 
-            if (this._font.align === 'right') {
+            if ((<any>this._font).align === 'right') {
                 alignOffset = maxLineWidth - lineWidths[_i];
-            } else if (this._font.align === 'center') {
+            } else if ((<any>this._font).align === 'center') {
                 alignOffset = (maxLineWidth - lineWidths[_i]) / 2;
             }
 
@@ -115,10 +129,10 @@ export class PoolHeavenBitmapText extends PIXI.extras.BitmapText {
             if (c) {
                 c.texture = chars[_i2].texture;
             } else {
-                //c = new PIXI.heaven.Sprite(chars[_i2].texture);//Application.One.cs(null, null, chars[_i2].texture);
                 c = Application.One.cs(null, null, chars[_i2].texture, false);
                 this._glyphs.push(c);
             }
+            (<PIXI.heaven.Sprite>c).color = this._color;
 
             c.position.x = (chars[_i2].position.x + lineAlignOffsets[chars[_i2].line]) * scale;
             c.position.y = chars[_i2].position.y * scale;
@@ -139,20 +153,12 @@ export class PoolHeavenBitmapText extends PIXI.extras.BitmapText {
         this._textHeight = (pos.y + data.lineHeight) * scale;
 
         // apply anchor
-        if (this.anchor.x !== 0 || this.anchor.y !== 0) {
+        if ((<any>this.anchor).x !== 0 || (<any>this.anchor).y !== 0) {
             for (var _i4 = 0; _i4 < lenChars; _i4++) {
-                this._glyphs[_i4].x -= this._textWidth * this.anchor.x;
-                this._glyphs[_i4].y -= this._textHeight * this.anchor.y;
+                this._glyphs[_i4].x -= this._textWidth * (<any>this.anchor).x;
+                this._glyphs[_i4].y -= this._textHeight * (<any>this.anchor).y;
             }
         }
         this._maxLineHeight = maxLineHeight * scale;
-
-        for (let x of this._glyphs) {
-            let anyx: any = x;
-            if (!anyx.color) {
-                anyx.convertToHeaven();
-                anyx.color = this.color;
-            }
-        }
     };
 }

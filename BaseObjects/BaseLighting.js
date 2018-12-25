@@ -71,7 +71,7 @@ define(["require", "exports", "./O", "./Light", "../Application", "../../main", 
             this.alwaysVisible = true;
             var delta = 0;
             this.filterArea = new PIXI.Rectangle(-delta, -delta, Application_1.Application.One.SCR_WIDTH + 2 * delta, Application_1.Application.One.SCR_HEIGHT + 2 * delta);
-            this.gfx = new PIXI.Sprite();
+            this.gfx = Application_1.Application.One.cc();
             this.ambient = Application_1.Application.One.cs(BaseLighting.DEFAULT_GFX);
             this.ambient.anchor.x = 0.5;
             this.ambient.anchor.y = 0.5;

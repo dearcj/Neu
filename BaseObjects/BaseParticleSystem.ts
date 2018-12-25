@@ -11,8 +11,6 @@ export interface BaseParticle  {
     alpha: number;
 }
 
-
-
 export class BaseParticleSystem extends O{
     public particles: BaseParticle[] = [];
     public globalAlpha: number = 1;
@@ -32,8 +30,6 @@ export class BaseParticleSystem extends O{
         this.gfx.addChild(gfx);
         this.processParticle(this.gfx.children.length - 1, Application.One.delta);
 
-        this.width = Application.One.SCR_WIDTH;
-        this.height = Application.One.SCR_HEIGHT;
         p.alpha = this.globalAlpha;
 
         return p;
@@ -42,6 +38,8 @@ export class BaseParticleSystem extends O{
     init( props: any): void{
         if (this.layer)
             this.layer.addChild(this.gfx);
+        this.width = Application.One.SCR_WIDTH;
+        this.height = Application.One.SCR_HEIGHT;
 
         super.init(props);
     }
@@ -61,6 +59,8 @@ export class BaseParticleSystem extends O{
 
     processParticles(timeDelta: number) {
         let len = this.particles.length;
+        if (len != this.gfx.children.length)
+        console.log("!!!! ", len, " xx ", this.gfx.children.length);
         for (let i = 0; i < len; ++i) {
             let part = this.particles[i];
             part.lifeTime -= timeDelta;

@@ -1,10 +1,11 @@
-define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application", "./Transitions/BlackTransition", "../main"], function (require, exports, Camera_1, Math_1, Application_1, BlackTransition_1, main_1) {
+define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application", "./Transitions/BlackTransition", "../main", "./PIXIPlugins/AnimClip"], function (require, exports, Camera_1, Math_1, Application_1, BlackTransition_1, main_1, AnimClip_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.POOL_TAG_SPRITE = "sprite";
     exports.POOL_TAG_HEAVEN_SPRITE = "heaven_sprite";
     exports.POOL_TAG_CONTAINER = "container";
     exports.POOL_TAG_GRAPHICS = "graphics";
+    exports.POOL_TAG_ANIM_CLIP = "anim";
     var SM = /** @class */ (function () {
         function SM() {
             this.pool = {};
@@ -19,6 +20,8 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.globalIds = {};
         }
         SM.prototype.resetObj = function (obj) {
+            Application_1.Application.One.killTweensOf(obj);
+            Application_1.Application.One.killTweensOf(obj.scale);
             obj.removeAllListeners();
             obj.visible = true;
             obj.alpha = 1;
@@ -35,8 +38,6 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             obj.width = 0;
             obj.height = 0;
             obj.rotation = 0;
-            Application_1.Application.One.killTweensOf(obj);
-            Application_1.Application.One.killTweensOf(obj.scale);
             obj.setTransform(0, 0, 0, 0, 0, 0, 0, 0, 0);
             if (obj instanceof PIXI.DisplayObject) {
                 obj.buttonMode = false;
@@ -46,26 +47,37 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 obj.tint = 0xffffff;
                 obj.clear();
             }
-            if (obj instanceof PIXI.heaven.Sprite) {
-                obj.anchor.x = 0.5;
-                obj.anchor.y = 0.5;
-                obj.tint = 0xffffff;
-                obj.filters = [];
-                obj.filterArea = null;
+            if (obj instanceof AnimClip_1.AnimClip) {
                 obj.color.clear();
                 obj.maskSprite = null;
                 obj.maskVertexData = null;
                 obj.mask = null;
+                obj.filters = [];
+                obj.filterArea = null;
+                obj.renderable = true;
             }
-            /*        if (obj instanceof PIXI.Sprite) {
-                        obj.anchor.x = 0.5;
-                        obj.anchor.y = 0.5;
-                        obj.renderable = true;
-                        obj.filters = [];
-                        obj.filterArea = null;
-                        obj.tint = 0xffffff;
-                        obj.mask = null;
-                    }*/
+            if (obj instanceof PIXI.heaven.Sprite) {
+                obj.color = new PIXI.heaven.ColorTransform();
+                obj.anchor.x = 0.;
+                obj.anchor.y = 0.;
+                obj.color.clear();
+                obj.tint = 0xffffff;
+                obj.filters = [];
+                obj.filterArea = null;
+                obj.maskSprite = null;
+                obj.maskVertexData = null;
+                obj.mask = null;
+                obj.renderable = true;
+            }
+            if (obj instanceof PIXI.Sprite) {
+                obj.anchor.x = 0.;
+                obj.anchor.y = 0.;
+                obj.renderable = true;
+                obj.filters = [];
+                obj.filterArea = null;
+                obj.tint = 0xffffff;
+                obj.mask = null;
+            }
         };
         SM.prototype.poolTag = function (obj) {
             var tagname;
@@ -73,12 +85,14 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             if (constructor == PIXI.Container) {
                 tagname = exports.POOL_TAG_CONTAINER;
             }
+            if (constructor == AnimClip_1.AnimClip) {
+                tagname = exports.POOL_TAG_ANIM_CLIP;
+            }
             if (constructor == PIXI.Graphics) {
                 tagname = exports.POOL_TAG_GRAPHICS;
             }
             if (constructor == PIXI.Sprite) {
-                return null;
-                //tagname = POOL_TAG_SPRITE;
+                //     tagname = POOL_TAG_SPRITE;
             }
             if (constructor == PIXI.heaven.Sprite) {
                 tagname = exports.POOL_TAG_HEAVEN_SPRITE;

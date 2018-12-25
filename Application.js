@@ -153,9 +153,6 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             if (!o)
                 return;
             this.rp(o);
-            //     if (o._activeParentLayer) {
-            //        return;
-            //    }
             if (o.inPool) {
                 return;
             }
@@ -199,7 +196,12 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 }
                 inx++;
             }
-            var gfx = new AnimClip_1.AnimClip(textures);
+            var gfx = this.sm.fromPool(SM_1.POOL_TAG_ANIM_CLIP);
+            if (!gfx)
+                gfx = new AnimClip_1.AnimClip(textures);
+            else {
+                gfx.textures = textures;
+            }
             gfx.anchor.x = 0.5;
             gfx.anchor.y = 0.5;
             if (layer)

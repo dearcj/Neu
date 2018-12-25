@@ -77,7 +77,7 @@ export class BaseLighting extends O {
         this.alwaysVisible = true;
         let delta = 0;
         this.filterArea = new PIXI.Rectangle(-delta, -delta, Application.One.SCR_WIDTH + 2 * delta, Application.One.SCR_HEIGHT + 2 * delta);
-        this.gfx = new PIXI.Sprite();
+        this.gfx = Application.One.cc();
         this.ambient = <PIXI.heaven.Sprite>Application.One.cs(BaseLighting.DEFAULT_GFX);
         this.ambient.anchor.x = 0.5;
         this.ambient.anchor.y = 0.5;

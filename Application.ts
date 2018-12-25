@@ -1,6 +1,6 @@
 import {AnimClip} from "./PIXIPlugins/AnimClip";
 import {O} from "./BaseObjects/O";
-import {POOL_TAG_GRAPHICS, POOL_TAG_HEAVEN_SPRITE, POOL_TAG_SPRITE, SM} from "./SM";
+import {POOL_TAG_ANIM_CLIP, POOL_TAG_GRAPHICS, POOL_TAG_HEAVEN_SPRITE, POOL_TAG_SPRITE, SM} from "./SM";
 import {ResourceManager} from "./ResourceManager";
 import {Loader} from "./Loader";
 import {Vec2} from "./Math";
@@ -212,10 +212,6 @@ export class Application {
 
         this.rp(o);
 
-   //     if (o._activeParentLayer) {
-    //        return;
-    //    }
-
         if ((<any>o).inPool) {
             return
         }
@@ -263,7 +259,13 @@ export class Application {
             inx++;
         }
 
-        let gfx = new AnimClip(textures);
+        let gfx = this.sm.fromPool(POOL_TAG_ANIM_CLIP);
+        if (!gfx)
+            gfx = new AnimClip(textures); else {
+            gfx.textures = textures;
+        }
+
+
         gfx.anchor.x = 0.5;
         gfx.anchor.y = 0.5;
 

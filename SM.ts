@@ -6,11 +6,13 @@ import {ITransition} from "./Transitions/ITransition";
 import {BlackTransition} from "./Transitions/BlackTransition";
 import {_, PIXIUI} from "../main";
 import {Stage} from "./Stage";
+import {AnimClip} from "./PIXIPlugins/AnimClip";
 
 export const POOL_TAG_SPRITE = "sprite";
 export const POOL_TAG_HEAVEN_SPRITE = "heaven_sprite";
 export const POOL_TAG_CONTAINER = "container";
 export const POOL_TAG_GRAPHICS = "graphics";
+export const POOL_TAG_ANIM_CLIP = "anim";
 
 export class SM {
     public pool:  { [key:string]: any; } = {};
@@ -44,6 +46,8 @@ export class SM {
     public camera3d: PIXI.Container;
 
     public resetObj(obj: any) {
+        Application.One.killTweensOf(obj);
+        Application.One.killTweensOf(obj.scale);
         obj.removeAllListeners();
         obj.visible = true;
         obj.alpha = 1;
@@ -63,8 +67,6 @@ export class SM {
         obj.height = 0;
         obj.rotation = 0;
 
-        Application.One.killTweensOf(obj);
-        Application.One.killTweensOf(obj.scale);
 
         obj.setTransform(0,0,0,0,0,0,0,0,0);
 
@@ -78,27 +80,39 @@ export class SM {
             (<PIXI.Graphics>obj).clear();
         }
 
+        if (obj instanceof AnimClip) {
+            (<any>obj).color.clear();
+            (<any>obj).maskSprite = null;
+            (<any>obj).maskVertexData = null;
+            obj.mask = null;
+            obj.filters = [];
+            obj.filterArea = null;
+            obj.renderable = true;
+        }
+
         if (obj instanceof PIXI.heaven.Sprite) {
-            obj.anchor.x = 0.5;
-            obj.anchor.y = 0.5;
+            obj.color = new PIXI.heaven.ColorTransform();
+            obj.anchor.x = 0.;
+            obj.anchor.y = 0.;
+            obj.color.clear();
             obj.tint = 0xffffff;
             obj.filters = [];
             obj.filterArea = null;
-            obj.color.clear();
             obj.maskSprite = null;
             obj.maskVertexData = null;
             obj.mask = null;
+            obj.renderable = true;
         }
 
-/*        if (obj instanceof PIXI.Sprite) {
-            obj.anchor.x = 0.5;
-            obj.anchor.y = 0.5;
+        if (obj instanceof PIXI.Sprite) {
+            obj.anchor.x = 0.;
+            obj.anchor.y = 0.;
             obj.renderable = true;
             obj.filters = [];
             obj.filterArea = null;
             obj.tint = 0xffffff;
             obj.mask = null;
-        }*/
+        }
     }
 
     public poolTag(obj: any): string {
@@ -110,13 +124,16 @@ export class SM {
             tagname = POOL_TAG_CONTAINER;
         }
 
+        if (constructor == AnimClip) {
+            tagname = POOL_TAG_ANIM_CLIP;
+        }
+
         if (constructor == PIXI.Graphics) {
             tagname = POOL_TAG_GRAPHICS;
         }
 
         if (constructor == PIXI.Sprite) {
-            return null;
-            //tagname = POOL_TAG_SPRITE;
+       //     tagname = POOL_TAG_SPRITE;
         }
 
         if (constructor == PIXI.heaven.Sprite) {
