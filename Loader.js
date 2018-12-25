@@ -366,12 +366,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
                 gfx.animationSpeed = 0.35;
             }
             else {
-                //TODO: camera
-                /*if (textureName.toLowerCase() == "sky.png") {
-                    gfx = Application.One.sm.fromPool(POOL_TAG_HEAVEN_SPRITE);
-                    gfx.texture = PIXI.Texture.fromFrame(textureName);
-                    gfx._activeParentLayer = null;
-                } else*/
                 gfx = Application_1.Application.One.cs(textureName);
             }
             gfx.anchor.x = .5;
@@ -384,23 +378,6 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (properties['blendMode']) {
                 gfx.blendMode = extractBlendMode(properties['blendMode'].toLowerCase());
             }
-            /* if (textureName.toLowerCase() == "sky.png")  {
-                 let g = new PIXI.heaven.Sprite(PIXI.Texture.fromFrame(textureName));
-                 g.anchor.x = .5;
-                 g.anchor.y = .5;
-                 g.width = w;
-                 g.height = h;
-                 g.x = x;
-                 g.y = y;
-                 g.position.x = 0;
-                 g.position.y = 0;
-     
-                 Application.One.sm.main.addChild(g);
-                 Application.One.sm.camera.wait(0).call(()=>{
-                     console.log(gfx);
-                     console.log(g);
-                 }).apply();
-             }*/
             return gfx;
         };
         Loader.prototype.createObject = function (stage, o, textureName, offsetx, offsety, frameName, layerName, groupProps, flipX, flipY) {

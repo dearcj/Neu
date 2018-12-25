@@ -6,13 +6,13 @@ import { _, PIXIContainer} from "../../main";
 import {O} from "./O";
 import {Camera} from "./Camera";
 import BitmapText = PIXI.extras.BitmapText;
-import {HeavenBitmapText} from "../PIXIPlugins/HeavenBitmapText";
+import {PoolHeavenBitmapText} from "../PIXIPlugins/PoolBitmapText";
 
 export class IO extends O {
     private _fontScale: number = 1;
     fontInitialSize: number = 20;
 
-    public textField: HeavenBitmapText;
+    public textField: PoolHeavenBitmapText;
     private _click: Function;
     protected _text: string;
     public align: string;

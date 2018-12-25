@@ -2,8 +2,8 @@
  * Created by MSI on 05.01.2017.
  */
 import {IO} from "./IO";
-import {HeavenBitmapText} from "../PIXIPlugins/HeavenBitmapText";
 import {Application} from "../Application";
+import {PoolHeavenBitmapText} from "../PIXIPlugins/PoolBitmapText";
 /**
  * Created by KURWINDALLAS on 11.07.2014.
  *////
@@ -25,7 +25,7 @@ export class TextBox extends IO {
         return a.replace(/==/g, '\n');
     }
 
-    static createTextField(obj, props: any): HeavenBitmapText {
+    static createTextField(obj, props: any): PoolHeavenBitmapText {
         let fontName: string;
         if (props.fontName) {
             fontName = props.fontName;
@@ -40,7 +40,7 @@ export class TextBox extends IO {
 
         if (obj.text == undefined) obj.text = "";
 
-        let pt = new HeavenBitmapText(obj.text, {font: fontName});
+        let pt = new PoolHeavenBitmapText(obj.text, {font: fontName});
         (<any>pt).fontInitialSize = (<any>pt.font).size;
         if (props.fontscale && props.fontscale != '') {
             (<any>pt.font).size = (<any>pt).fontInitialSize * parseFloat(props.fontscale)

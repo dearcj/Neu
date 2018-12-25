@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./IO", "../PIXIPlugins/HeavenBitmapText", "../Application"], function (require, exports, IO_1, HeavenBitmapText_1, Application_1) {
+define(["require", "exports", "./IO", "../Application", "../PIXIPlugins/PoolBitmapText"], function (require, exports, IO_1, Application_1, PoolBitmapText_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -47,7 +47,7 @@ define(["require", "exports", "./IO", "../PIXIPlugins/HeavenBitmapText", "../App
             }
             if (obj.text == undefined)
                 obj.text = "";
-            var pt = new HeavenBitmapText_1.HeavenBitmapText(obj.text, { font: fontName });
+            var pt = new PoolBitmapText_1.PoolHeavenBitmapText(obj.text, { font: fontName });
             pt.fontInitialSize = pt.font.size;
             if (props.fontscale && props.fontscale != '') {
                 pt.font.size = pt.fontInitialSize * parseFloat(props.fontscale);

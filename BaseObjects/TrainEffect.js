@@ -26,6 +26,8 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             var p = this.points[this.verticesX - 1];
             p.x = x;
             p.y = y;
+            this.calculatedPoints[this.verticesX - 1].x = x;
+            this.calculatedPoints[this.verticesX - 1].y = y;
         };
         NeuRope.prototype.updatePoints = function () {
             this._checkPointsLen();
@@ -57,18 +59,10 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             if (!props.scaleY)
                 props.scaleY = 1;
             this.points.push(new RopePoint(this.pos[0] / props.scaleX, this.pos[1] / props.scaleY));
-            //for (let x = 0; x < this.totalPoints; x++) {
-            //    this.points.push(new RopePoint(this.pos[0] / props.scaleX, this.pos[1] / props.scaleY))
-            // }
             this.historyPoints = props.historyPoints ? props.historyPoints : 40;
             this.historyX.push((this.pos[0]) / props.scaleX);
             this.historyY.push((this.pos[1]) / props.scaleY);
-            //  for (let i = 0; i < this.historyPoints; i++) {
-            //      this.historyX.push((this.pos[0] - 0.5*(this.historyPoints - i - 1))/ props.scaleX);
-            //      this.historyY.push((this.pos[1] - 0.5*(this.historyPoints - i - 1)) / props.scaleY);
-            //  }
             var trailTexture = PIXI.Texture.fromImage(props.gfx);
-            //ANUS
             this.gfx = new NeuRope(trailTexture, this.points);
             this.gfx.enableColors();
             this.gfx.drawMode = PIXI.heaven.mesh.Mesh.DRAW_MODES.TRIANGLES;
@@ -100,19 +94,25 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                 this.historyY[0] = curHistoryY;
             }
             if (this.gfx.verticesX < this.totalPoints) {
-                this.gfx.addPoint(this.pos[0] / this.gfx.scale.x, this.pos[1] / this.gfx.scale.y);
+                this.gfx.addPoint(this.pos[0] / this.gfx.scale.x + Math.random() * 300, this.pos[1] / this.gfx.scale.y + Math.random() * 300);
             }
             var points = this.gfx.points;
+            var delta = [0, 0];
             for (var i = 0; i < points.length; i++) {
                 var p = points[i];
                 var prop = i / (points.length - 1);
                 this.pointFunc(p, prop);
-                var ix = cubicInterpolation(this.historyX, i / points.length * this.historyPoints);
-                var iy = cubicInterpolation(this.historyY, i / points.length * this.historyPoints);
+                var ix = cubicInterpolation(this.historyX, (i + 1) / points.length * this.historyPoints);
+                var iy = cubicInterpolation(this.historyY, (i + 1) / points.length * this.historyPoints);
                 p.x = ix;
                 p.y = iy;
+                if (i > 0) {
+                    delta[0] = .5 * delta[0] + .5 * (points[i - 1].x - points[i].x) / 1000;
+                    delta[1] = .5 * delta[1] + .5 * (points[i - 1].y - points[i].y) / 1000;
+                    p.x += delta[0];
+                    p.y += delta[0];
+                }
             }
-            //console.log(this.historyX.length, ' ', points.length)
             this.x += this.v[0]; // * Application.One.worldSpeed * Application.One.delta2;
             this.y += this.v[1]; // * Application.One.worldSpeed * Application.One.delta2;
             if (!this.noCameraOffset) {

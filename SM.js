@@ -19,10 +19,14 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.globalIds = {};
         }
         SM.prototype.resetObj = function (obj) {
+            obj.removeAllListeners();
             obj.visible = true;
             obj.alpha = 1;
             obj.blendMode = PIXI.BLEND_MODES.NORMAL;
-            obj._activeParentLayer = null;
+            if (obj._activeParentLayer) {
+                obj.parentLayer = null;
+                obj._activeParentLayer = null;
+            }
             obj.cacheAsBitmap = false;
             obj.interactive = false;
             obj.interactiveChildren = false;
@@ -31,58 +35,62 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             obj.width = 0;
             obj.height = 0;
             obj.rotation = 0;
+            Application_1.Application.One.killTweensOf(obj);
+            Application_1.Application.One.killTweensOf(obj.scale);
+            obj.setTransform(0, 0, 0, 0, 0, 0, 0, 0, 0);
             if (obj instanceof PIXI.DisplayObject) {
                 obj.buttonMode = false;
                 obj.hitArea = null;
-                obj.setTransform(0, 0, 1, 1, 0, 0, 0, 0, 0);
             }
             if (obj instanceof PIXI.Graphics) {
                 obj.tint = 0xffffff;
                 obj.clear();
             }
             if (obj instanceof PIXI.heaven.Sprite) {
-                obj.anchor.x = 0;
-                obj.anchor.y = 0;
-                obj.skew.set();
+                obj.anchor.x = 0.5;
+                obj.anchor.y = 0.5;
+                obj.tint = 0xffffff;
                 obj.filters = [];
                 obj.filterArea = null;
                 obj.color.clear();
                 obj.maskSprite = null;
                 obj.maskVertexData = null;
                 obj.mask = null;
-                obj.renderable = true;
             }
-            if (obj instanceof PIXI.Sprite) {
-                obj.anchor.x = 0;
-                obj.anchor.y = 0;
-                obj.renderable = true;
-                obj.skew.set();
-                obj.filters = [];
-                obj.filterArea = null;
-                obj.tint = 0xffffff;
-                obj.mask = null;
-            }
-            obj.displayOrder = 0;
+            /*        if (obj instanceof PIXI.Sprite) {
+                        obj.anchor.x = 0.5;
+                        obj.anchor.y = 0.5;
+                        obj.renderable = true;
+                        obj.filters = [];
+                        obj.filterArea = null;
+                        obj.tint = 0xffffff;
+                        obj.mask = null;
+                    }*/
         };
-        SM.prototype.toPool = function (obj) {
+        SM.prototype.poolTag = function (obj) {
             var tagname;
             var constructor = Object.getPrototypeOf(obj).constructor;
             if (constructor == PIXI.Container) {
-                //    tagname = POOL_TAG_CONTAINER;
+                tagname = exports.POOL_TAG_CONTAINER;
             }
             if (constructor == PIXI.Graphics) {
-                //    tagname = POOL_TAG_GRAPHICS;
+                tagname = exports.POOL_TAG_GRAPHICS;
             }
             if (constructor == PIXI.Sprite) {
-                //    tagname = POOL_TAG_SPRITE;
+                return null;
+                //tagname = POOL_TAG_SPRITE;
             }
             if (constructor == PIXI.heaven.Sprite) {
                 tagname = exports.POOL_TAG_HEAVEN_SPRITE;
             }
+            return tagname;
+        };
+        SM.prototype.toPool = function (obj, tagname) {
             obj.inPool = true;
             if (!this.pool[tagname]) {
                 this.pool[tagname] = [];
             }
+            this.resetObj(obj);
             this.pool[tagname].push(obj);
         };
         SM.prototype.fromPool = function (tag) {
@@ -93,7 +101,6 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 var p = this.pool[tag].shift();
                 if (p) {
                     p.inPool = null;
-                    this.resetObj(p);
                 }
                 return p;
             }
@@ -278,7 +285,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 if (obji.doRemove) {
                     obji.onDestroy();
                     this.objects.splice(i, 1);
-                    i--;
+                    //i--;
                 }
             }
         };

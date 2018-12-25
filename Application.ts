@@ -210,24 +210,26 @@ export class Application {
     free(o: PIXI.Sprite | PIXI.heaven.Sprite | PIXI.Graphics | PIXI.Container | PIXI.DisplayObject): null {
         if (!o) return;
 
+        this.rp(o);
+
+   //     if (o._activeParentLayer) {
+    //        return;
+    //    }
+
         if ((<any>o).inPool) {
             return
         }
 
-        this.rp(o);
+        let tagname = this.sm.poolTag(o);
 
-        if (o instanceof PIXI.heaven.spine.Spine || o instanceof PIXI.spine.Spine ) {
-            return null
-        }
-
-        if (o instanceof PIXI.Sprite || o instanceof PIXI.heaven.Sprite || o instanceof PIXI.Container) {
+        if (tagname) {
             if ((<any>o).children) {
                 while ((<any>o).children.length > 0) {
                     this.free((<any>o).children[(<any>o).children.length - 1]);
                 }
             }
 
-            this.sm.toPool(o);
+            this.sm.toPool(o, tagname);
         }
 
         return null;
@@ -310,17 +312,14 @@ export class Application {
     }
 
 
-    public cs<T extends PIXI.Sprite>(s: string = null, layer: PIXI.Container = null): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
-        let texture;
-        if (PIXI.utils.TextureCache[s]) {
-            texture = PIXI.Texture.fromFrame(s);
-        } else {
-            texture = PIXI.Texture.fromFrame(s + '.png');
-        }
-
+    public cs<T extends PIXI.Sprite>(s: string, layer: PIXI.Container = null, tex: PIXI.Texture = null, centered: boolean = true): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
+        let texture = tex;
         if (!texture) {
-            console.log("Can't find ", s);
-            return null;
+            if (PIXI.utils.TextureCache[s]) {
+                texture = PIXI.Texture.fromFrame(s);
+            } else {
+                texture = PIXI.Texture.fromFrame(s + '.png');
+            }
         }
 
         if (texture) {
@@ -328,11 +327,14 @@ export class Application {
 
             if (!gfx) gfx = new PIXI.heaven.Sprite(texture); else {
                 (<PIXI.heaven.Sprite>gfx).texture = texture;
-                console.log("POOL_TAG_HEAVEN_SPRITE")
+                (<PIXI.heaven.Sprite>gfx)._onTextureUpdate();
             }
 
-            gfx.anchor.x = .5;
-            gfx.anchor.y = .5;
+            if (centered) {
+                gfx.anchor.x = .5;
+                gfx.anchor.y = .5;
+            }
+
             if (layer)
                 layer.addChild(gfx);
 

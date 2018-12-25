@@ -4,6 +4,7 @@ import {O} from "./O";
  */
 import {Vec2} from "../Math";
 import {Application, TweenMax} from "../Application";
+import {PoolHeavenBitmapText} from "../PIXIPlugins/PoolBitmapText";
 
 export const TOOLTIP_WIDTH = 260, TOOLTIP_HEIGHT = 260;
 const SPACE_SIZE = 8;
@@ -62,7 +63,7 @@ export class Tooltip extends O {
 
 
     createTF(t: string, fontName: string): any {
-        return new PIXI.extras.BitmapText(t, PIXI.extras.BitmapText.fonts[fontName])
+        return new PoolHeavenBitmapText(t, PIXI.extras.BitmapText.fonts[fontName])
     }
 
 

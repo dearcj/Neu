@@ -44,10 +44,16 @@ export class SM {
     public camera3d: PIXI.Container;
 
     public resetObj(obj: any) {
+        obj.removeAllListeners();
         obj.visible = true;
         obj.alpha = 1;
         obj.blendMode = PIXI.BLEND_MODES.NORMAL;
-        obj._activeParentLayer = null;
+
+        if (obj._activeParentLayer) {
+            obj.parentLayer = null;
+            obj._activeParentLayer = null;
+        }
+
         obj.cacheAsBitmap = false;
         obj.interactive = false;
         obj.interactiveChildren = false;
@@ -57,10 +63,14 @@ export class SM {
         obj.height = 0;
         obj.rotation = 0;
 
+        Application.One.killTweensOf(obj);
+        Application.One.killTweensOf(obj.scale);
+
+        obj.setTransform(0,0,0,0,0,0,0,0,0);
+
         if (obj instanceof PIXI.DisplayObject) {
             obj.buttonMode  = false;
             obj.hitArea = null;
-            obj.setTransform(0,0,1,1,0,0,0,0,0);
         }
 
         if (obj instanceof PIXI.Graphics) {
@@ -69,57 +79,60 @@ export class SM {
         }
 
         if (obj instanceof PIXI.heaven.Sprite) {
-            (<PIXI.Sprite>obj).anchor.x = 0;
-            (<PIXI.Sprite>obj).anchor.y = 0;
-            (<PIXI.heaven.Sprite>obj).skew.set();
-            (<PIXI.heaven.Sprite>obj).filters = [];
-            (<PIXI.heaven.Sprite>obj).filterArea = null;
-            (<PIXI.heaven.Sprite>obj).color.clear();
-            (<PIXI.heaven.Sprite>obj).maskSprite = null;
-            (<PIXI.heaven.Sprite>obj).maskVertexData = null;
-            (<PIXI.Sprite>obj).mask = null;
-            (<PIXI.heaven.Sprite>obj).renderable = true;
+            obj.anchor.x = 0.5;
+            obj.anchor.y = 0.5;
+            obj.tint = 0xffffff;
+            obj.filters = [];
+            obj.filterArea = null;
+            obj.color.clear();
+            obj.maskSprite = null;
+            obj.maskVertexData = null;
+            obj.mask = null;
         }
 
-        if (obj instanceof PIXI.Sprite) {
-            (<PIXI.Sprite>obj).anchor.x = 0;
-            (<PIXI.Sprite>obj).anchor.y = 0;
-            (<PIXI.Sprite>obj).renderable = true;
-            (<PIXI.Sprite>obj).skew.set();
-            (<PIXI.Sprite>obj).filters = [];
-            (<PIXI.Sprite>obj).filterArea = null;
-            (<PIXI.Sprite>obj).tint = 0xffffff;
-            (<PIXI.Sprite>obj).mask = null;
-        }
-
-        obj.displayOrder = 0;
+/*        if (obj instanceof PIXI.Sprite) {
+            obj.anchor.x = 0.5;
+            obj.anchor.y = 0.5;
+            obj.renderable = true;
+            obj.filters = [];
+            obj.filterArea = null;
+            obj.tint = 0xffffff;
+            obj.mask = null;
+        }*/
     }
 
-    public toPool(obj: any) {
+    public poolTag(obj: any): string {
         let tagname: string;
+
 
         let constructor = Object.getPrototypeOf(obj).constructor;
         if (constructor == PIXI.Container) {
-        //    tagname = POOL_TAG_CONTAINER;
+            tagname = POOL_TAG_CONTAINER;
         }
 
         if (constructor == PIXI.Graphics) {
-        //    tagname = POOL_TAG_GRAPHICS;
+            tagname = POOL_TAG_GRAPHICS;
         }
 
         if (constructor == PIXI.Sprite) {
-        //    tagname = POOL_TAG_SPRITE;
+            return null;
+            //tagname = POOL_TAG_SPRITE;
         }
 
         if (constructor == PIXI.heaven.Sprite) {
             tagname = POOL_TAG_HEAVEN_SPRITE;
         }
 
+        return tagname;
+    }
+
+    public toPool(obj: any, tagname: string) {
         (<any>obj).inPool = true;
         if (!this.pool[tagname]) {
             this.pool[tagname] = [];
         }
 
+        this.resetObj(obj);
         this.pool[tagname].push(obj);
     }
 
@@ -130,7 +143,6 @@ export class SM {
             let p = this.pool[tag].shift();
             if (p) {
                 p.inPool = null;
-                this.resetObj(p);
             }
 
             return p;
@@ -331,7 +343,7 @@ export class SM {
             if (obji.doRemove) {
                 obji.onDestroy();
                 this.objects.splice(i, 1);
-                i--;
+                //i--;
             }
         }
     }
@@ -366,6 +378,7 @@ export class SM {
                     x.killNow()
             }
         }
+
         return null;
     }
 

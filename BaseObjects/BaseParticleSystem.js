@@ -34,7 +34,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
         BaseParticleSystem.prototype.add = function (p, gfx) {
             this.particles.push(p);
             this.gfx.addChild(gfx);
-            this.processParticle(this.particles.length - 1, Application_1.Application.One.delta);
+            this.processParticle(this.gfx.children.length - 1, Application_1.Application.One.delta);
             this.width = Application_1.Application.One.SCR_WIDTH;
             this.height = Application_1.Application.One.SCR_HEIGHT;
             p.alpha = this.globalAlpha;
@@ -63,7 +63,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
                 this.processParticle(i, timeDelta);
                 if (part.lifeTime < 0) {
                     this.particles.splice(i, 1);
-                    this.gfx.removeChildAt(i);
+                    Application_1.Application.One.free(this.gfx.children[i]);
                     i--;
                     len--;
                 }

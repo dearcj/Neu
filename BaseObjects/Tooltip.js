@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./O", "../Application"], function (require, exports, O_1, Application_1) {
+define(["require", "exports", "./O", "../Application", "../PIXIPlugins/PoolBitmapText"], function (require, exports, O_1, Application_1, PoolBitmapText_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TOOLTIP_WIDTH = 260, exports.TOOLTIP_HEIGHT = 260;
@@ -69,7 +69,7 @@ define(["require", "exports", "./O", "../Application"], function (require, expor
             }
         };
         Tooltip.prototype.createTF = function (t, fontName) {
-            return new PIXI.extras.BitmapText(t, PIXI.extras.BitmapText.fonts[fontName]);
+            return new PoolBitmapText_1.PoolHeavenBitmapText(t, PIXI.extras.BitmapText.fonts[fontName]);
         };
         //test tooltip
         // Adds r[25% damage ] with bla bla bla

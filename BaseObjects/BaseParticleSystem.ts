@@ -30,7 +30,7 @@ export class BaseParticleSystem extends O{
     add<T extends BaseParticle>(p: T, gfx: DisplayObject): any {
         this.particles.push(p);
         this.gfx.addChild(gfx);
-        this.processParticle(this.particles.length - 1, Application.One.delta);
+        this.processParticle(this.gfx.children.length - 1, Application.One.delta);
 
         this.width = Application.One.SCR_WIDTH;
         this.height = Application.One.SCR_HEIGHT;
@@ -67,8 +67,9 @@ export class BaseParticleSystem extends O{
             this.processParticle(i, timeDelta);
 
             if (part.lifeTime < 0) {
+
                 this.particles.splice(i, 1);
-                this.gfx.removeChildAt(i);
+                Application.One.free(this.gfx.children[i]);
                 i--;
                 len--;
             }
