@@ -201,6 +201,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 gfx = new AnimClip_1.AnimClip(textures);
             else {
                 gfx.textures = textures;
+                gfx.endFrame = textures.length - 1;
             }
             gfx.anchor.x = 0.5;
             gfx.anchor.y = 0.5;

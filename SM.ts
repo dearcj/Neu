@@ -84,7 +84,10 @@ export class SM {
             (<any>obj).color.clear();
             (<any>obj).maskSprite = null;
             (<any>obj).maskVertexData = null;
+            obj.startFrame = 0;
             obj.mask = null;
+            obj.animationSpeed = 1;
+            obj.gotoAndStop(1);
             obj.filters = [];
             obj.filterArea = null;
             obj.renderable = true;

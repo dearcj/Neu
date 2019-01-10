@@ -39,6 +39,10 @@ export class ResourceManager  {
 
     loadAssets(assets: string[], onProcess: (loader: any, evt: any) => any, onComplete: () => any) {
         let loader = new PIXI.loaders.Loader();
+
+        if ((<any>PIXI).compressedTextures) {
+            (<any>loader).before((<any>PIXI).compressedTextures.imageParser());
+        }
         loader.add(assets);
 
 

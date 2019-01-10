@@ -6,8 +6,9 @@ import AnimatedSpriteTextureTimeObject = PIXI.extras.AnimatedSpriteTextureTimeOb
 
 
 export class AnimClip extends PIXI.extras.AnimatedSprite {
-    private endFrame: number = 0;
-    private startFrame: number = 0;
+    public endFrame: number = 0;
+    public startFrame: number = 0;
+
 
     constructor(textures: Texture[] | AnimatedSpriteTextureTimeObject[], autoUpdate?: boolean) {
         super(textures);

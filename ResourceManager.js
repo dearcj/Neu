@@ -37,6 +37,9 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
         ResourceManager.prototype.loadAssets = function (assets, onProcess, onComplete) {
             var _this = this;
             var loader = new PIXI.loaders.Loader();
+            if (PIXI.compressedTextures) {
+                loader.before(PIXI.compressedTextures.imageParser());
+            }
             loader.add(assets);
             loader.on('complete', function () {
                 onComplete();

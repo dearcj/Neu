@@ -263,8 +263,8 @@ export class Application {
         if (!gfx)
             gfx = new AnimClip(textures); else {
             gfx.textures = textures;
+            gfx.endFrame = textures.length - 1;
         }
-
 
         gfx.anchor.x = 0.5;
         gfx.anchor.y = 0.5;

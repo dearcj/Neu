@@ -107,16 +107,14 @@ export class BaseLighting extends O {
         if (this.tweenDest) {
             let l = this.lerp;
             let il = 1 - this.lerp;
-            this.envColor[0] = this.tweenStart[0] * il + l * this.tweenDest[0];
-            this.envColor[1] = this.tweenStart[1] * il + l * this.tweenDest[1];
-            this.envColor[2] = this.tweenStart[2] * il + l * this.tweenDest[2];
-            this.envColor[3] = this.tweenStart[3] * il + l * this.tweenDest[3];
+            this.envColor[1] = this.tweenStart[0] * il + l * this.tweenDest[0];
+            this.envColor[2] = this.tweenStart[1] * il + l * this.tweenDest[1];
+            this.envColor[3] = this.tweenStart[2] * il + l * this.tweenDest[2];
 
 
-            this.envColorDark[0] = this.tweenStartDark[0] * il + l * this.tweenDestDark[0];
-            this.envColorDark[1] = this.tweenStartDark[1] * il + l * this.tweenDestDark[1];
-            this.envColorDark[2] = this.tweenStartDark[2] * il + l * this.tweenDestDark[2];
-            this.envColorDark[3] = this.tweenStartDark[3] * il + l * this.tweenDestDark[3];
+            this.envColorDark[1] = this.tweenStartDark[0] * il + l * this.tweenDestDark[0];
+            this.envColorDark[2] = this.tweenStartDark[1] * il + l * this.tweenDestDark[1];
+            this.envColorDark[3] = this.tweenStartDark[2] * il + l * this.tweenDestDark[2];
 
             this.redraw();
         }

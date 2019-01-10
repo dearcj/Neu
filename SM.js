@@ -51,7 +51,10 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 obj.color.clear();
                 obj.maskSprite = null;
                 obj.maskVertexData = null;
+                obj.startFrame = 0;
                 obj.mask = null;
+                obj.animationSpeed = 1;
+                obj.gotoAndStop(1);
                 obj.filters = [];
                 obj.filterArea = null;
                 obj.renderable = true;

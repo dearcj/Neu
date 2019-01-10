@@ -4,6 +4,7 @@
 import {O} from "./O";
 import {m, Vec2} from "../Math";
 import {Application, Power2, TweenMax} from "../Application";
+import Rectangle = PIXI.Rectangle;
 
 export class Camera extends O {
     private deltaAngle: number = 0;
@@ -13,6 +14,8 @@ export class Camera extends O {
     private anchorDelta: Vec2 = [0,0];
     public layerOfsX: number;
     public layerOfsY: number;
+
+    public boundaries: PIXI.Bounds;
 
     get zoom(): number {
         return this._zoom;
@@ -182,6 +185,11 @@ export class Camera extends O {
 
 
     process() {
+        if (this.boundaries) {
+            this.x = this.checkXBoundary(this.boundaries)
+            this.y = this.checkYBoundary(this.boundaries)
+        }
+
     //    this.x += 1;
         //console.log(this.x);
     }
@@ -216,6 +224,26 @@ export class Camera extends O {
     transformPoint(point: Vec2, dir: number, pos2: any) {
         pos2[0] = point[0] + (- this.pos[0] + Application.One.SCR_WIDTH_HALF)*dir;
         pos2[1] = point[1] + (- this.pos[1] + Application.One.SCR_HEIGHT_HALF)*dir;
+    }
+
+    private checkYBoundary(boundaries: PIXI.Bounds) {
+        let h = Application.One.SCR_HEIGHT / this.zoom;
+        let t = this.y + h / 2;
+        let b = this.y - h / 2;
+        if (t > boundaries.maxY) return boundaries.maxY - h / 2;
+        if (b < boundaries.minY) return boundaries.minY + h / 2;
+
+        return this.y;
+    }
+
+    private checkXBoundary(boundaries: PIXI.Bounds) {
+        let w = Application.One.SCR_WIDTH / this.zoom;
+        let r = this.x + w / 2;
+        let l = this.x - w / 2;
+        if (r > boundaries.maxX) return boundaries.maxX - w/2;
+        if (l < boundaries.minX) return boundaries.minX + w/2;
+        
+        return this.x;
     }
 }
 

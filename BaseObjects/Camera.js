@@ -162,6 +162,10 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             return this.pos[1] - Application_1.Application.One.SCR_HEIGHT_HALF;
         };
         Camera.prototype.process = function () {
+            if (this.boundaries) {
+                this.x = this.checkXBoundary(this.boundaries);
+                this.y = this.checkYBoundary(this.boundaries);
+            }
             //    this.x += 1;
             //console.log(this.x);
         };
@@ -191,6 +195,26 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.transformPoint = function (point, dir, pos2) {
             pos2[0] = point[0] + (-this.pos[0] + Application_1.Application.One.SCR_WIDTH_HALF) * dir;
             pos2[1] = point[1] + (-this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF) * dir;
+        };
+        Camera.prototype.checkYBoundary = function (boundaries) {
+            var h = Application_1.Application.One.SCR_HEIGHT / this.zoom;
+            var t = this.y + h / 2;
+            var b = this.y - h / 2;
+            if (t > boundaries.maxY)
+                return boundaries.maxY - h / 2;
+            if (b < boundaries.minY)
+                return boundaries.minY + h / 2;
+            return this.y;
+        };
+        Camera.prototype.checkXBoundary = function (boundaries) {
+            var w = Application_1.Application.One.SCR_WIDTH / this.zoom;
+            var r = this.x + w / 2;
+            var l = this.x - w / 2;
+            if (r > boundaries.maxX)
+                return boundaries.maxX - w / 2;
+            if (l < boundaries.minX)
+                return boundaries.minX + w / 2;
+            return this.x;
         };
         return Camera;
     }(O_1.O));

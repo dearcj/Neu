@@ -23,7 +23,7 @@ export class NeuRope extends PIXI.heaven.mesh.Rope {
 
 }
 
-export class TrainEffect extends O {
+export class TrailEffect extends O {
     private points: Array<RopePoint>;
 
     private totalPoints: number;
@@ -104,8 +104,8 @@ export class TrainEffect extends O {
             p.y = iy;
 
             if (i > 0) {
-                delta[0] = .5 * delta[0] + .5 * (points[i - 1].x - points[i].x) / 1000;
-                delta[1] = .5 * delta[1] + .5 * (points[i - 1].y - points[i].y) / 1000;
+                delta[0] = .5 * delta[0] + .5 * (points[i - 1].x - points[i].x) / 100;
+                delta[1] = .5 * delta[1] + .5 * (points[i - 1].y - points[i].y) / 100;
                 p.x += delta[0];
                 p.y += delta[0];
             }
