@@ -5,8 +5,22 @@ import {O} from "./O";
 import {m, Vec2} from "../Math";
 import {Application, Power2, TweenMax} from "../Application";
 import Rectangle = PIXI.Rectangle;
+import {CameraZoom} from "../../Stages/Game";
 
 export class Camera extends O {
+    setTo(z : CameraZoom, dur: number = .8, ease = Power2.easeOut): any {
+        TweenMax.killTweensOf(this);
+
+        let tween: any = {
+            y: z.posY,
+            zoom: z.zoom,
+            ease: ease,
+        };
+
+        if (z.posX) tween.x = z.posX;
+
+        TweenMax.to(this, dur, tween)
+    }
     private deltaAngle: number = 0;
     private deltaLen: number = 0;
     private delta: Vec2 = [0, 0];
@@ -186,8 +200,8 @@ export class Camera extends O {
 
     process() {
         if (this.boundaries) {
-            this.x = this.checkXBoundary(this.boundaries)
-            this.y = this.checkYBoundary(this.boundaries)
+            this.x = this.checkXBoundary(this.boundaries);
+            this.y = this.checkYBoundary(this.boundaries);
         }
 
     //    this.x += 1;
@@ -209,9 +223,9 @@ export class Camera extends O {
     }
 
     hitAnimation(charPos: Vec2) {
-        let pos = [(charPos[0] - this.pos[0]) / 15, (charPos[1] - this.pos[1]) / 15];
+        //let pos = [(charPos[0] - this.pos[0]) / 15, (charPos[1] - this.pos[1]) / 15];
 
-        new TweenMax(this, 0.25, {x: this.pos[0] + pos[0], zoom: 1.05, yoyo: true, repeat: 1});
+        //new TweenMax(this, 0.25, {x: this.pos[0] + pos[0], zoom: DEFAULT_ZOOM + .05, yoyo: true, repeat: 1});
     }
 
 

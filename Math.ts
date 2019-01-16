@@ -321,6 +321,10 @@ class M {
 
         return [r / 255., g / 255., b / 255.]
     }
+
+    clamp(number: number) {
+        return number < 1 ? number : 1;
+    }
 }
 
 export var m = new M();

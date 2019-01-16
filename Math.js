@@ -298,6 +298,9 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
             var r = parseInt(hexstr.slice(4, 6), 16), g = parseInt(hexstr.slice(6, 8), 16), b = parseInt(hexstr.slice(8, 10), 16);
             return [r / 255., g / 255., b / 255.];
         };
+        M.prototype.clamp = function (number) {
+            return number < 1 ? number : 1;
+        };
         return M;
     }());
     exports.m = new M();

@@ -35,6 +35,19 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             _this.rect = new PIXI.Rectangle(0, 0, Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             return _this;
         }
+        Camera.prototype.setTo = function (z, dur, ease) {
+            if (dur === void 0) { dur = .8; }
+            if (ease === void 0) { ease = Application_1.Power2.easeOut; }
+            Application_1.TweenMax.killTweensOf(this);
+            var tween = {
+                y: z.posY,
+                zoom: z.zoom,
+                ease: ease,
+            };
+            if (z.posX)
+                tween.x = z.posX;
+            Application_1.TweenMax.to(this, dur, tween);
+        };
         Object.defineProperty(Camera.prototype, "zoom", {
             get: function () {
                 return this._zoom;
@@ -184,8 +197,8 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             return ((Math.abs(g.position.x - Application_1.Application.One.SCR_WIDTH_HALF - this.anchorDelta[0]) <= this.rect.width + Application_1.Application.One.SCR_WIDTH_HALF / this._zoom) && (Math.abs(g.position.y - Application_1.Application.One.SCR_HEIGHT_HALF - this.anchorDelta[1]) <= this.rect.height + Application_1.Application.One.SCR_HEIGHT_HALF / this._zoom));
         };
         Camera.prototype.hitAnimation = function (charPos) {
-            var pos = [(charPos[0] - this.pos[0]) / 15, (charPos[1] - this.pos[1]) / 15];
-            new Application_1.TweenMax(this, 0.25, { x: this.pos[0] + pos[0], zoom: 1.05, yoyo: true, repeat: 1 });
+            //let pos = [(charPos[0] - this.pos[0]) / 15, (charPos[1] - this.pos[1]) / 15];
+            //new TweenMax(this, 0.25, {x: this.pos[0] + pos[0], zoom: DEFAULT_ZOOM + .05, yoyo: true, repeat: 1});
         };
         Camera.prototype.worldScreenToUI = function (p) {
             p[0] -= Application_1.Application.One.SCR_WIDTH_HALF * (1 - this.zoom);
