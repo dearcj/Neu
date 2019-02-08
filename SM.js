@@ -209,6 +209,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.gui2 = new PIXI.Container();
             this.olgui = new PIXI.Container();
             this.fonts = new PIXI.Container();
+            this.uppermain = new PIXI.Container();
             this.effects = new PIXI.Container();
             this.cursorlayer = new PIXI.Container();
             this.light = new PIXI.Container();
@@ -221,6 +222,7 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             this.superstage.addChild(this.main);
             this.pixiUiStage = new main_1.PIXIUI.Stage(Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
             this.superstage.addChild(this.pixiUiStage);
+            this.superstage.addChild(this.uppermain);
             this.superstage.addChild(this.effects);
             this.main.addChild(this.light);
             this.superstage.addChild(this.olgui);

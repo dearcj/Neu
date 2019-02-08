@@ -3,23 +3,29 @@
  */
 import {O} from "./O";
 import {m, Vec2} from "../Math";
-import {Application, Power2, TweenMax} from "../Application";
+import {Application, Linear, Power2, Power3, TweenMax} from "../Application";
 import Rectangle = PIXI.Rectangle;
 import {CameraZoom} from "../../Stages/Game";
 
 export class Camera extends O {
     setTo(z : CameraZoom, dur: number = .8, ease = Power2.easeOut): any {
+        console.log("zooming camera to", z.zoom);
         TweenMax.killTweensOf(this);
 
         let tween: any = {
-            y: z.posY,
             zoom: z.zoom,
             ease: ease,
         };
 
-        if (z.posX) tween.x = z.posX;
+        let tween2 : any ={
+            y: z.posY,
+            ease: Power3.easeOut,
+        };
 
-        TweenMax.to(this, dur, tween)
+        if (z.posX) tween2.x = z.posX;
+
+        TweenMax.to(this, dur, tween);
+        TweenMax.to(this, dur*2, tween2);
     }
     private deltaAngle: number = 0;
     private deltaLen: number = 0;
@@ -44,6 +50,11 @@ export class Camera extends O {
         app.sm.main.y = this.layerOfsY;
         app.sm.main.scale.x = value;
         app.sm.main.scale.y = value;
+
+        app.sm.uppermain.x = this.layerOfsX;
+        app.sm.uppermain.y = this.layerOfsY;
+        app.sm.uppermain.scale.x = value;
+        app.sm.uppermain.scale.y = value;
 
         app.sm.olgui.scale.x = value;
         app.sm.olgui.scale.y = value;
@@ -179,9 +190,7 @@ export class Camera extends O {
             clip.y = obj.pos[1] - this.pos[1] + Application.One.SCR_HEIGHT_HALF;
         }
 
-
         if (!obj.alwaysVisible && !obj.noCameraOffset) {
-//            clip.visible = this.isVisible(clip)
         }
 
         if (clip.visible) {
@@ -203,9 +212,6 @@ export class Camera extends O {
             this.x = this.checkXBoundary(this.boundaries);
             this.y = this.checkYBoundary(this.boundaries);
         }
-
-    //    this.x += 1;
-        //console.log(this.x);
     }
 
     public isVisible(g: PIXI.DisplayObject) {

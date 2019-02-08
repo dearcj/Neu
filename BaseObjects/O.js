@@ -253,6 +253,26 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             return ((Math.abs(o.x - this.x) < (o.width + this.width) / 2) &&
                 (Math.abs(o.y - this.y) < (o.height + this.height) / 2));
         };
+        Object.defineProperty(O.prototype, "vx", {
+            get: function () {
+                return this.v[0];
+            },
+            set: function (v) {
+                this.v[0] = v;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(O.prototype, "vy", {
+            get: function () {
+                return this.v[1];
+            },
+            set: function (v) {
+                this.v[1] = v;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /*****
         * Link object list to this
         * any this movement will move linked objects

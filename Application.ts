@@ -316,7 +316,7 @@ export class Application {
 
     public cs<T extends PIXI.Sprite>(s: string, layer: PIXI.Container = null, tex: PIXI.Texture = null, centered: boolean = true): PIXI.heaven.Sprite { //create sprite from frame and add to default layer
         let texture = tex;
-        if (!texture) {
+        if (!texture && s != "") {
             if (PIXI.utils.TextureCache[s]) {
                 texture = PIXI.Texture.fromFrame(s);
             } else {
@@ -324,7 +324,7 @@ export class Application {
             }
         }
 
-        if (texture) {
+        if (texture || s == "") {
             let gfx = this.sm.fromPool(POOL_TAG_HEAVEN_SPRITE);
 
             if (!gfx) gfx = new PIXI.heaven.Sprite(texture); else {

@@ -44,6 +44,7 @@ export class SM {
     public bg: PIXI.Container;
 
     public camera3d: PIXI.Container;
+    public uppermain: PIXI.Container;
 
     public resetObj(obj: any) {
         Application.One.killTweensOf(obj);
@@ -250,6 +251,7 @@ export class SM {
         this.gui2 = new PIXI.Container();
         this.olgui = new PIXI.Container();
         this.fonts = new PIXI.Container();
+        this.uppermain = new PIXI.Container();
         this.effects = new PIXI.Container();
         this.cursorlayer = new PIXI.Container();
         this.light = new PIXI.Container();
@@ -263,6 +265,7 @@ export class SM {
         this.superstage.addChild(this.main);
         this.pixiUiStage = new PIXIUI.Stage(Application.One.SCR_WIDTH, Application.One.SCR_HEIGHT);
         this.superstage.addChild(this.pixiUiStage);
+        this.superstage.addChild(this.uppermain);
         this.superstage.addChild(this.effects);
         this.main.addChild(this.light);
         this.superstage.addChild(this.olgui);

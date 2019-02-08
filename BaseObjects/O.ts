@@ -109,6 +109,8 @@ export class O implements Contextable {
     public createTime: number = 0;
     protected _children: O[] = [];
 
+
+
     overlapPoint(p: Vec2) {
         if (p[0] > this.pos[0] - this.bounds[0] / 2 &&
             p[0] < this.pos[0] + this.bounds[0] / 2 &&
@@ -256,6 +258,22 @@ export class O implements Contextable {
     public intersects(o: O): boolean {
         return ((Math.abs(o.x - this.x) < (o.width + this.width) / 2) &&
             (Math.abs(o.y - this.y) < (o.height + this.height) / 2));
+    }
+
+    public set vx(v) {
+        this.v[0] = v;
+    }
+
+    public get vx(): number {
+        return this.v[0];
+    }
+
+    public set vy(v) {
+        this.v[1] = v;
+    }
+
+    public get vy(): number {
+        return this.v[1];
     }
 
     /*****

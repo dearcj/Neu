@@ -253,7 +253,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             if (tex === void 0) { tex = null; }
             if (centered === void 0) { centered = true; }
             var texture = tex;
-            if (!texture) {
+            if (!texture && s != "") {
                 if (exports.PIXI.utils.TextureCache[s]) {
                     texture = exports.PIXI.Texture.fromFrame(s);
                 }
@@ -261,7 +261,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                     texture = exports.PIXI.Texture.fromFrame(s + '.png');
                 }
             }
-            if (texture) {
+            if (texture || s == "") {
                 var gfx = this.sm.fromPool(SM_1.POOL_TAG_HEAVEN_SPRITE);
                 if (!gfx)
                     gfx = new exports.PIXI.heaven.Sprite(texture);

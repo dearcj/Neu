@@ -38,15 +38,20 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.setTo = function (z, dur, ease) {
             if (dur === void 0) { dur = .8; }
             if (ease === void 0) { ease = Application_1.Power2.easeOut; }
+            console.log("zooming camera to", z.zoom);
             Application_1.TweenMax.killTweensOf(this);
             var tween = {
-                y: z.posY,
                 zoom: z.zoom,
                 ease: ease,
             };
+            var tween2 = {
+                y: z.posY,
+                ease: Application_1.Power3.easeOut,
+            };
             if (z.posX)
-                tween.x = z.posX;
+                tween2.x = z.posX;
             Application_1.TweenMax.to(this, dur, tween);
+            Application_1.TweenMax.to(this, dur * 2, tween2);
         };
         Object.defineProperty(Camera.prototype, "zoom", {
             get: function () {
@@ -61,6 +66,10 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 app.sm.main.y = this.layerOfsY;
                 app.sm.main.scale.x = value;
                 app.sm.main.scale.y = value;
+                app.sm.uppermain.x = this.layerOfsX;
+                app.sm.uppermain.y = this.layerOfsY;
+                app.sm.uppermain.scale.x = value;
+                app.sm.uppermain.scale.y = value;
                 app.sm.olgui.scale.x = value;
                 app.sm.olgui.scale.y = value;
                 app.sm.olgui.x = this.layerOfsX;
@@ -162,7 +171,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
             }
             if (!obj.alwaysVisible && !obj.noCameraOffset) {
-                //            clip.visible = this.isVisible(clip)
             }
             if (clip.visible) {
                 clip.rotation = obj.a + this.a;
@@ -179,8 +187,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 this.x = this.checkXBoundary(this.boundaries);
                 this.y = this.checkYBoundary(this.boundaries);
             }
-            //    this.x += 1;
-            //console.log(this.x);
         };
         Camera.prototype.isVisible = function (g) {
             g.getBounds(false, this.rect);
