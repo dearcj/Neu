@@ -21,7 +21,7 @@ define(["require", "exports", "./TextBox"], function (require, exports, TextBox_
         }
         TextParticle.prototype.process = function () {
             _super.prototype.process.call(this);
-            this.v[1] *= 0.97;
+            //  this.v[1] *= 0.97;
         };
         return TextParticle;
     }(TextBox_1.TextBox));

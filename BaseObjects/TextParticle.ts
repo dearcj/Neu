@@ -4,6 +4,6 @@ import {TextBox} from "./TextBox";
 export class TextParticle extends TextBox {
     process() {
         super.process();
-        this.v[1] *= 0.97;
+      //  this.v[1] *= 0.97;
     }
 }

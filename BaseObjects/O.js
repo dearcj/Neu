@@ -253,7 +253,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             return ((Math.abs(o.x - this.x) < (o.width + this.width) / 2) &&
                 (Math.abs(o.y - this.y) < (o.height + this.height) / 2));
         };
-        Object.defineProperty(O.prototype, "vx", {
+        Object.defineProperty(O.prototype, "velx", {
             get: function () {
                 return this.v[0];
             },
@@ -263,7 +263,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(O.prototype, "vy", {
+        Object.defineProperty(O.prototype, "vely", {
             get: function () {
                 return this.v[1];
             },

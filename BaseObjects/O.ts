@@ -260,19 +260,19 @@ export class O implements Contextable {
             (Math.abs(o.y - this.y) < (o.height + this.height) / 2));
     }
 
-    public set vx(v) {
+    public set velx(v) {
         this.v[0] = v;
     }
 
-    public get vx(): number {
+    public get velx(): number {
         return this.v[0];
     }
 
-    public set vy(v) {
+    public set vely(v) {
         this.v[1] = v;
     }
 
-    public get vy(): number {
+    public get vely(): number {
         return this.v[1];
     }
 
