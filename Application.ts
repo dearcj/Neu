@@ -259,7 +259,7 @@ export class Application {
             inx++;
         }
 
-        let gfx = this.sm.fromPool(POOL_TAG_ANIM_CLIP);
+        let gfx = null;//this.sm.fromPool(POOL_TAG_ANIM_CLIP);
         if (!gfx)
             gfx = new AnimClip(textures); else {
             gfx.textures = textures;

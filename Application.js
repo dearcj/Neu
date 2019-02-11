@@ -196,7 +196,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
                 }
                 inx++;
             }
-            var gfx = this.sm.fromPool(SM_1.POOL_TAG_ANIM_CLIP);
+            var gfx = null; //this.sm.fromPool(POOL_TAG_ANIM_CLIP);
             if (!gfx)
                 gfx = new AnimClip_1.AnimClip(textures);
             else {
