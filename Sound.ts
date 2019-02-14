@@ -35,32 +35,9 @@ export class Sound {
     }
 
     lazyPlayMusic(fullName: string, volume: number = null, pos: number = null): any {
-        let o: LazyLoadRequest = {cb: null};
-
-        let cb = (sound) => {
-            let found = false;
-            let inx: number = -1;
-            for (let i = 0; i < this.loadingCallbacks.length; ++i) {
-                if (this.loadingCallbacks[i] == o) {
-                    inx = i;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) return;
-            this.loadingCallbacks.splice(inx, 1);
-
-
-            if (pos) sound.seek(pos);
-            if (volume) sound.volume(volume);
-
-            this.play(null, sound);
-        };
-
-        o.cb = cb;
-        this.loadingCallbacks.push(o);
-
-        this.loadOneSound(MUSIC_PATH + fullName, cb)
+        this.loadOneSound(MUSIC_PATH + fullName, (sound) => {
+            this.play(null, sound, true, volume);
+        });
     }
 
     lazyPlaySound(fullName: string): any {
@@ -124,32 +101,41 @@ export class Sound {
     }
 
 
-    playMusic(snd:string) {
-
+    playMusic(snd:string): any {
+        return this.play(snd, null, true);
     }
 
     unmute() {
+        Howl.unmute(false);
     }
 
     mute() {
+        Howl.mute(true);
     }
 
     playRandom(arr: string[]){
         this.play(m.getRand(arr))
     }
 
-    play(snd: string, sndObj: any = null) {
+    play(snd: string, sndObj: any = null, loop: boolean =false, volume: number = null): any {
         if (!this.enabled) return;
-        snd = snd.toLowerCase();
         try {
-            let soundObj = sndObj ? sndObj : this.sounds[snd];
+            let soundObj = sndObj ? sndObj : this.sounds[snd.toLowerCase()];
+            if (volume)
+            soundObj.volume(volume);
+
+            soundObj.loop(loop);
             soundObj.play();
             this.soundsPlaying.push(soundObj);
-            soundObj.on('end', () => {
+
+            soundObj.once('end', () => {
                 this.soundsPlaying.splice(this.soundsPlaying.indexOf(soundObj) , 1);
             });
+
+            return soundObj;
         } catch (e) {
         }
+        return null
     };
 
 }

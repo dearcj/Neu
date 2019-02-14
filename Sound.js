@@ -27,29 +27,9 @@ define(["require", "exports", "./Math"], function (require, exports, Math_1) {
             var _this = this;
             if (volume === void 0) { volume = null; }
             if (pos === void 0) { pos = null; }
-            var o = { cb: null };
-            var cb = function (sound) {
-                var found = false;
-                var inx = -1;
-                for (var i = 0; i < _this.loadingCallbacks.length; ++i) {
-                    if (_this.loadingCallbacks[i] == o) {
-                        inx = i;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                    return;
-                _this.loadingCallbacks.splice(inx, 1);
-                if (pos)
-                    sound.seek(pos);
-                if (volume)
-                    sound.volume(volume);
-                _this.play(null, sound);
-            };
-            o.cb = cb;
-            this.loadingCallbacks.push(o);
-            this.loadOneSound(MUSIC_PATH + fullName, cb);
+            this.loadOneSound(MUSIC_PATH + fullName, function (sound) {
+                _this.play(null, sound, true, volume);
+            });
         };
         Sound.prototype.lazyPlaySound = function (fullName) {
             var _this = this;
@@ -104,30 +84,39 @@ define(["require", "exports", "./Math"], function (require, exports, Math_1) {
             }
         };
         Sound.prototype.playMusic = function (snd) {
+            return this.play(snd, null, true);
         };
         Sound.prototype.unmute = function () {
+            Howl.unmute(false);
         };
         Sound.prototype.mute = function () {
+            Howl.mute(true);
         };
         Sound.prototype.playRandom = function (arr) {
             this.play(Math_1.m.getRand(arr));
         };
-        Sound.prototype.play = function (snd, sndObj) {
+        Sound.prototype.play = function (snd, sndObj, loop, volume) {
             var _this = this;
             if (sndObj === void 0) { sndObj = null; }
+            if (loop === void 0) { loop = false; }
+            if (volume === void 0) { volume = null; }
             if (!this.enabled)
                 return;
-            snd = snd.toLowerCase();
             try {
-                var soundObj_1 = sndObj ? sndObj : this.sounds[snd];
+                var soundObj_1 = sndObj ? sndObj : this.sounds[snd.toLowerCase()];
+                if (volume)
+                    soundObj_1.volume(volume);
+                soundObj_1.loop(loop);
                 soundObj_1.play();
                 this.soundsPlaying.push(soundObj_1);
-                soundObj_1.on('end', function () {
+                soundObj_1.once('end', function () {
                     _this.soundsPlaying.splice(_this.soundsPlaying.indexOf(soundObj_1), 1);
                 });
+                return soundObj_1;
             }
             catch (e) {
             }
+            return null;
         };
         ;
         return Sound;
