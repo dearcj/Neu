@@ -269,7 +269,6 @@ export class SM {
         this.superstage.addChild(this.effects);
         this.main.addChild(this.light);
         this.superstage.addChild(this.olgui);
-        
         this.superstage.addChild(this.gui);
         this.superstage.addChild(this.gui2);
         this.superstage.addChild(this.fonts);
