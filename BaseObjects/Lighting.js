@@ -24,6 +24,7 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
             _this._darkness = 1;
             _this.color = [.5, .5, .5];
             _this.illum = [1, 1, 1];
+            _this._saturation = 3;
             return _this;
         }
         Object.defineProperty(Lighting.prototype, "darkness", {

@@ -71,7 +71,7 @@ export class Lighting extends O {
     private blendMode: number;
     public color: RGBColor = [.5, .5, .5] ;
     public illum: RGBColor = [1 ,1 ,1] ;
-    private _saturation: number;
+    private _saturation: number = 3;
     private _contrast: number;
 
     onDestroy() {
