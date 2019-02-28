@@ -1,4 +1,6 @@
 # Neu
+![](neulogo.png)
+
 PIXI.JS + Tiled = Neu, easy engine for web games
 
 # Dependencies

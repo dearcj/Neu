@@ -1,0 +1,19 @@
+{
+  "name": "neu",
+  "version": "1.0.0",
+  "description": "PIXI.JS + Tiled = Neu, easy engine for web+ games",
+  "main": "Application.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dearcj/Neu.git"
+  },
+  "author": "Yuriy Dorogoy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dearcj/Neu/issues"
+  },
+  "homepage": "https://github.com/dearcj/Neu#readme"
+}
