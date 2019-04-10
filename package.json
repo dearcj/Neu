@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dearcj/Neu/issues"
   },
-  "homepage": "https://github.com/dearcj/Neu#readme"
+  "homepage": "https://github.com/dearcj/Neu#readme",
+  "dependencies": {
+    "pixi-layers": "^0.1.10"
+  }
 }
