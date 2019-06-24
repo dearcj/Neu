@@ -370,10 +370,24 @@ export class SM {
         }
     }
 
+    cameraProcess() {
+        this.camera.process();
+        let len = this.objects.length;
+        for (let i = len - 1; i >= 0; --i) {
+            let obji: O = this.objects[i];
+            if (obji.gfx)
+            this.camera.updateTransform(obji, obji.gfx, 0, 0);
+            //Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
+        }
+    }
+
     process() {
-        Application.One.sm.camera.process();
+        if (this.stage && this.stage.doProcess)
+            this.stage.process();
+
 
         this.cleanRemoved();
+
 
         let len = this.objects.length;
         for (let i = len - 1; i >= 0; --i) {
@@ -388,9 +402,6 @@ export class SM {
                     }
             }
         }
-
-        if (this.stage && this.stage.doProcess)
-            this.stage.process();
     }
 
     removeList(objects: O[]): null {

@@ -195,10 +195,12 @@ define(["require", "exports", "./BaseLighting", "../Application", "./Light", "..
             this.layer.addChild(l.gfx);
         };
         Lighting.prototype.process = function () {
-            this.ambient.x = -Application_1.Application.One.SCR_WIDTH * (-0.5);
-            this.ambient.y = -Application_1.Application.One.SCR_HEIGHT * (-0.5);
-            this.ambient.scale.x = (this.baseScaleX / Application_1.Application.One.sm.camera.zoom); // -_.sm.camera.x - _.SCR_WIDTH_HALF;
-            this.ambient.scale.y = (this.baseScaleY / Application_1.Application.One.sm.camera.zoom); // -_.sm.camera.y - _.SCR_HEIGHT_HALF;
+            if (this.ambient) {
+                this.ambient.x = -Application_1.Application.One.SCR_WIDTH * (-0.5);
+                this.ambient.y = -Application_1.Application.One.SCR_HEIGHT * (-0.5);
+                this.ambient.scale.x = (this.baseScaleX / Application_1.Application.One.sm.camera.zoom); // -_.sm.camera.x - _.SCR_WIDTH_HALF;
+                this.ambient.scale.y = (this.baseScaleY / Application_1.Application.One.sm.camera.zoom); // -_.sm.camera.y - _.SCR_HEIGHT_HALF;
+            }
             //    let arr  = [Math.round(this.lightFilter.uniforms.red*255), Math.round(this.lightFilter.uniforms.green*255), Math.round(this.lightFilter.uniforms.blue*255),
             //        Math.round(this.ambient.color.lightR*255), Math.round(this.ambient.color.lightG*255), Math.round(this.ambient.color.lightB*255),
             //

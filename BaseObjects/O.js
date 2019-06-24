@@ -496,7 +496,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
                 this.a += this.av * Application_1.Application.One.worldSpeed * Application_1.Application.One.delta;
             if (this._gfx) {
                 if (!this._parent) {
-                    Application_1.Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
+                    //     Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
                 }
                 else {
                     this._gfx.x = this.pos[0];

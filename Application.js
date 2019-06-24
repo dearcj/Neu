@@ -1,7 +1,7 @@
 define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../ClientSettings", "./Controls", "./PauseTimer", "../lib/matter"], function (require, exports, AnimClip_1, SM_1, Loader_1, ClientSettings_1, Controls_1, PauseTimer_1, matter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.TweenMax = window.TweenMax;
+    exports.TweenMax = window.TweenLite;
     exports.TimelineMax = window.TimelineMax;
     exports.TweenLite = window.TweenLite;
     exports.PIXI = window.PIXI;
@@ -55,12 +55,13 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.app = new exports.PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
                 autoStart: false,
                 clearBeforeRender: false,
-                resolution: this.resolution, antialias: false,
-                preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x111111,
+                resolution: this.resolution, antialias: true,
+                preserveDrawingBuffer: false, forceFXAA: false, backgroundColor: 0x111111,
             });
             this.app.renderer = new exports.PIXI.WebGLRenderer({
                 width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
                 resolution: this.resolution,
+                autoStart: false,
             });
             document.body.appendChild(this.app.view);
             this.app.stage = new exports.PIXI.display.Stage();
@@ -77,10 +78,20 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.sm.createCamera();
             this.lastLoop = (new Date()).getTime();
             this.lastNetworkPing = this.lastLoop;
+            exports.PIXI.ticker.shared.stop();
             var bindedProcess = this.process.bind(this);
-            exports.TweenMax.ticker.addEventListener("tick", bindedProcess);
-            this.app.ticker.add(this.animate, this, exports.PIXI.UPDATE_PRIORITY.HIGH);
-            this.app.ticker.start();
+            exports.TweenMax.ticker.addEventListener("tick", function () {
+                _this.sm.cameraProcess();
+                _this.app.renderer.render(_this.app.stage);
+                _this.process();
+            });
+            //        this.app.ticker.add(bindedProcess, this, PIXI.UPDATE_PRIORITY.LOW);
+            /*    this.app.ticker.add(()=>{
+                    this.app.renderer.render(this.app.stage);
+                    this.sm.cameraProcess();
+                    this.process();
+                }, this, PIXI.UPDATE_PRIORITY.HIGH);
+                this.app.ticker.start();*/
         };
         Application.prototype.killTweensOf = function (obj) {
             var tweens = exports.TweenMax.getTweensOf(obj);
@@ -139,6 +150,7 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.cursorPos = this.app.renderer.plugins.interaction.mouse.global;
         };
         Application.prototype.process = function () {
+            this.animate();
             if (!this.isInitialLoading) {
                 var timeD = (this.time - this.lastLoop);
                 this.lastLoop = this.time;

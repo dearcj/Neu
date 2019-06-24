@@ -42,9 +42,6 @@ define(["require", "exports"], function (require, exports) {
             }
         };
         Controls.prototype.update = function () {
-            var nav = navigator;
-            var gamepads = navigator.getGamepads ? navigator.getGamepads() : (nav.webkitGetGamepads ? nav.webkitGetGamepads : []);
-            this.gp = gamepads[0];
             if (this.gp) {
                 if (this.gp.axes[0] != this.prevX && this.gp.axes[0] > .99 && this.onRight)
                     this.onRight();

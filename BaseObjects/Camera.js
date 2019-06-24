@@ -18,9 +18,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         __extends(Camera, _super);
         function Camera(pos) {
             var _this = _super.call(this, pos) || this;
-            _this.deltaAngle = 0;
-            _this.deltaLen = 0;
-            _this.delta = [0, 0];
             _this.anchorDelta = [0, 0];
             _this.operator = false;
             _this.voX = 0;
@@ -28,8 +25,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             _this.boardLU = [0, 0];
             _this.boardRD = [0, 0];
             _this._zoom = 1;
-            _this.camScale = 1;
-            _this._yflow = false;
             _this.zoom = 1;
             _this.removeable = false;
             _this.rect = new PIXI.Rectangle(0, 0, Application_1.Application.One.SCR_WIDTH, Application_1.Application.One.SCR_HEIGHT);
@@ -78,19 +73,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                 app.sm.effects.scale.y = value;
                 app.sm.effects.x = this.layerOfsX;
                 app.sm.effects.y = this.layerOfsY;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Camera.prototype, "yflow", {
-            get: function () {
-                return this._yflow;
-            },
-            set: function (value) {
-                this._yflow = value;
-                if (!value) {
-                    this.baseY = null;
-                }
             },
             enumerable: true,
             configurable: true
@@ -169,8 +151,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
             else {
                 clip.x = obj.pos[0] - this.pos[0] + Application_1.Application.One.SCR_WIDTH_HALF;
                 clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
-            }
-            if (!obj.alwaysVisible && !obj.noCameraOffset) {
             }
             if (clip.visible) {
                 clip.rotation = obj.a + this.a;

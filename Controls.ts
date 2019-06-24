@@ -32,10 +32,6 @@ export class Controls {
     }
 
     update(): void{
-        let nav: any = navigator;
-        let gamepads = navigator.getGamepads ? navigator.getGamepads() : (nav.webkitGetGamepads ? nav.webkitGetGamepads : []);
-        this.gp = gamepads[0];
-
         if (this.gp) {
             if (this.gp.axes[0] != this.prevX && this.gp.axes[0] > .99 && this.onRight) this.onRight();
             if (this.gp.axes[0] != this.prevX && this.gp.axes[0] < -.99 && this.onLeft) this.onLeft();
@@ -59,6 +55,7 @@ export class Controls {
         let nav: any = navigator;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() : (nav.webkitGetGamepads ? nav.webkitGetGamepads : []);
         this.gp = gamepads[0];
+
         window.addEventListener("gamepaddisconnected", (e) => {
             this.gp = null;
         }, false);

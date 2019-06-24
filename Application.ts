@@ -11,7 +11,7 @@ import {Sound} from "./Sound";
 import {Engine} from "../lib/matter";
 
 declare let window: any;
-export let TweenMax = window.TweenMax;
+export let TweenMax = window.TweenLite;
 export let TimelineMax = window.TimelineMax;
 export let TweenLite = window.TweenLite;
 export let PIXI = window.PIXI;
@@ -97,13 +97,14 @@ export class Application {
         this.app = new PIXI.Application(this.SCR_WIDTH, this.SCR_HEIGHT, {
             autoStart: false,
             clearBeforeRender: false,
-            resolution: this.resolution, antialias: false,
-            preserveDrawingBuffer: false, forceFXAA: true, backgroundColor: 0x111111,
+            resolution: this.resolution, antialias: true,
+            preserveDrawingBuffer: false, forceFXAA: false, backgroundColor: 0x111111,
         });
 
         this.app.renderer = new PIXI.WebGLRenderer({
             width: this.SCR_WIDTH, height: this.SCR_HEIGHT,
             resolution: this.resolution,
+            autoStart: false,
         });
 
         document.body.appendChild(this.app.view);
@@ -123,12 +124,23 @@ export class Application {
         this.sm.createCamera();
         this.lastLoop = (new Date()).getTime();
         this.lastNetworkPing = this.lastLoop;
+        PIXI.ticker.shared.stop();
+
 
         let bindedProcess = this.process.bind(this);
-        TweenMax.ticker.addEventListener("tick", bindedProcess);
+        TweenMax.ticker.addEventListener("tick", ()=>{
+            this.sm.cameraProcess();
+            this.app.renderer.render(this.app.stage);
+            this.process();
+        });
 
-        this.app.ticker.add(this.animate, this, PIXI.UPDATE_PRIORITY.HIGH);
-        this.app.ticker.start();
+//        this.app.ticker.add(bindedProcess, this, PIXI.UPDATE_PRIORITY.LOW);
+    /*    this.app.ticker.add(()=>{
+            this.app.renderer.render(this.app.stage);
+            this.sm.cameraProcess();
+            this.process();
+        }, this, PIXI.UPDATE_PRIORITY.HIGH);
+        this.app.ticker.start();*/
     }
 
     killTweensOf(obj: any): null {
@@ -190,6 +202,8 @@ export class Application {
     }
 
     process() {
+        this.animate();
+
         if (!this.isInitialLoading) {
             let timeD = (this.time - this.lastLoop);
             this.lastLoop = this.time;

@@ -6,6 +6,7 @@ import {m, Vec2} from "../Math";
 import {Application, Linear, Power2, Power3, TweenMax} from "../Application";
 import Rectangle = PIXI.Rectangle;
 import {CameraZoom} from "../../Stages/Game";
+import {_} from "../../main";
 
 export class Camera extends O {
     setTo(z : CameraZoom, dur: number = .8, ease = Power2.easeOut): any {
@@ -27,10 +28,6 @@ export class Camera extends O {
         TweenMax.to(this, dur, tween);
         TweenMax.to(this, dur*2, tween2);
     }
-    private deltaAngle: number = 0;
-    private deltaLen: number = 0;
-    private delta: Vec2 = [0, 0];
-    public moveToX: number;
     private anchorDelta: Vec2 = [0,0];
     public layerOfsX: number;
     public layerOfsY: number;
@@ -68,16 +65,6 @@ export class Camera extends O {
 
     }
     private baseY: number;
-    get yflow(): boolean {
-        return this._yflow;
-    }
-
-    set yflow(value: boolean) {
-        this._yflow = value;
-        if (!value) {
-            this.baseY = null;
-        }
-    }
 
     public operator: boolean = false;
     private voX:number = 0;
@@ -87,10 +74,6 @@ export class Camera extends O {
     private boardLU: Vec2 = [0, 0];
     private boardRD: Vec2 = [0, 0];
     private _zoom: number = 1;
-    private camScale:number = 1;
-    private sina:number;
-    private cosa:number;
-    private _yflow: boolean = false;
 
     follow(o: O) {
         this.followObj = o;
@@ -112,7 +95,7 @@ export class Camera extends O {
         this.v[1] = 0;
     }
 
-    t(oldP:Array<number>) {
+    t(oldP:Vec2) {
         return [oldP[0] - this.pos[0], oldP[1] - this.pos[1]];
     }
 
@@ -183,14 +166,11 @@ export class Camera extends O {
 
     updateTransform(obj:O, clip: PIXI.DisplayObject, offsX:number = 0, offsY:number = 0) {
         if (obj.noCameraOffset) {
-            clip.x = obj.pos[0] + offsX ;
+            clip.x = obj.pos[0] + offsX;
             clip.y = obj.pos[1] + offsY;
         } else {
             clip.x = obj.pos[0] - this.pos[0] + Application.One.SCR_WIDTH_HALF;
             clip.y = obj.pos[1] - this.pos[1] + Application.One.SCR_HEIGHT_HALF;
-        }
-
-        if (!obj.alwaysVisible && !obj.noCameraOffset) {
         }
 
         if (clip.visible) {
@@ -246,7 +226,7 @@ export class Camera extends O {
         pos2[1] = point[1] + (- this.pos[1] + Application.One.SCR_HEIGHT_HALF)*dir;
     }
 
-    private checkYBoundary(boundaries: PIXI.Bounds) {
+    private checkYBoundary(boundaries: PIXI.Bounds): number {
         let h = Application.One.SCR_HEIGHT / this.zoom;
         let t = this.y + h / 2;
         let b = this.y - h / 2;
@@ -256,7 +236,7 @@ export class Camera extends O {
         return this.y;
     }
 
-    private checkXBoundary(boundaries: PIXI.Bounds) {
+    private checkXBoundary(boundaries: PIXI.Bounds): number {
         let w = Application.One.SCR_WIDTH / this.zoom;
         let r = this.x + w / 2;
         let l = this.x - w / 2;

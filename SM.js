@@ -308,8 +308,19 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                 }
             }
         };
+        SM.prototype.cameraProcess = function () {
+            this.camera.process();
+            var len = this.objects.length;
+            for (var i = len - 1; i >= 0; --i) {
+                var obji = this.objects[i];
+                if (obji.gfx)
+                    this.camera.updateTransform(obji, obji.gfx, 0, 0);
+                //Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
+            }
+        };
         SM.prototype.process = function () {
-            Application_1.Application.One.sm.camera.process();
+            if (this.stage && this.stage.doProcess)
+                this.stage.process();
             this.cleanRemoved();
             var len = this.objects.length;
             for (var i = len - 1; i >= 0; --i) {
@@ -323,8 +334,6 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
                     }
                 }
             }
-            if (this.stage && this.stage.doProcess)
-                this.stage.process();
         };
         SM.prototype.removeList = function (objects) {
             if (objects) {

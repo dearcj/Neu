@@ -539,7 +539,7 @@ export class O implements Contextable {
 
         if (this._gfx) {
             if (!this._parent) {
-                Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
+           //     Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
             } else {
                 this._gfx.x = this.pos[0];
                 this._gfx.y = this.pos[1];
