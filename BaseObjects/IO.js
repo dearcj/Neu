@@ -126,7 +126,7 @@ define(["require", "exports", "../../main", "./O"], function (require, exports, 
             configurable: true
         });
         IO.prototype.init = function (props) {
-            this.noCameraOffset = true;
+            this.CameraMode = O_1.CAMERA_MODE.CM_UPDATE_NO_OFFSET;
             this.valign = (props && props.valign) ? props.valign : 'center';
             _super.prototype.init.call(this, props);
             //        let spr1 = _.cs('Clock_Red.png');

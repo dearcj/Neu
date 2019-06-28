@@ -144,17 +144,19 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
         Camera.prototype.updateTransform = function (obj, clip, offsX, offsY) {
             if (offsX === void 0) { offsX = 0; }
             if (offsY === void 0) { offsY = 0; }
-            if (obj.noCameraOffset) {
-                clip.x = obj.pos[0] + offsX;
-                clip.y = obj.pos[1] + offsY;
+            switch (obj.CameraMode) {
+                case O_1.CAMERA_MODE.CM_UPDATE_NO_OFFSET:
+                    clip.x = obj.pos[0] + offsX;
+                    clip.y = obj.pos[1] + offsY;
+                    break;
+                case O_1.CAMERA_MODE.CM_UPDATE:
+                    clip.x = obj.pos[0] - this.pos[0] + Application_1.Application.One.SCR_WIDTH_HALF;
+                    clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
+                    break;
             }
-            else {
-                clip.x = obj.pos[0] - this.pos[0] + Application_1.Application.One.SCR_WIDTH_HALF;
-                clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
-            }
-            if (clip.visible) {
-                clip.rotation = obj.a + this.a;
-            }
+            //if (clip.visible) {
+            //    clip.rotation = obj.a  + this.a;
+            //}
         };
         Camera.prototype.offsetX = function () {
             return this.pos[0] - Application_1.Application.One.SCR_WIDTH_HALF;

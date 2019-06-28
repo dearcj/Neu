@@ -45,6 +45,12 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
         }
         return EngineEvent;
     }());
+    var CAMERA_MODE;
+    (function (CAMERA_MODE) {
+        CAMERA_MODE[CAMERA_MODE["CM_UPDATE"] = 1] = "CM_UPDATE";
+        CAMERA_MODE[CAMERA_MODE["CM_UPDATE_NO_OFFSET"] = 2] = "CM_UPDATE_NO_OFFSET";
+        CAMERA_MODE[CAMERA_MODE["CM_NO_UPDATE"] = 3] = "CM_NO_UPDATE";
+    })(CAMERA_MODE = exports.CAMERA_MODE || (exports.CAMERA_MODE = {}));
     var O = /** @class */ (function () {
         function O(pos, gfx) {
             if (pos === void 0) { pos = null; }
@@ -58,7 +64,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             this.removeable = true;
             this.av = 0;
             this.a = 0;
-            this.noCameraOffset = false;
+            this.CameraMode = CAMERA_MODE.CM_UPDATE;
             this.alwaysVisible = false;
             this._width = 0;
             this._height = 0;
@@ -274,8 +280,8 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             configurable: true
         });
         /*****
-        * Link object list to this
-        * any this movement will move linked objects
+         * Link object list to this
+         * any this movement will move linked objects
          ***/
         O.prototype.linkObj = function () {
             var o = [];
@@ -379,7 +385,7 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
                 }
             }
             this.createTime = Application_1.Application.One.timer.getTimer();
-            if (this._gfx && !this._parent && !this.noCameraOffset)
+            if (this._gfx && !this._parent && !this.CameraMode)
                 Application_1.Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
             this.updateBounds();
         };
@@ -494,14 +500,9 @@ define(["require", "exports", "../Math", "../../lib/matter", "../Application"], 
             }
             if (this.av != 0)
                 this.a += this.av * Application_1.Application.One.worldSpeed * Application_1.Application.One.delta;
-            if (this._gfx) {
-                if (!this._parent) {
-                    //     Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
-                }
-                else {
-                    this._gfx.x = this.pos[0];
-                    this._gfx.y = this.pos[1];
-                }
+            if (this._gfx && this._parent) {
+                this._gfx.x = this.pos[0];
+                this._gfx.y = this.pos[1];
             }
         };
         O.prototype.updateLinked = function (x, y) {

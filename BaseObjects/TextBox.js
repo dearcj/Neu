@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./IO", "../Application", "../PIXIPlugins/PoolBitmapText"], function (require, exports, IO_1, Application_1, PoolBitmapText_1) {
+define(["require", "exports", "./IO", "../Application", "../PIXIPlugins/PoolBitmapText", "./O"], function (require, exports, IO_1, Application_1, PoolBitmapText_1, O_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -71,7 +71,7 @@ define(["require", "exports", "./IO", "../Application", "../PIXIPlugins/PoolBitm
             this.gfx = new PIXI.Container();
             this.pos[0] -= this.width / 2;
             this.pos[1] -= this.height / 2;
-            this.noCameraOffset = true;
+            this.CameraMode = O_1.CAMERA_MODE.CM_UPDATE_NO_OFFSET;
             _super.prototype.init.call(this, props);
             this.textField = TextBox.createTextField(this, props);
             this.fontInitialSize = this.textField.maxLineHeight;

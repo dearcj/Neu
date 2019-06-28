@@ -1,7 +1,7 @@
 import {m, Vec2} from "../Math";
 //import {Shape} from "../ClientPhys";
 import {Body, Composite} from "../../lib/matter";
-import {Application, TweenMax, TimelineMax} from "../Application";
+import {Application, TimelineMax, TweenMax} from "../Application";
 
 
 export let DEF_EVENTS = {
@@ -70,10 +70,17 @@ interface Extension {
     process(o: O)
 }
 
+export enum CAMERA_MODE {
+    CM_UPDATE = 1,
+    CM_UPDATE_NO_OFFSET = 2,
+    CM_NO_UPDATE = 3,
+}
+
 export class O implements Contextable {
     public polygon: string;
     public polyline: string;
     tileColRow: Vec2;
+
     public get parent(): O {
         return this._parent;
     }
@@ -99,7 +106,7 @@ export class O implements Contextable {
     removeable: boolean = true;
     av: number = 0;
     a: number = 0;
-    noCameraOffset: boolean = false;
+    CameraMode: CAMERA_MODE = CAMERA_MODE.CM_UPDATE;
     public type: number;
     public alwaysVisible: boolean = false;
     private events: Array<EngineEvent>;
@@ -108,7 +115,6 @@ export class O implements Contextable {
     private _height: number = 0;
     public createTime: number = 0;
     protected _children: O[] = [];
-
 
 
     overlapPoint(p: Vec2) {
@@ -277,8 +283,8 @@ export class O implements Contextable {
     }
 
     /*****
-    * Link object list to this
-    * any this movement will move linked objects
+     * Link object list to this
+     * any this movement will move linked objects
      ***/
     linkObj(...o: O[]) {
         if (!this.linkedObjects) this.linkedObjects = [];
@@ -301,7 +307,6 @@ export class O implements Contextable {
     private _body: Body;
 
 
-
     hasFlag(value, flag) {
         return ((value & flag) == value)
     }
@@ -310,7 +315,6 @@ export class O implements Contextable {
     onCollide(b: O) {
 
     }
-
 
 
     static hideList(list: O[], visibility: boolean = false): void {
@@ -415,7 +419,7 @@ export class O implements Contextable {
         }
         this.createTime = Application.One.timer.getTimer();
 
-        if (this._gfx && !this._parent && !this.noCameraOffset)
+        if (this._gfx && !this._parent && !this.CameraMode)
             Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
 
         this.updateBounds();
@@ -537,13 +541,9 @@ export class O implements Contextable {
         if (this.av != 0)
             this.a += this.av * Application.One.worldSpeed * Application.One.delta;
 
-        if (this._gfx) {
-            if (!this._parent) {
-           //     Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
-            } else {
-                this._gfx.x = this.pos[0];
-                this._gfx.y = this.pos[1];
-            }
+        if (this._gfx && this._parent) {
+            this._gfx.x = this.pos[0];
+            this._gfx.y = this.pos[1];
         }
     }
 

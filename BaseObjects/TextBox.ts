@@ -4,6 +4,8 @@
 import {IO} from "./IO";
 import {Application} from "../Application";
 import {PoolHeavenBitmapText} from "../PIXIPlugins/PoolBitmapText";
+import {CAMERA_MODE} from "./O";
+
 /**
  * Created by KURWINDALLAS on 11.07.2014.
  *////
@@ -69,7 +71,7 @@ export class TextBox extends IO {
         this.gfx = new PIXI.Container();
         this.pos[0] -= this.width / 2;
         this.pos[1] -= this.height / 2 ;
-        this.noCameraOffset = true;
+        this.CameraMode = CAMERA_MODE.CM_UPDATE_NO_OFFSET;
 
             super.init(props);
         this.textField = TextBox.createTextField(this, props);

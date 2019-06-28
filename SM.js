@@ -313,9 +313,8 @@ define(["require", "exports", "./BaseObjects/Camera", "./Math", "./Application",
             var len = this.objects.length;
             for (var i = len - 1; i >= 0; --i) {
                 var obji = this.objects[i];
-                if (obji.gfx)
+                if (obji.gfx && !obji.parent)
                     this.camera.updateTransform(obji, obji.gfx, 0, 0);
-                //Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
             }
         };
         SM.prototype.process = function () {

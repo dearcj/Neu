@@ -117,12 +117,13 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             return list;
         };
-        Loader.prototype.loadToContainer = function (stage, name, cb, noCameraOffset, offs, group) {
-            if (noCameraOffset === void 0) { noCameraOffset = false; }
+        Loader.prototype.loadToContainer = function (stage, name, cb, CameraMode, offs, group, container) {
+            if (CameraMode === void 0) { CameraMode = null; }
             if (offs === void 0) { offs = null; }
             if (group === void 0) { group = null; }
-            var c = new Application_1.PIXI.Container();
-            var a = this.load(stage, name, cb, noCameraOffset, offs, group);
+            if (container === void 0) { container = null; }
+            var c = container ? container : new Application_1.PIXI.Container();
+            var a = this.load(stage, name, cb, CameraMode, offs, group);
             for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
                 var x = a_2[_i];
                 if (x.gfx) {
@@ -147,10 +148,10 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             }
             return true;
         };
-        Loader.prototype.load = function (stage, name, preInitCB, noCameraOffset, offs, restrictGroup, addObjects, doInit) {
+        Loader.prototype.load = function (stage, name, preInitCB, CameraMode, offs, restrictGroup, addObjects, doInit) {
             var _this = this;
             if (preInitCB === void 0) { preInitCB = null; }
-            if (noCameraOffset === void 0) { noCameraOffset = false; }
+            if (CameraMode === void 0) { CameraMode = null; }
             if (offs === void 0) { offs = null; }
             if (restrictGroup === void 0) { restrictGroup = null; }
             if (addObjects === void 0) { addObjects = true; }
@@ -279,7 +280,7 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             if (preInitCB)
                 preInitCB(objectsList, globalProperties);
             if (doInit)
-                this.init(objectsList, noCameraOffset);
+                this.init(objectsList, CameraMode);
             this.objectsList = null;
             this.loading = false;
             return objectsList;
@@ -555,10 +556,12 @@ define(["require", "exports", "./BaseObjects/O", "./Math", "../ObjectsList", "./
             layer.addChild(sprite);
             return o;
         };
-        Loader.prototype.init = function (list, noCameraOffset) {
+        Loader.prototype.init = function (list, CameraMode) {
             for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
                 var o = list_1[_i];
-                o.noCameraOffset = noCameraOffset;
+                if (CameraMode) {
+                    o.CameraMode = CameraMode;
+                }
                 o.init(o.properties);
             }
         };

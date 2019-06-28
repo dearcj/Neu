@@ -152,9 +152,9 @@ export class Loader {
     }
 
 
-    loadToContainer(stage: Stage, name: string, cb: Function, noCameraOffset = false, offs: Vec2 = null, group: string = null): LoadContainerType {
-        let c = new PIXI.Container();
-        let a = this.load(stage, name, cb, noCameraOffset, offs, group);
+    loadToContainer(stage: Stage, name: string, cb: Function, CameraMode = null, offs: Vec2 = null, group: string = null, container: PIXI.Container = null): LoadContainerType {
+        let c = container ? container : new PIXI.Container();
+        let a = this.load(stage, name, cb, CameraMode, offs, group);
         for (let x of a) {
             if (x.gfx) {
                 Application.One.rp(x.gfx);
@@ -179,7 +179,7 @@ export class Loader {
     }
 
 
-    load(stage: Stage, name: string, preInitCB: Function = null, noCameraOffset = false, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
+    load(stage: Stage, name: string, preInitCB: Function = null, CameraMode = null, offs: Vec2 = null, restrictGroup: string = null, addObjects = true, doInit: boolean = true): Array<O> {
         this.loading = true;
 
         let data = this.levels[name];
@@ -314,7 +314,7 @@ export class Loader {
         if (preInitCB) preInitCB(objectsList, globalProperties);
 
         if (doInit)
-            this.init(objectsList, noCameraOffset);
+            this.init(objectsList, CameraMode);
 
         this.objectsList = null;
         this.loading = false;
@@ -633,9 +633,11 @@ export class Loader {
         return o;
     }
 
-    init(list: Array<O>, noCameraOffset) {
+    init(list: Array<O>, CameraMode) {
         for (let o of list) {
-            o.noCameraOffset = noCameraOffset;
+            if (CameraMode) {
+                o.CameraMode = CameraMode;
+            }
             o.init(o.properties);
         }
     }

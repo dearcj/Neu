@@ -2,10 +2,8 @@
  * Created by MSI on 04.01.2017.
  */
 //Interface object
-import { _, PIXIContainer} from "../../main";
-import {O} from "./O";
-import {Camera} from "./Camera";
-import BitmapText = PIXI.extras.BitmapText;
+import {_} from "../../main";
+import {CAMERA_MODE, O} from "./O";
 import {PoolHeavenBitmapText} from "../PIXIPlugins/PoolBitmapText";
 
 export class IO extends O {
@@ -125,7 +123,7 @@ export class IO extends O {
     }
 
     init(props: any) {
-        this.noCameraOffset = true;
+        this.CameraMode = CAMERA_MODE.CM_UPDATE_NO_OFFSET;
         this.valign = (props && props.valign) ? props.valign : 'center';
         super.init(props);
 //        let spr1 = _.cs('Clock_Red.png');

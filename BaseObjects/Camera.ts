@@ -1,12 +1,10 @@
 /**
  * Created by MSI on 04.01.2017.
  */
-import {O} from "./O";
+import {CAMERA_MODE, O} from "./O";
 import {m, Vec2} from "../Math";
-import {Application, Linear, Power2, Power3, TweenMax} from "../Application";
-import Rectangle = PIXI.Rectangle;
+import {Application, Power2, Power3, TweenMax} from "../Application";
 import {CameraZoom} from "../../Stages/Game";
-import {_} from "../../main";
 
 export class Camera extends O {
     setTo(z : CameraZoom, dur: number = .8, ease = Power2.easeOut): any {
@@ -165,17 +163,20 @@ export class Camera extends O {
     }
 
     updateTransform(obj:O, clip: PIXI.DisplayObject, offsX:number = 0, offsY:number = 0) {
-        if (obj.noCameraOffset) {
-            clip.x = obj.pos[0] + offsX;
-            clip.y = obj.pos[1] + offsY;
-        } else {
-            clip.x = obj.pos[0] - this.pos[0] + Application.One.SCR_WIDTH_HALF;
-            clip.y = obj.pos[1] - this.pos[1] + Application.One.SCR_HEIGHT_HALF;
+        switch (obj.CameraMode){
+            case CAMERA_MODE.CM_UPDATE_NO_OFFSET:
+                clip.x = obj.pos[0] + offsX;
+                clip.y = obj.pos[1] + offsY;
+                break;
+            case CAMERA_MODE.CM_UPDATE:
+                clip.x = obj.pos[0] - this.pos[0] + Application.One.SCR_WIDTH_HALF;
+                clip.y = obj.pos[1] - this.pos[1] + Application.One.SCR_HEIGHT_HALF;
+                break;
         }
 
-        if (clip.visible) {
-            clip.rotation = obj.a  + this.a;
-        }
+        //if (clip.visible) {
+        //    clip.rotation = obj.a  + this.a;
+        //}
     }
 
     offsetX(): number {

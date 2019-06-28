@@ -115,7 +115,7 @@ export class TrailEffect extends O {
         this.x += this.v[0];// * Application.One.worldSpeed * Application.One.delta2;
         this.y += this.v[1];// * Application.One.worldSpeed * Application.One.delta2;
 
-        if (!this.noCameraOffset) {
+        if (!this.CameraMode) {
             Application.One.sm.camera.transformPoint([0, 0], 1, this.pos2);
             this.gfx.x = this.pos2[0];
             this.gfx.y = this.pos2[1];

@@ -375,9 +375,8 @@ export class SM {
         let len = this.objects.length;
         for (let i = len - 1; i >= 0; --i) {
             let obji: O = this.objects[i];
-            if (obji.gfx)
-            this.camera.updateTransform(obji, obji.gfx, 0, 0);
-            //Application.One.sm.camera.updateTransform(this, this._gfx, 0, 0);
+            if (obji.gfx && !obji.parent)
+                this.camera.updateTransform(obji, obji.gfx, 0, 0);
         }
     }
 
