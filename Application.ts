@@ -11,7 +11,7 @@ import {Sound} from "./Sound";
 import {Engine} from "../lib/matter";
 
 declare let window: any;
-export let TweenMax = window.TweenLite;
+export let TweenMax = window.TweenMax;
 export let TimelineMax = window.TimelineMax;
 export let TweenLite = window.TweenLite;
 export let PIXI = window.PIXI;
