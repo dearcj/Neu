@@ -173,10 +173,6 @@ export class Camera extends O {
                 clip.y = obj.pos[1] - this.pos[1] + Application.One.SCR_HEIGHT_HALF;
                 break;
         }
-
-        //if (clip.visible) {
-        //    clip.rotation = obj.a  + this.a;
-        //}
     }
 
     offsetX(): number {

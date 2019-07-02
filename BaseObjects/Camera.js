@@ -154,9 +154,6 @@ define(["require", "exports", "./O", "../Math", "../Application"], function (req
                     clip.y = obj.pos[1] - this.pos[1] + Application_1.Application.One.SCR_HEIGHT_HALF;
                     break;
             }
-            //if (clip.visible) {
-            //    clip.rotation = obj.a  + this.a;
-            //}
         };
         Camera.prototype.offsetX = function () {
             return this.pos[0] - Application_1.Application.One.SCR_WIDTH_HALF;
