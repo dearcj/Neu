@@ -1,7 +1,7 @@
 /**
  * Created by Михаил on 27.06.2014.
  */
-define(["require", "exports", "../main"], function (require, exports, main_1) {
+define(["require", "exports", "../main", "../config"], function (require, exports, main_1, config_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var LoadQueue = /** @class */ (function () {
@@ -26,6 +26,10 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
         return LoadQueue;
     }());
     exports.LoadQueue = LoadQueue;
+    function NanosecToSec(x) {
+        return x / config_1.config.Millisecond / 1000.;
+    }
+    exports.NanosecToSec = NanosecToSec;
     function binarySearch(array, target, comparator) {
         var l = 0, h = array.length - 1, m, comparison;
         comparator = comparator || function (a, b) {
@@ -300,6 +304,9 @@ define(["require", "exports", "../main"], function (require, exports, main_1) {
         };
         M.prototype.clamp = function (number) {
             return number < 1 ? number : 1;
+        };
+        M.prototype.dist = function (pos, pos2) {
+            return Math.sqrt(this.sqdist(pos, pos2));
         };
         return M;
     }());

@@ -3,6 +3,7 @@
  */
 
 import {_} from "../main";
+import {config} from "../config";
 
 export class LoadQueue {
     private onEnd: Function;
@@ -28,6 +29,10 @@ export type Vec2 = [number, number]
 export type ARGBColor = [number, number, number, number]
 
 export type RGBColor = [number, number, number]
+
+export function NanosecToSec(x: number): number {
+    return x / config.Millisecond / 1000.;
+}
 
 export  function binarySearch(array, target, comparator) {
     var l = 0,
@@ -324,6 +329,11 @@ class M {
 
     clamp(number: number) {
         return number < 1 ? number : 1;
+    }
+
+    dist(pos: Vec2, pos2: Vec2) {
+
+        return Math.sqrt(this.sqdist(pos, pos2))
     }
 }
 
