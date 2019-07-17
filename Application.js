@@ -79,11 +79,11 @@ define(["require", "exports", "./PIXIPlugins/AnimClip", "./SM", "./Loader", "../
             this.lastLoop = (new Date()).getTime();
             this.lastNetworkPing = this.lastLoop;
             exports.PIXI.ticker.shared.stop();
-            var bindedProcess = this.process.bind(this);
+            //let bindedProcess = this.process.bind(this);
             exports.TweenMax.ticker.addEventListener("tick", function () {
+                _this.process();
                 _this.sm.cameraProcess();
                 _this.app.renderer.render(_this.app.stage);
-                _this.process();
             });
             //        this.app.ticker.add(bindedProcess, this, PIXI.UPDATE_PRIORITY.LOW);
             /*    this.app.ticker.add(()=>{

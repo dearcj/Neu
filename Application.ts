@@ -127,11 +127,11 @@ export class Application {
         PIXI.ticker.shared.stop();
 
 
-        let bindedProcess = this.process.bind(this);
+        //let bindedProcess = this.process.bind(this);
         TweenMax.ticker.addEventListener("tick", ()=>{
+            this.process();
             this.sm.cameraProcess();
             this.app.renderer.render(this.app.stage);
-            this.process();
         });
 
 //        this.app.ticker.add(bindedProcess, this, PIXI.UPDATE_PRIORITY.LOW);
