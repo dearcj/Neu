@@ -1,4 +1,4 @@
-import {O} from "./O";
+import {CAMERA_MODE, O} from "./O";
 import {Vec2} from "../Math";
 import {Application} from "../Application";
 import RopePoint = PIXI.heaven.mesh.RopePoint;
@@ -87,6 +87,7 @@ export class TrailEffect extends O {
             this.historyX[0] = curHistoryX;
             this.historyY[0] = curHistoryY;
         }
+
         if ((<NeuRope>this.gfx).verticesX < this.totalPoints) {
             (<NeuRope>this.gfx).addPoint(this.pos[0] / this.gfx.scale.x + Math.random()*300, this.pos[1] / this.gfx.scale.y+ Math.random()*300)
         }
@@ -115,7 +116,7 @@ export class TrailEffect extends O {
         this.x += this.v[0];// * Application.One.worldSpeed * Application.One.delta2;
         this.y += this.v[1];// * Application.One.worldSpeed * Application.One.delta2;
 
-        if (!this.CameraMode) {
+        if (this.CameraMode == CAMERA_MODE.CM_UPDATE) {
             Application.One.sm.camera.transformPoint([0, 0], 1, this.pos2);
             this.gfx.x = this.pos2[0];
             this.gfx.y = this.pos2[1];
